@@ -1,0 +1,29 @@
+### Login
+
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "usernameOrEmail": "florix",
+  "password": "password"
+}
+
+### Register
+
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+  "username": "florix",
+  "email": "florixak@mail.com",
+  "password": "password"
+}
+
+### Refresh Token
+
+POST http://localhost:8080/api/auth/refresh-token
+Content-Type: application/json
+
+{
+  "refreshToken": "c873fec0-a7ab-43a5-8a2e-8771dd2ea08e"
+}
