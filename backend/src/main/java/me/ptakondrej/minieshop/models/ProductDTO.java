@@ -17,7 +17,6 @@ public class ProductDTO {
 	private String description;
 	private BigDecimal price;
 	private String imageUrl;
-	private Integer quantity;
 	private CategoryDTO category;
 	private Boolean enabled = true;
 }

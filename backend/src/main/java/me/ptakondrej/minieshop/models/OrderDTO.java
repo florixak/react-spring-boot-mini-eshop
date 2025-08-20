@@ -1,6 +1,7 @@
 package me.ptakondrej.minieshop.models;
 
 import lombok.*;
+import me.ptakondrej.minieshop.order.OrderStatus;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -17,5 +18,6 @@ public class OrderDTO {
 	private List<OrderItemDTO> orderItems;
 	private BigDecimal totalPrice;
 	private String createdAt;
-	private String status;
+	private String updatedAt;
+	private OrderStatus status;
 }
