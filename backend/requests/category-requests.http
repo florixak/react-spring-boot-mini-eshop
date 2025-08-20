@@ -1,0 +1,17 @@
+### Get All Categories
+
+GET http://localhost:8080/api/categories?page=0&limit=10
+Content-Type: application/json
+
+### Get Category by ID
+GET http://localhost:8080/api/categories/1
+
+### Create Category
+POST http://localhost:8080/api/categories
+Content-Type: application/json
+
+{
+  "title": "New Category 12",
+  "description": "This is a new category.",
+  "imageUrl": "https://placehold.co/600x400/EEE/31343C"
+}

@@ -1,0 +1,13 @@
+### Add product
+
+POST http://localhost:8080/api/products/admin
+Content-Type: application/json
+Authorization: Bearer token
+
+{
+  "title": "New Product 14",
+  "description": "This is a new product.",
+  "price": 99.9,
+  "imageUrl": "https://placehold.co/600x400/EEE/31343C",
+  "categoryId": 1
+}
