@@ -2,6 +2,7 @@ package me.ptakondrej.minieshop.services;
 
 import me.ptakondrej.minieshop.models.LoginUserDTO;
 import me.ptakondrej.minieshop.models.RegisterUserDTO;
+import me.ptakondrej.minieshop.user.Role;
 import me.ptakondrej.minieshop.user.User;
 import me.ptakondrej.minieshop.user.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,6 +33,9 @@ public class AuthService {
 				.username(registerUserDTO.getUsername())
 				.password(passwordEncoder.encode(registerUserDTO.getPassword()))
 				.email(registerUserDTO.getEmail())
+				.firstName(null)
+				.lastName(null)
+				.role(Role.USER)
 				.enabled(true)
 				.build();
 		return userRepository.save(user);
