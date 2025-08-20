@@ -29,7 +29,7 @@ public class Category {
 	@Column(nullable = false, columnDefinition = "boolean default true")
 	private Boolean enabled = true;
 	@CreationTimestamp
-	@Column(name = "created_at", nullable = false, updatable = false)
+	@Column(name = "created_at", nullable = false)
 	private LocalDateTime createdAt;
 	@UpdateTimestamp
 	@Column(name = "updated_at", nullable = false)

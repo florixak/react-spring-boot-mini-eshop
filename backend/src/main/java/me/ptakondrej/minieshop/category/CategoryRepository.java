@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
-	List<Category> findAllByNameContainingIgnoreCase(String name, Pageable pageable);
-	Optional<Category> findByName(String name);
-	boolean existsByName(String name);
+	List<Category> findAllByTitleContainingIgnoreCase(String name, Pageable pageable);
+	Optional<Category> findByTitle(String name);
+	boolean existsByTitle(String name);
 }
