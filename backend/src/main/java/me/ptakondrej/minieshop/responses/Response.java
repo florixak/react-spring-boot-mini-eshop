@@ -7,8 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Response {
+public class Response<T> {
 
 	private boolean success;
+	private T data;
 	private String message;
 }

@@ -1,23 +1,10 @@
 package me.ptakondrej.minieshop.responses;
 
-import lombok.Getter;
-import lombok.Setter;
-import me.ptakondrej.minieshop.models.UserDTO;
+import me.ptakondrej.minieshop.models.LoginDataDTO;
 
-@Getter
-@Setter
-public class LoginResponse extends Response {
+public class LoginResponse extends Response<LoginDataDTO> {
 
-	private UserDTO user;
-	private String token;
-	private long expiresIn;
-	private String refreshToken;
-
-	public LoginResponse(boolean success, UserDTO user, String token, long expiresIn, String refreshToken, String message) {
-		super(success, message);
-		this.user = user;
-		this.token = token;
-		this.refreshToken = refreshToken;
-		this.expiresIn = expiresIn;
+	public LoginResponse(boolean success, LoginDataDTO data, String message) {
+		super(success, data, message);
 	}
 }
