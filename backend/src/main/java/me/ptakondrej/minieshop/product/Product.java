@@ -37,9 +37,6 @@ public class Product {
 	@Column(nullable = false, precision = 10, scale = 2)
 	private BigDecimal price;
 
-	@Column(nullable = false, columnDefinition = "integer default 0")
-	private Integer quantity;
-
 	@ManyToOne
 	@JoinColumn(name = "category_id", nullable = false)
 	private Category category;
