@@ -1,15 +1,17 @@
 package me.ptakondrej.minieshop.auth;
 
+import me.ptakondrej.minieshop.models.LoginDataDTO;
 import me.ptakondrej.minieshop.models.LoginUserDTO;
 import me.ptakondrej.minieshop.models.RegisterUserDTO;
 import me.ptakondrej.minieshop.models.UserDTO;
 import me.ptakondrej.minieshop.requests.RefreshTokenRequest;
 import me.ptakondrej.minieshop.responses.LoginResponse;
-import me.ptakondrej.minieshop.responses.RegisterResponse;
+import me.ptakondrej.minieshop.responses.Response;
 import me.ptakondrej.minieshop.services.AuthService;
 import me.ptakondrej.minieshop.services.JwtService;
 import me.ptakondrej.minieshop.services.RefreshTokenService;
 import me.ptakondrej.minieshop.user.User;
+import me.ptakondrej.minieshop.user.UserMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,18 +35,18 @@ public class AuthController {
 	}
 
 	@PostMapping("/signup")
-	public ResponseEntity<RegisterResponse> signUp(@RequestBody RegisterUserDTO registerUserDTO) {
+	public ResponseEntity<Response<UserDTO>> signUp(@RequestBody RegisterUserDTO registerUserDTO) {
 		try {
+			if (registerUserDTO == null || registerUserDTO.getEmail() == null || registerUserDTO.getPassword() == null) {
+				return ResponseEntity.badRequest().body(new Response<UserDTO>(false, null, "Invalid registration data."));
+			}
+
 			User user = authService.signUp(registerUserDTO);
-			UserDTO userDTO = new UserDTO(
-					user.getId(),
-					user.getUsername(),
-					user.getEmail(),
-					true
-			);
-			return ResponseEntity.ok(new RegisterResponse(true, userDTO, "Registration successful. Please verify your email."));
+			UserDTO userDTO = UserMapper.convertToDto(user);
+
+			return ResponseEntity.ok(new Response<UserDTO>(true, userDTO, "Registration successful. Please verify your email."));
 		} catch (RuntimeException e) {
-			return ResponseEntity.badRequest().body(new RegisterResponse(false, null, e.getMessage()));
+			return ResponseEntity.badRequest().body(new Response<UserDTO>(false, null, e.getMessage()));
 		}
 	}
 
@@ -55,25 +57,20 @@ public class AuthController {
 			User authenticatedUser = authService.authenticate(loginUserDTO);
 			HashMap<String, Object> userDetails = authService.createUserDetails(authenticatedUser);
 			String token = jwtService.generateToken(userDetails, authenticatedUser);
-			UserDTO userDTO = new UserDTO(
-					authenticatedUser.getId(),
-					authenticatedUser.getUsername(),
-					authenticatedUser.getEmail(),
-					authenticatedUser.isEnabled()
-			);
+			UserDTO userDTO = UserMapper.convertToDto(authenticatedUser);
 			RefreshToken refreshToken = refreshTokenService.createRefreshToken(authenticatedUser);
 
 			return ResponseEntity.ok(new LoginResponse(
 					true,
-					userDTO,
+					new LoginDataDTO(userDTO,
 					token,
 					jwtService.getExpirationTime(),
-					refreshToken.getToken(),
+					refreshToken.getToken()),
 					"Login successful"
 			));
 
 		} catch (RuntimeException e) {
-			return ResponseEntity.badRequest().body(new LoginResponse(false, null, null, -1, null,  e.getMessage()));
+			return ResponseEntity.badRequest().body(new LoginResponse(false, new LoginDataDTO(null, null, -1, null),  e.getMessage()));
 		}
 	}
 
@@ -87,23 +84,21 @@ public class AuthController {
 
 			User user = refreshToken.getUser();
 			HashMap<String, Object> userDetails = authService.createUserDetails(user);
-			String newAccesToken = jwtService.generateToken(userDetails, user);
-			UserDTO userDTO = new UserDTO(
-					user.getId(),
-					user.getUsername(),
-					user.getEmail(),
-					user.isEnabled()
-			);
+			String newAccessToken = jwtService.generateToken(userDetails, user);
+			UserDTO userDTO = UserMapper.convertToDto(user);
+
 			return ResponseEntity.ok(new LoginResponse(
 					true,
-					userDTO,
-					newAccesToken,
-					jwtService.getExpirationTime(),
-					refreshToken.getToken(),
+					new LoginDataDTO(
+							userDTO,
+							newAccessToken,
+							jwtService.getExpirationTime(),
+							refreshToken.getToken()
+					),
 					"Token refreshed successfully"
 			));
 		} catch (RuntimeException e) {
-			return ResponseEntity.badRequest().body(new LoginResponse(false, null, null, -1, null, e.getMessage()));
+			return ResponseEntity.badRequest().body(new LoginResponse(false, new LoginDataDTO(null, null, -1, null), e.getMessage()));
 		}
 	}
 

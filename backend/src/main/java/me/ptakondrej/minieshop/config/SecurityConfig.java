@@ -23,7 +23,9 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationProvider authenticationProvider, JwtAuthFilter jwtAuthFilter) throws Exception {
 		http.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(authorize -> authorize
-						.requestMatchers("api/products/**").permitAll()
+						.requestMatchers("/api/products/admin", "/api/products/admin/**").hasRole("ADMIN")
+						.requestMatchers("/api/products/**").permitAll()
+						.requestMatchers("/api/categories/**").permitAll()
 						.requestMatchers("/api/auth/**").permitAll()
 						.anyRequest().authenticated()
 				)
