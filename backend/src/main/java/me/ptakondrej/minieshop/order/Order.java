@@ -5,6 +5,7 @@ import lombok.*;
 import me.ptakondrej.minieshop.orderItem.OrderItem;
 import me.ptakondrej.minieshop.user.User;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.List;
 
@@ -25,19 +26,17 @@ public class Order {
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
-	@ManyToMany
-	@JoinTable(
-			name = "order_items",
-			joinColumns = @JoinColumn(name = "order_id"),
-			inverseJoinColumns = @JoinColumn(name = "product_id")
-	)
-	private List<OrderItem> orderItems;
-
-	@Column(name = "created_at", nullable = false)
-	@CreationTimestamp
-	private String createdAt;
-
 	@Column(name = "status", nullable = false)
 	private OrderStatus status = OrderStatus.PENDING;
 
+	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<OrderItem> orderItems;
+
+	@CreationTimestamp
+	@Column(name = "created_at", nullable = false, updatable = false)
+	private String createdAt;
+
+	@UpdateTimestamp
+	@Column(name = "updated_at", nullable = false)
+	private String updatedAt;
 }
