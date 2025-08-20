@@ -2,8 +2,7 @@ package me.ptakondrej.minieshop.user;
 
 import me.ptakondrej.minieshop.models.OrderDTO;
 import me.ptakondrej.minieshop.order.Order;
-import me.ptakondrej.minieshop.requests.UserOrdersRequest;
-import me.ptakondrej.minieshop.responses.OrderListResponse;
+import me.ptakondrej.minieshop.responses.Response;
 import me.ptakondrej.minieshop.services.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,18 +20,18 @@ public class UserController {
 	}
 
 	@GetMapping("/orders")
-	public ResponseEntity<OrderListResponse> getAllUserOrders(@RequestAttribute Long userId) {
+	public ResponseEntity<Response<List<OrderDTO>>> getAllUserOrders(@RequestAttribute Long userId) {
 		try {
 			List<Order> orders = orderService.getAllUserOrders(userId);
 			List<OrderDTO> orderDTOs = orders.stream()
 					.map(orderService::convertToDTO)
 					.toList();
 			return ResponseEntity.ok(
-					new OrderListResponse(true, orderDTOs, "Orders retrieved successfully")
+					new Response<List<OrderDTO>>(true, orderDTOs, "Orders retrieved successfully")
 			);
 		} catch (Exception e) {
 			return ResponseEntity.status(500).body(
-					new OrderListResponse(false, null, "Failed to retrieve orders: " + e.getMessage())
+					new Response<List<OrderDTO>>(false, null, "Failed to retrieve orders: " + e.getMessage())
 			);
 		}
 	}

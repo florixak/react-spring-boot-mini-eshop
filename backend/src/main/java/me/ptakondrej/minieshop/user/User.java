@@ -2,6 +2,8 @@ package me.ptakondrej.minieshop.user;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -25,8 +27,21 @@ public class User implements UserDetails {
 	private String email;
 	@Column(nullable = false)
 	private String password;
+	@Column(name = "first_name")
+	private String firstName;
+	@Column(name = "last_name")
+	private String lastName;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "role", nullable = false)
+	private Role role;
 	@Column(name = "enabled", nullable = false, columnDefinition = "boolean default false")
 	private boolean enabled;
+	@CreationTimestamp
+	@Column(name = "created_at", nullable = false, updatable = false)
+	private String createdAt;
+	@UpdateTimestamp
+	@Column(name = "updated_at", nullable = false)
+	private String updatedAt;
 
 	@Override
 	public String getUsername() {
@@ -40,7 +55,7 @@ public class User implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return List.of();
+		return List.of(() -> "ROLE_" + role.name());
 	}
 
 	@Override
