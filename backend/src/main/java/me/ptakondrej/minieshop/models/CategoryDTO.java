@@ -2,22 +2,17 @@ package me.ptakondrej.minieshop.models;
 
 import lombok.*;
 
-import java.math.BigDecimal;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductDTO {
+public class CategoryDTO {
 
 	private Long id;
 	private String title;
-	private String slug;
 	private String description;
-	private BigDecimal price;
 	private String imageUrl;
-	private Integer quantity;
-	private CategoryDTO category;
+	private String slug;
 	private Boolean enabled = true;
 }
