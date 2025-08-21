@@ -9,6 +9,7 @@ GET http://localhost:8080/api/categories/1
 ### Create Category
 POST http://localhost:8080/api/categories
 Content-Type: application/json
+Authorization: Bearer your-access-token
 
 {
   "title": "New Category 12",

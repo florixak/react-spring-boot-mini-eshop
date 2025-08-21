@@ -1,0 +1,33 @@
+### Create a new order
+POST http://localhost:8080/api/orders
+Content-Type: application/json
+Authorization: Bearer your-access-token
+
+{
+  "userId": 1,
+  "shippingAddress": "123 Main St, Springfield, IL",
+  "billingAddress": "456 Elm St, Springfield, IL",
+  "paymentMethod": "CREDIT_CARD",
+  "orderItems": [
+    {
+      "productId": 1,
+      "quantity": 2
+    },
+    {
+      "productId": 3,
+      "quantity": 5
+    }
+  ],
+  "totalPrice": 59.99,
+  "status": "PENDING"
+}
+
+### Get all orders
+GET http://localhost:8080/api/orders
+Content-Type: application/json
+Authorization: Bearer your-access-token
+
+### Get order by ID
+GET http://localhost:8080/api/orders/11
+Content-Type: application/json
+Authorization: Bearer your-access-token
