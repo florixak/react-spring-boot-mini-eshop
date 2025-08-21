@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -38,10 +39,10 @@ public class User implements UserDetails {
 	private boolean enabled;
 	@CreationTimestamp
 	@Column(name = "created_at", nullable = false, updatable = false)
-	private String createdAt;
+	private LocalDateTime createdAt;
 	@UpdateTimestamp
 	@Column(name = "updated_at", nullable = false)
-	private String updatedAt;
+	private LocalDateTime updatedAt;
 
 	@Override
 	public String getUsername() {

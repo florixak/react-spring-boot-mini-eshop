@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -27,8 +28,9 @@ public class Order {
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
+	@Enumerated(EnumType.STRING)
 	@Column(name = "status", nullable = false)
-	private OrderStatus status = OrderStatus.PENDING;
+	private OrderStatus status;
 
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<OrderItem> orderItems;
@@ -47,9 +49,9 @@ public class Order {
 
 	@CreationTimestamp
 	@Column(name = "created_at", nullable = false, updatable = false)
-	private String createdAt;
+	private LocalDateTime createdAt;
 
 	@UpdateTimestamp
 	@Column(name = "updated_at", nullable = false)
-	private String updatedAt;
+	private LocalDateTime updatedAt;
 }
