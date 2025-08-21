@@ -26,4 +26,11 @@ public class UserService {
 			return userRepository.findByUsername(emailOrUsername);
 		}
 	}
+
+	public Optional<User> findById(Long userId) {
+		if (userId == null || userId <= 0) {
+			return Optional.empty();
+		}
+		return userRepository.findById(userId);
+	}
 }
