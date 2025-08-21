@@ -7,6 +7,7 @@ import me.ptakondrej.minieshop.user.User;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -31,6 +32,18 @@ public class Order {
 
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<OrderItem> orderItems;
+
+	@Column(name = "shipping_address", nullable = false)
+	private String shippingAddress;
+
+	@Column(name = "billing_address", nullable = false)
+	private String billingAddress;
+
+	@Column(name = "payment_method", nullable = false)
+	private String paymentMethod;
+
+	@Column(name = "total_price", nullable = false, precision = 10, scale = 2)
+	private BigDecimal totalPrice;
 
 	@CreationTimestamp
 	@Column(name = "created_at", nullable = false, updatable = false)

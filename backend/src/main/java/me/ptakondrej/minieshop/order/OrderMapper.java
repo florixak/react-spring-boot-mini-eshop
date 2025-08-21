@@ -12,6 +12,7 @@ public class OrderMapper {
 				.user(UserMapper.convertToDto(order.getUser()))
 				.orderItems(order.getOrderItems().stream().map(OrderItemMapper::convertToDto).toList())
 				.status(order.getStatus())
+				.totalPrice(order.getTotalPrice())
 				.createdAt(order.getCreatedAt())
 				.updatedAt(order.getUpdatedAt())
 				.build();
@@ -25,6 +26,7 @@ public class OrderMapper {
 						.map(OrderItemMapper::convertToEntity)
 						.toList())
 				.status(orderDTO.getStatus())
+				.totalPrice(orderDTO.getTotalPrice())
 				.createdAt(orderDTO.getCreatedAt())
 				.updatedAt(orderDTO.getUpdatedAt())
 				.build();
