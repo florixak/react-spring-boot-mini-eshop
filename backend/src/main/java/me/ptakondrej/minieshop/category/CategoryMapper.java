@@ -11,7 +11,7 @@ public class CategoryMapper {
 				.slug(category.getSlug())
 				.description(category.getDescription())
 				.imageUrl(category.getImageUrl())
-				.enabled(category.getEnabled())
+				.enabled(category.getDeleted())
 				.build();
 	}
 

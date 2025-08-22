@@ -1,7 +1,7 @@
 package me.ptakondrej.minieshop.category;
 
 import me.ptakondrej.minieshop.models.CategoryDTO;
-import me.ptakondrej.minieshop.requests.CategoryCreationRequest;
+import me.ptakondrej.minieshop.requests.CategoryRequest;
 import me.ptakondrej.minieshop.responses.Response;
 import me.ptakondrej.minieshop.services.CategoryService;
 import org.springframework.data.domain.PageRequest;
@@ -70,8 +70,8 @@ public class CategoryController {
 		}
 	}
 
-	@PostMapping
-	public ResponseEntity<Response<CategoryDTO>> createCategory(@RequestBody CategoryCreationRequest request) {
+	@PostMapping("/admin")
+	public ResponseEntity<Response<CategoryDTO>> createCategory(@RequestBody CategoryRequest request) {
 		try {
 			if (request == null) {
 				throw new IllegalArgumentException("Category data cannot be null.");
@@ -87,10 +87,28 @@ public class CategoryController {
 		}
 	}
 
+	@PutMapping("/admin/{id}")
+	public ResponseEntity<Response<CategoryDTO>> updateCategory(@PathVariable Long id, @RequestBody CategoryRequest request) {
+		try {
+			Category category = categoryService.updateCategory(id, request);
+			CategoryDTO updatedCategoryDTO = CategoryMapper.convertToDto(category);
+			return ResponseEntity.ok(new Response<CategoryDTO>(true, updatedCategoryDTO, "Category updated successfully"));
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(new Response<CategoryDTO>(false, null, e.getMessage()));
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(new Response<CategoryDTO>(false, null, "An error occurred while updating the category: " + e.getMessage()));
+		}
+	}
 
-
-
-
-
-
+	@DeleteMapping("/admin/{id}")
+	public ResponseEntity<Response<Void>> deleteCategory(@PathVariable Long id) {
+		try {
+			categoryService.deleteCategory(id);
+			return ResponseEntity.ok(new Response<Void>(true, null, "Category deleted successfully"));
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(new Response<Void>(false, null, e.getMessage()));
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(new Response<Void>(false, null, "An error occurred while deleting the category: " + e.getMessage()));
+		}
+	}
 }

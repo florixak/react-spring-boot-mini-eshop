@@ -2,10 +2,12 @@ package me.ptakondrej.minieshop.services;
 
 import me.ptakondrej.minieshop.category.Category;
 import me.ptakondrej.minieshop.category.CategoryRepository;
-import me.ptakondrej.minieshop.requests.CategoryCreationRequest;
+import me.ptakondrej.minieshop.requests.CategoryRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static me.ptakondrej.minieshop.utils.SlugUtils.generateSlug;
@@ -19,6 +21,7 @@ public class CategoryService {
 		this.categoryRepository = categoryRepository;
 	}
 
+	@Transactional(readOnly = true)
 	public List<Category> getAllCategories(String name, Pageable pageable) {
 		if (name == null || name.isEmpty()) {
 			return categoryRepository.findAll(pageable).getContent();
@@ -27,18 +30,14 @@ public class CategoryService {
 		}
 	}
 
-	public Category createCategory(CategoryCreationRequest request) throws IllegalArgumentException {
-		if (request == null) {
-			throw new IllegalArgumentException("Category creation request cannot be null");
+	@Transactional
+	public Category createCategory(CategoryRequest request) throws IllegalArgumentException {
+		if (!validateCategoryRequest(request)) {
+			throw new IllegalArgumentException("Invalid category creation request");
 		}
-		if (request.getTitle() == null || request.getTitle().isEmpty()) {
-			throw new IllegalArgumentException("Category title cannot be null or empty");
-		}
-		if (request.getDescription() == null || request.getDescription().isEmpty()) {
-			throw new IllegalArgumentException("Category description cannot be null or empty");
-		}
-		if (request.getImageUrl() == null || request.getImageUrl().isEmpty()) {
-			throw new IllegalArgumentException("Category image URL cannot be null or empty");
+
+		if (existsCategoryBySlug(request.getTitle())) {
+			throw new IllegalArgumentException("Category with the same title already exists");
 		}
 
 		Category category = Category.builder()
@@ -47,19 +46,62 @@ public class CategoryService {
 				.description(request.getDescription())
 				.imageUrl(request.getImageUrl())
 				.enabled(true)
+				.deleted(false)
 				.build();
 
 		return categoryRepository.save(category);
 	}
 
-	public Category getCategoryById(Long id) {
+	@Transactional
+	public Category updateCategory(Long id, CategoryRequest request) throws IllegalArgumentException {
+		if (id == null || id <= 0) {
+			throw new IllegalArgumentException("Category ID must be a positive number");
+		}
+
+		if (!validateCategoryRequest(request)) {
+			throw new IllegalArgumentException("Invalid category update request");
+		}
+
+		Category existingCategory = categoryRepository.findById(id)
+				.orElseThrow(() -> new IllegalArgumentException("Category not found with id: " + id));
+
+		existingCategory.setTitle(request.getTitle());
+		existingCategory.setSlug(generateSlug(request.getTitle()));
+		existingCategory.setDescription(request.getDescription());
+		existingCategory.setImageUrl(request.getImageUrl());
+
+		return categoryRepository.save(existingCategory);
+	}
+
+	@Transactional
+	public Category deleteCategory(Long id) throws IllegalArgumentException {
+		if (id == null || id <= 0) {
+			throw new IllegalArgumentException("Category ID must be a positive number");
+		}
+
+		Category existingCategory = categoryRepository.findById(id)
+				.orElseThrow(() -> new IllegalArgumentException("Category not found with id: " + id));
+		existingCategory.setDeleted(true);
+		existingCategory.setDeletedAt(LocalDateTime.now());
+		existingCategory.setEnabled(false);
+		return categoryRepository.save(existingCategory);
+	}
+
+	public boolean existsCategoryBySlug (String title){
+		String slug = generateSlug(title);
+		return categoryRepository.existsBySlug(slug);
+	}
+
+	public Category getCategoryById (Long id){
 		return categoryRepository.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Category not found with id: " + id));
 	}
 
-
-
-
-
+	private boolean validateCategoryRequest (CategoryRequest request){
+		return request != null
+				&& request.getTitle() != null && !request.getTitle().isEmpty()
+				&& request.getDescription() != null && !request.getDescription().isEmpty()
+				&& request.getImageUrl() != null && !request.getImageUrl().isEmpty();
+	}
 
 }
