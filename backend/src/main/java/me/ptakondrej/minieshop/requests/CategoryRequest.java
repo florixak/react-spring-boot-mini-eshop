@@ -9,8 +9,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryCreationRequest {
+public class CategoryRequest {
 	private String title;
 	private String description;
 	private String imageUrl;
+	private Boolean enabled;
 }
