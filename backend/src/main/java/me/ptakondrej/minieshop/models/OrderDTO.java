@@ -2,8 +2,10 @@ package me.ptakondrej.minieshop.models;
 
 import lombok.*;
 import me.ptakondrej.minieshop.order.OrderStatus;
+import me.ptakondrej.minieshop.order.PaymentMethod;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -17,8 +19,9 @@ public class OrderDTO {
 	private UserDTO user;
 	private List<OrderItemDTO> orderItems;
 	private BigDecimal totalPrice;
-	private String createdAt;
-	private String updatedAt;
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
+	private PaymentMethod paymentMethod;
 	private OrderStatus status;
 
 }
