@@ -4,8 +4,6 @@ import me.ptakondrej.minieshop.models.OrderDTO;
 import me.ptakondrej.minieshop.orderItem.OrderItemMapper;
 import me.ptakondrej.minieshop.user.UserMapper;
 
-import java.time.LocalDateTime;
-
 public class OrderMapper {
 
 	public static OrderDTO convertToDto(Order order) {
@@ -15,8 +13,9 @@ public class OrderMapper {
 				.orderItems(order.getOrderItems().stream().map(OrderItemMapper::convertToDto).toList())
 				.status(order.getStatus())
 				.totalPrice(order.getTotalPrice())
-				.createdAt(order.getCreatedAt().toString())
-				.updatedAt(order.getUpdatedAt().toString())
+				.paymentMethod(order.getPaymentMethod())
+				.createdAt(order.getCreatedAt())
+				.updatedAt(order.getUpdatedAt())
 				.build();
 	}
 
@@ -28,9 +27,10 @@ public class OrderMapper {
 						.map(OrderItemMapper::convertToEntity)
 						.toList())
 				.status(orderDTO.getStatus())
+				.paymentMethod(orderDTO.getPaymentMethod())
 				.totalPrice(orderDTO.getTotalPrice())
-				.createdAt(LocalDateTime.parse(orderDTO.getCreatedAt()))
-				.updatedAt(LocalDateTime.parse(orderDTO.getUpdatedAt()))
+				.createdAt(orderDTO.getCreatedAt())
+				.updatedAt(orderDTO.getUpdatedAt())
 				.build();
 	}
 }

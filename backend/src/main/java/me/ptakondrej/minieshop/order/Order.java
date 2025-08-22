@@ -41,8 +41,9 @@ public class Order {
 	@Column(name = "billing_address", nullable = false)
 	private String billingAddress;
 
+	@Enumerated(EnumType.STRING)
 	@Column(name = "payment_method", nullable = false)
-	private String paymentMethod;
+	private PaymentMethod paymentMethod;
 
 	@Column(name = "total_price", nullable = false, precision = 10, scale = 2)
 	private BigDecimal totalPrice;

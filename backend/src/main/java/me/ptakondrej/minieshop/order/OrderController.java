@@ -29,6 +29,10 @@ public class OrderController {
 			return ResponseEntity.ok(
 					new Response<List<OrderDTO>>(true, orderDTOs, "Orders retrieved successfully")
 			);
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(
+					new Response<List<OrderDTO>>(false, null, "Invalid request: " + e.getMessage())
+			);
 		} catch (Exception e) {
 			return ResponseEntity.status(500).body(
 					new Response<List<OrderDTO>>(false, null, "An error occurred while retrieving orders: " + e.getMessage())
@@ -55,6 +59,10 @@ public class OrderController {
 			OrderDTO orderDTO = OrderMapper.convertToDto(order);
 			return ResponseEntity.ok(
 					new Response<OrderDTO>(true, orderDTO, "Order retrieved successfully")
+			);
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(
+					new Response<OrderDTO>(false, null, "Invalid request: " + e.getMessage())
 			);
 		} catch (Exception e) {
 			return ResponseEntity.status(500).body(
