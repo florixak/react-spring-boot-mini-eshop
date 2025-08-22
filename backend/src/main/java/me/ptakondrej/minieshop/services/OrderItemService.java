@@ -26,7 +26,7 @@ public class OrderItemService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<OrderItem> getOrderItemByOrderId(Long orderId) {
+	public List<OrderItem> getOrderItemsByOrderId(Long orderId) {
 		if (orderId == null || orderId <= 0) {
 			throw new IllegalArgumentException("Invalid order item ID");
 		}
