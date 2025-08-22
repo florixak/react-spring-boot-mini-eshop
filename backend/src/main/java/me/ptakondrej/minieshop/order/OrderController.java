@@ -96,4 +96,29 @@ public class OrderController {
 			);
 		}
 	}
+
+	@PatchMapping("/{orderId}") // ?status=PROCESSING/COMPLETED/CANCELLED
+	public ResponseEntity<Response<OrderDTO>> updateOrderStatus(@RequestAttribute Long userId, @PathVariable Long orderId, @RequestParam OrderStatus status) {
+		if (orderId == null || orderId <= 0 || status == null) {
+			return ResponseEntity.badRequest().body(
+					new Response<OrderDTO>(false, null, "Invalid order ID or status")
+			);
+		}
+		try {
+			Order order = orderService.updateOrderStatus(userId, orderId, status);
+			OrderDTO orderDTO = OrderMapper.convertToDto(order);
+			return ResponseEntity.ok(
+					new Response<OrderDTO>(true, orderDTO, "Order status updated successfully")
+			);
+
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(
+					new Response<OrderDTO>(false, null, "Invalid request: " + e.getMessage())
+			);
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(
+					new Response<OrderDTO>(false, null, "An error occurred while updating the order: " + e.getMessage())
+			);
+		}
+	}
 }

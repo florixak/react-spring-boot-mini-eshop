@@ -2,6 +2,7 @@ package me.ptakondrej.minieshop.services;
 
 import me.ptakondrej.minieshop.order.Order;
 import me.ptakondrej.minieshop.order.OrderRepository;
+import me.ptakondrej.minieshop.order.OrderStatus;
 import me.ptakondrej.minieshop.orderItem.OrderItem;
 import me.ptakondrej.minieshop.product.Product;
 import me.ptakondrej.minieshop.requests.OrderCreationRequest;
@@ -64,6 +65,16 @@ public class OrderService {
 
 		savedOrder.setOrderItems(new ArrayList<>(orderItems));
 		return orderRepository.save(savedOrder);
+	}
+
+	@Transactional
+	public Order updateOrderStatus(Long userId, Long orderId, OrderStatus status) {
+		Order order = getOrderById(userId, orderId);
+		if (order == null) {
+			throw new IllegalArgumentException("Order not found with ID: " + orderId);
+		}
+		order.setStatus(status);
+		return orderRepository.save(order);
 	}
 
 }
