@@ -9,12 +9,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductCreationRequest {
+public class ProductRequest {
 
 	private String title;
 	private String description;
 	private String imageUrl;
 	private double price;
 	private long categoryId;
-
+	private Boolean enabled;
 }

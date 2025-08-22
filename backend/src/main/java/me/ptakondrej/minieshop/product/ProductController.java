@@ -1,14 +1,12 @@
 package me.ptakondrej.minieshop.product;
 
-import me.ptakondrej.minieshop.category.Category;
 import me.ptakondrej.minieshop.models.ProductDTO;
 import me.ptakondrej.minieshop.models.ProductListDataDTO;
-import me.ptakondrej.minieshop.requests.ProductCreationRequest;
+import me.ptakondrej.minieshop.requests.ProductRequest;
 import me.ptakondrej.minieshop.requests.ProductsRequest;
 import me.ptakondrej.minieshop.responses.Response;
 import me.ptakondrej.minieshop.services.CategoryService;
 import me.ptakondrej.minieshop.services.ProductService;
-import me.ptakondrej.minieshop.utils.SlugUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +14,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -59,6 +56,8 @@ public class ProductController {
 			);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().body(new Response<ProductListDataDTO>(false, null, e.getMessage()));
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(new Response<ProductListDataDTO>(false, null, "An error occurred while retrieving products: " + e.getMessage()));
 		}
 	}
 
@@ -76,44 +75,46 @@ public class ProductController {
 			return ResponseEntity.ok(new Response<ProductDTO>(true, productDTO, "Product retrieved successfully"));
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().body(new Response<ProductDTO>(false, null, e.getMessage()));
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(new Response<ProductDTO>(false, null, "An error occurred while retrieving the product: " + e.getMessage()));
 		}
 	}
 
 	@PostMapping("/admin")
-	public ResponseEntity<Response<ProductDTO>> createProduct(@RequestBody ProductCreationRequest request) {
+	public ResponseEntity<Response<ProductDTO>> createProduct(@RequestBody ProductRequest request) {
 		try {
-			if (request == null || request.getTitle() == null || request.getTitle().trim().isEmpty()) {
-				return ResponseEntity.badRequest().body(new Response<ProductDTO>(false, null, "Product data cannot be null or empty"));
-			}
-			if (request.getPrice() <= 0) {
-				return ResponseEntity.badRequest().body(new Response<ProductDTO>(false, null, "Product price must be greater than zero"));
-			}
-			if (request.getCategoryId() <= 0) {
-				return ResponseEntity.badRequest().body(new Response<ProductDTO>(false, null, "Category ID must be a positive number"));
-			}
-
-			if (productService.existsProductBySlug(request.getTitle())) {
-				return ResponseEntity.badRequest().body(new Response<ProductDTO>(false, null, "Product with this title already exists"));
-			}
-
-			Category category = categoryService.getCategoryById(request.getCategoryId());
-			if (category == null) {
-				return ResponseEntity.badRequest().body(new Response<ProductDTO>(false, null, "Category not found with ID: " + request.getCategoryId()));
-			}
-
-			Product product = Product.builder()
-					.title(request.getTitle())
-					.description(request.getDescription())
-					.price(BigDecimal.valueOf(request.getPrice()))
-					.category(category)
-					.imageUrl(request.getImageUrl())
-					.enabled(true)
-					.build();
-			Product savedProduct = productService.createProduct(product);
+			Product savedProduct = productService.createProduct(request);
 			ProductDTO savedProductDTO = ProductMapper.convertToDto(savedProduct);
 			return ResponseEntity.ok(new Response<ProductDTO>(true, savedProductDTO, "Product created successfully"));
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().body(new Response<ProductDTO>(false, null, e.getMessage()));
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(new Response<ProductDTO>(false, null, "An error occurred while creating the product: " + e.getMessage()));
+		}
+	}
+
+	@PutMapping("/admin/{id}")
+	public ResponseEntity<Response<ProductDTO>> updateProduct(@PathVariable Long id, @RequestBody ProductRequest request) {
+		try {
+			Product product = productService.updateProduct(id, request);
+			ProductDTO productDTO = ProductMapper.convertToDto(product);
+			return ResponseEntity.ok(new Response<ProductDTO>(true, productDTO, "Product updated successfully"));
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(new Response<ProductDTO>(false, null, e.getMessage()));
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(new Response<ProductDTO>(false, null, "An error occurred while updating the product: " + e.getMessage()));
+		}
+	}
+
+	@DeleteMapping("/admin/{id}")
+	public ResponseEntity<Response<Void>> deleteProduct(@PathVariable Long id) {
+		try {
+			productService.deleteProduct(id);
+			return ResponseEntity.ok(new Response<Void>(true, null, "Product deleted successfully"));
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(new Response<Void>(false, null, e.getMessage()));
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(new Response<Void>(false, null, "An error occurred while deleting the product: " + e.getMessage()));
 		}
 	}
 }

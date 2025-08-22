@@ -51,4 +51,10 @@ public class Product {
 	@UpdateTimestamp
 	@Column(name = "updated_at", nullable = false)
 	private LocalDateTime updatedAt;
+
+	@Column(nullable = false, columnDefinition = "boolean default false")
+	private Boolean deleted = true;
+
+	@Column(name = "deleted_at")
+	private LocalDateTime deletedAt;
 }
