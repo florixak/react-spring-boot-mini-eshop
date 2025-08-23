@@ -5,12 +5,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import me.ptakondrej.minieshop.services.JwtService;
+import me.ptakondrej.minieshop.services.UserService;
+import me.ptakondrej.minieshop.user.User;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -21,11 +21,11 @@ import java.io.IOException;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
 	private final JwtService jwtService;
-	private final UserDetailsService userDetailsService;
+	private final UserService userService;
 
-	public JwtAuthFilter(JwtService jwtService, UserDetailsService userDetailsService) {
+	public JwtAuthFilter(JwtService jwtService, UserService userService) {
 		this.jwtService = jwtService;
-		this.userDetailsService = userDetailsService;
+		this.userService = userService;
 	}
 
 	@Override
@@ -56,9 +56,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 				return;
 			}
 
-			UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+			User user = userService.findByEmailOrUsername(username)
+					.orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
 
-			if (!jwtService.isTokenValid(token, userDetails)) {
+			if (user.isDeleted()) {
+				response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User account is deleted");
+				return;
+			}
+
+			if (!jwtService.isTokenValid(token, user)) {
 				response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT token");
 				return;
 			}
@@ -66,7 +72,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 			Long userId = jwtService.extractClaim(token, claims -> claims.get("id", Long.class));
 			request.setAttribute("userId", userId);
 
-			UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+			UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 			authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 			SecurityContextHolder.getContext().setAuthentication(authToken);
 

@@ -62,6 +62,7 @@ public class AuthService {
 		userDetails.put("username", user.getUsername());
 		userDetails.put("email", user.getEmail());
 		userDetails.put("enabled", user.isEnabled());
+		userDetails.put("role", user.getRole().name());
 		return userDetails;
 	}
 

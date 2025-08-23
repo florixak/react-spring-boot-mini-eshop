@@ -43,6 +43,10 @@ public class User implements UserDetails {
 	@UpdateTimestamp
 	@Column(name = "updated_at", nullable = false)
 	private LocalDateTime updatedAt;
+	@Column(name = "deleted", nullable = false, columnDefinition = "boolean default false")
+	private boolean deleted;
+	@Column(name = "deleted_at")
+	private LocalDateTime deletedAt;
 
 	@Override
 	public String getUsername() {

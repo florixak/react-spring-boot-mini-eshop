@@ -40,8 +40,11 @@ public class OrderService {
 
 	@Transactional
 	public Order createOrder(Long userId, OrderCreationRequest request) {
-		User user = userService.findById(userId)
-				.orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+		User user = userService.findById(userId);
+
+		if (user == null) {
+			throw new IllegalArgumentException("User not found with ID: " + userId);
+		}
 
 		Order order = Order.builder()
 				.user(user)

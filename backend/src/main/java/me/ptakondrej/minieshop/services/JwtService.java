@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
+import me.ptakondrej.minieshop.user.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -55,7 +56,7 @@ public class JwtService {
 				.compact();
 	}
 
-	public boolean isTokenValid(String token, UserDetails userDetails) {
+	public boolean isTokenValid(String token, User userDetails) {
 		try {
 			final String loginFromToken = extractUsername(token);
 			return (loginFromToken.equals(userDetails.getUsername()) && !isTokenExpired(token));

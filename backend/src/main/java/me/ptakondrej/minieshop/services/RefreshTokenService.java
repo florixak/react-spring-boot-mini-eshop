@@ -4,6 +4,7 @@ import me.ptakondrej.minieshop.auth.RefreshToken;
 import me.ptakondrej.minieshop.auth.RefreshTokenRepository;
 import me.ptakondrej.minieshop.user.User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -18,6 +19,7 @@ public class RefreshTokenService {
 		this.refreshTokenRepository = refreshTokenRepository;
 	}
 
+	@Transactional
 	public RefreshToken createRefreshToken(User user) {
 		RefreshToken refreshToken = new RefreshToken();
 		refreshToken.setToken(UUID.randomUUID().toString());
@@ -26,6 +28,7 @@ public class RefreshTokenService {
 		return refreshTokenRepository.save(refreshToken);
 	}
 
+	@Transactional
 	public RefreshToken verifyExpiration(RefreshToken refreshToken) {
 		if (refreshToken.getExpiryDate().isBefore(LocalDateTime.now())) {
 			refreshTokenRepository.delete(refreshToken);
@@ -34,6 +37,19 @@ public class RefreshTokenService {
 		return refreshToken;
 	}
 
+	@Transactional
+	public void deleteByOldRefreshToken(String oldRefreshToken) {
+		refreshTokenRepository.deleteByToken(oldRefreshToken);
+	}
+
+	@Transactional
+	public void deleteAllByUserId(Long userId) {
+		refreshTokenRepository.findAll().stream()
+				.filter(token -> token.getUser().getId().equals(userId))
+				.forEach(refreshTokenRepository::delete);
+	}
+
+	@Transactional(readOnly = true)
 	public Optional<RefreshToken> findByToken(String token) {
 		return refreshTokenRepository.findByToken(token);
 	}

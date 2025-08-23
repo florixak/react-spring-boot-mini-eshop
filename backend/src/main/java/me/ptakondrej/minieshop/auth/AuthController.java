@@ -53,7 +53,6 @@ public class AuthController {
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDTO loginUserDTO) {
 		try {
-
 			User authenticatedUser = authService.authenticate(loginUserDTO);
 			HashMap<String, Object> userDetails = authService.createUserDetails(authenticatedUser);
 			String token = jwtService.generateToken(userDetails, authenticatedUser);
@@ -77,12 +76,14 @@ public class AuthController {
 	@PostMapping("/refresh-token")
 	public ResponseEntity<LoginResponse> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
 		try {
-			RefreshToken refreshToken = refreshTokenService
+			RefreshToken oldRefreshToken = refreshTokenService
 					.findByToken(refreshTokenRequest.getRefreshToken())
 					.map(refreshTokenService::verifyExpiration)
 					.orElseThrow(() -> new RuntimeException("Invalid refresh token."));
 
-			User user = refreshToken.getUser();
+			User user = oldRefreshToken.getUser();
+			refreshTokenService.deleteByOldRefreshToken(oldRefreshToken.getToken());
+			RefreshToken newRefreshToken = refreshTokenService.createRefreshToken(user);
 			HashMap<String, Object> userDetails = authService.createUserDetails(user);
 			String newAccessToken = jwtService.generateToken(userDetails, user);
 			UserDTO userDTO = UserMapper.convertToDto(user);
@@ -93,7 +94,7 @@ public class AuthController {
 							userDTO,
 							newAccessToken,
 							jwtService.getExpirationTime(),
-							refreshToken.getToken()
+							newRefreshToken.getToken()
 					),
 					"Token refreshed successfully"
 			));
