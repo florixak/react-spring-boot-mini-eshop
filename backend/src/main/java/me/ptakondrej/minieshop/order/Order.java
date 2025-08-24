@@ -48,6 +48,12 @@ public class Order {
 	@Column(name = "total_price", nullable = false, precision = 10, scale = 2)
 	private BigDecimal totalPrice;
 
+	@Column(name = "stripe_session_id", unique = true)
+	private String stripeSessionId;
+
+	@Column(name = "payment_at")
+	private LocalDateTime paymentAt;
+
 	@CreationTimestamp
 	@Column(name = "created_at", nullable = false, updatable = false)
 	private LocalDateTime createdAt;

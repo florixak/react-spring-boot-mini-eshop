@@ -24,9 +24,12 @@ public class SecurityConfig {
 		http.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(authorize -> authorize
 						.requestMatchers("/api/products/admin", "/api/products/admin/**").hasRole("ADMIN")
-						.requestMatchers("/api/categories/admin", "/api/products/admin/**").hasRole("ADMIN")
+						.requestMatchers("/api/categories/admin", "/api/categories/admin/**").hasRole("ADMIN")
 						.requestMatchers("/api/products").permitAll()
 						.requestMatchers("/api/auth/**").permitAll()
+						.requestMatchers("/api/categories").permitAll()
+						.requestMatchers("/api/webhooks/**").permitAll()
+						.requestMatchers("/success", "/cancel").permitAll()
 						.anyRequest().authenticated()
 				)
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -42,8 +45,9 @@ public class SecurityConfig {
 		config.setAllowedOrigins(List.of(
 				"http://localhost:8080",
 				"http://localhost:8082",
+				"http://localhost:5173",
 				"null"));
-		config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+		config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Stripe-Signature"));
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

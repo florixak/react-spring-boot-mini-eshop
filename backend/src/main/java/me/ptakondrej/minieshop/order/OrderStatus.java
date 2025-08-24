@@ -2,6 +2,7 @@ package me.ptakondrej.minieshop.order;
 
 public enum OrderStatus {
 	PENDING,
+	PAID,
 	PROCESSING,
 	COMPLETED,
 	CANCELLED;

@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import me.ptakondrej.minieshop.models.OrderItemDataDTO;
-import me.ptakondrej.minieshop.order.OrderStatus;
 import me.ptakondrej.minieshop.order.PaymentMethod;
 
 import java.util.List;
@@ -20,6 +19,4 @@ public class OrderCreationRequest {
 	private String billingAddress;
 	private PaymentMethod paymentMethod;
 	private List<OrderItemDataDTO> orderItems;
-	private double totalPrice;
-	private OrderStatus status;
 }
