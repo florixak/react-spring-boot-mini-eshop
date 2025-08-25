@@ -9,6 +9,7 @@ import me.ptakondrej.minieshop.orderItem.OrderItem;
 import me.ptakondrej.minieshop.product.Product;
 import me.ptakondrej.minieshop.requests.OrderCreationRequest;
 import me.ptakondrej.minieshop.user.User;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -88,6 +89,7 @@ public class OrderService {
 				.paymentMethod(request.getPaymentMethod())
 				.status(OrderStatus.PENDING)
 				.totalPrice(totalPrice)
+				.expiresAt(LocalDateTime.now().plusMinutes(30))
 				.build();
 
 		Order savedOrder = orderRepository.save(order);
@@ -97,6 +99,7 @@ public class OrderService {
 			if (product == null) {
 				throw new IllegalArgumentException("Product not found with ID: " + itemDTO.getProductId());
 			}
+			productService.reduceStock(product.getId(), itemDTO.getQuantity());
 			return OrderItem.builder().product(product).order(savedOrder).quantity(itemDTO.getQuantity()).build();
 		}).map(orderItemService::createOrderItem).toList();
 
@@ -141,7 +144,20 @@ public class OrderService {
 
 		Order order = orderRepository.findById(orderId).orElse(null);
 		if (order != null && order.getStatus() == OrderStatus.PENDING) {
+			order.setStripeSessionId(null);
+			orderRepository.save(order);
+		}
+	}
+
+	@Scheduled(cron = "0 0 0 * * ?")
+	@Transactional
+	public void cancelStalePendingOrders() {
+		List<Order> staleOrders = orderRepository.findAllByStatusAndExpiresAtBefore(OrderStatus.PENDING, LocalDateTime.now());
+		for (Order order : staleOrders) {
 			order.setStatus(OrderStatus.CANCELLED);
+			for (OrderItem item : order.getOrderItems()) {
+				productService.increaseStock(item.getProduct().getId(), item.getQuantity());
+			}
 			orderRepository.save(order);
 		}
 	}

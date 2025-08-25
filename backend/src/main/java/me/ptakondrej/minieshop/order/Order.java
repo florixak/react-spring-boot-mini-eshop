@@ -61,4 +61,7 @@ public class Order {
 	@UpdateTimestamp
 	@Column(name = "updated_at", nullable = false)
 	private LocalDateTime updatedAt;
+
+	@Column(name = "expires_at", nullable = false)
+	private LocalDateTime expiresAt;
 }

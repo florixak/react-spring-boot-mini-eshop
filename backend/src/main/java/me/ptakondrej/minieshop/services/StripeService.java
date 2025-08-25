@@ -14,15 +14,15 @@ import java.util.List;
 @Service
 public class StripeService {
 
-	@Value("${app.base.url}")
-	private String baseUrl;
+	@Value("${app.frontend.url}")
+	private String frontendUrl;
 
 	public String createCheckoutSession(Order request) throws StripeException {
 		if (request == null || request.getOrderItems() == null || request.getOrderItems().isEmpty()) {
 			throw new IllegalArgumentException("Order and order items cannot be null or empty");
 		}
-		if (baseUrl == null || baseUrl.isEmpty()) {
-			throw new IllegalStateException("Base URL is not configured");
+		if (frontendUrl == null || frontendUrl.isEmpty()) {
+			throw new IllegalStateException("Frontend URL is not configured");
 		}
 		List<LineItem> lineItems = request.getOrderItems().stream().map(item -> LineItem.builder()
 				.setPriceData(LineItem.PriceData.builder()
@@ -39,8 +39,8 @@ public class StripeService {
 
 		SessionCreateParams.Builder paramsBuilder = SessionCreateParams.builder()
 				.setMode(SessionCreateParams.Mode.PAYMENT)
-				.setSuccessUrl(baseUrl + "/api/checkout/success?sessionId={CHECKOUT_SESSION_ID}")
-				.setCancelUrl(baseUrl + "/api/checkout/cancel")
+				.setSuccessUrl(frontendUrl + "/checkout/success?sessionId={CHECKOUT_SESSION_ID}")
+				.setCancelUrl(frontendUrl + "/checkout/cancel")
 				.addAllLineItem(lineItems)
 				.putMetadata("orderId", request.getId().toString());
 

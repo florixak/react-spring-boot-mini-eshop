@@ -54,7 +54,10 @@ public class CheckoutController {
 			if (!order.getStatus().equals(OrderStatus.PENDING)) {
 				return ResponseEntity.badRequest().body(new Response<>(false, null, "Only orders with PENDING status can be paid"));
 			}
-			String checkoutUrl = stripeService.createCheckoutSession(order);
+			String checkoutUrl = stripeService.getCheckoutSession(order.getStripeSessionId()).getUrl();
+			if (checkoutUrl == null || checkoutUrl.isEmpty()) {
+				checkoutUrl = stripeService.createCheckoutSession(order);
+			}
 			return ResponseEntity.ok().body(new Response<>(true, new CheckoutDTO(order.getId(), checkoutUrl), "Checkout session created successfully"));
 		} catch (StripeException e) {
 			return ResponseEntity.status(502).body(new Response<>(false, null, "Stripe API error: " + e.getMessage()));
