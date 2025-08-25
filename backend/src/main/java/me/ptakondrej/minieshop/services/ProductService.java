@@ -94,6 +94,35 @@ public class ProductService {
 		return productRepository.save(product);
 	}
 
+	@Transactional
+	public void reduceStock(Long productId, int quantity) throws IllegalArgumentException {
+		Product product = getProductById(productId);
+		if (product == null) {
+			throw new IllegalArgumentException("Product not found with id: " + productId);
+		}
+		if (quantity <= 0) {
+			throw new IllegalArgumentException("Quantity must be greater than zero");
+		}
+		if (product.getStockQuantity() < quantity) {
+			throw new IllegalArgumentException("Insufficient stock for product id: " + productId);
+		}
+		product.setStockQuantity(product.getStockQuantity() - quantity);
+		productRepository.save(product);
+	}
+
+	@Transactional
+	public void increaseStock(Long productId, int quantity) throws IllegalArgumentException {
+		Product product = getProductById(productId);
+		if (product == null) {
+			throw new IllegalArgumentException("Product not found with id: " + productId);
+		}
+		if (quantity <= 0) {
+			throw new IllegalArgumentException("Quantity must be greater than zero");
+		}
+		product.setStockQuantity(product.getStockQuantity() + quantity);
+		productRepository.save(product);
+	}
+
 	public boolean existsProductById(Long id) {
 		return productRepository.existsById(id);
 	}
@@ -103,6 +132,7 @@ public class ProductService {
 		return productRepository.findBySlug(slug).isPresent();
 	}
 
+	@Transactional
 	public Product deleteProduct(Long id) {
 		Product product = productRepository.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + id));
