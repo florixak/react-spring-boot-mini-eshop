@@ -1,5 +1,7 @@
-package me.ptakondrej.minieshop.category;
+package me.ptakondrej.minieshop.controllers;
 
+import me.ptakondrej.minieshop.category.Category;
+import me.ptakondrej.minieshop.category.CategoryMapper;
 import me.ptakondrej.minieshop.models.CategoryDTO;
 import me.ptakondrej.minieshop.requests.CategoryRequest;
 import me.ptakondrej.minieshop.responses.Response;

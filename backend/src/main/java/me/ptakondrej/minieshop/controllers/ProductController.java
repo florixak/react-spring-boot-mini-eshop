@@ -1,7 +1,9 @@
-package me.ptakondrej.minieshop.product;
+package me.ptakondrej.minieshop.controllers;
 
 import me.ptakondrej.minieshop.models.ProductDTO;
 import me.ptakondrej.minieshop.models.ProductListDataDTO;
+import me.ptakondrej.minieshop.product.Product;
+import me.ptakondrej.minieshop.product.ProductMapper;
 import me.ptakondrej.minieshop.requests.ProductRequest;
 import me.ptakondrej.minieshop.requests.ProductsRequest;
 import me.ptakondrej.minieshop.responses.Response;

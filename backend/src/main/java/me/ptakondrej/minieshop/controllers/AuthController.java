@@ -1,5 +1,6 @@
-package me.ptakondrej.minieshop.auth;
+package me.ptakondrej.minieshop.controllers;
 
+import me.ptakondrej.minieshop.auth.RefreshToken;
 import me.ptakondrej.minieshop.models.LoginDataDTO;
 import me.ptakondrej.minieshop.models.LoginUserDTO;
 import me.ptakondrej.minieshop.models.RegisterUserDTO;

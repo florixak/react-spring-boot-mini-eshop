@@ -1,4 +1,4 @@
-package me.ptakondrej.minieshop.user;
+package me.ptakondrej.minieshop.controllers;
 
 import me.ptakondrej.minieshop.models.UserDTO;
 import me.ptakondrej.minieshop.requests.EmailRequest;
@@ -6,6 +6,8 @@ import me.ptakondrej.minieshop.requests.PasswordRequest;
 import me.ptakondrej.minieshop.requests.UserEditRequest;
 import me.ptakondrej.minieshop.responses.Response;
 import me.ptakondrej.minieshop.services.UserService;
+import me.ptakondrej.minieshop.user.User;
+import me.ptakondrej.minieshop.user.UserMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

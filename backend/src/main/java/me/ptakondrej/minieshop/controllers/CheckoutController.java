@@ -1,4 +1,4 @@
-package me.ptakondrej.minieshop.checkout;
+package me.ptakondrej.minieshop.controllers;
 
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
