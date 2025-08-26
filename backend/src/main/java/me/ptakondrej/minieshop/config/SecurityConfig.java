@@ -3,7 +3,6 @@ package me.ptakondrej.minieshop.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -30,6 +29,8 @@ public class SecurityConfig {
 						.requestMatchers("/api/categories").permitAll()
 						.requestMatchers("/api/webhooks/**").permitAll()
 						.requestMatchers("/success", "/cancel").permitAll()
+						.requestMatchers("/actuator/health").permitAll()
+						.requestMatchers("/actuator/info").permitAll()
 						.anyRequest().authenticated()
 				)
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
