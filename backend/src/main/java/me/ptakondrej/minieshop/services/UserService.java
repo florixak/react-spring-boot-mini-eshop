@@ -141,4 +141,8 @@ public class UserService {
 		userRepository.save(user);
 	}
 
+	public void pingDatabase() {
+		userRepository.count();
+	}
+
 }
