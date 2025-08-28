@@ -1,33 +1,31 @@
 ### Create a new order
-POST http://localhost:8080/api/orders
+POST http://localhost:8080/api/checkout/create-checkout-session
 Content-Type: application/json
-Authorization: Bearer your-access-token
+Authorization: Bearer token
 
 {
-  "userId": 1,
   "shippingAddress": "123 Main St, Springfield, IL",
   "billingAddress": "456 Elm St, Springfield, IL",
   "paymentMethod": "CREDIT_CARD",
   "orderItems": [
     {
       "productId": 1,
-      "quantity": 2
-    },
-    {
-      "productId": 3,
-      "quantity": 5
+      "quantity": 1
     }
-  ],
-  "totalPrice": 59.99,
-  "status": "PENDING"
+  ]
 }
 
 ### Get all orders
 GET http://localhost:8080/api/orders
 Content-Type: application/json
-Authorization: Bearer your-access-token
+Authorization: Bearer token
 
 ### Get order by ID
-GET http://localhost:8080/api/orders/11
+GET http://localhost:8080/api/orders/1
 Content-Type: application/json
-Authorization: Bearer your-access-token
+Authorization: Bearer token
+
+### Update order status
+PATCH http://localhost:8080/api/orders/1?status=PROCESSING
+Content-Type: application/json
+Authorization: Bearer token

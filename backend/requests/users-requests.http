@@ -1,0 +1,14 @@
+### Get user's profile
+GET http://localhost:8080/api/users/me
+Content-Type: application/json
+Authorization: Bearer token
+
+### Update user's password
+PATCH http://localhost:8080/api/users/me/password
+Content-Type: application/json
+Authorization: Bearer token
+
+{
+  "oldPassword": "password",
+  "newPassword": "newpassword"
+}

@@ -1,13 +1,38 @@
 ### Add product
-
 POST http://localhost:8080/api/products/admin
 Content-Type: application/json
-Authorization: Bearer your-access-token
+Authorization: Bearer token
 
 {
-  "title": "Milk",
-  "description": "This is a new product.",
-  "price": 99.9,
+  "title": "PC Gamer",
+  "description": "High performance gaming PC.",
+  "price": 1999.99,
   "imageUrl": "https://placehold.co/600x400/EEE/31343C",
   "categoryId": 1
 }
+
+### Get all products
+GET http://localhost:8080/api/products?page=0&limit=10&categoryId=1
+Content-Type: application/json
+
+### Get product by ID
+GET http://localhost:8080/api/products/1
+Content-Type: application/json
+
+### Update product
+PUT http://localhost:8080/api/products/admin/1
+Content-Type: application/json
+Authorization: Bearer token
+
+{
+  "title": "Updated Product Title",
+  "description": "Updated description for the product.",
+  "price": 29.99,
+  "imageUrl": "https://placehold.co/600x400/EEE/31343C",
+  "categoryId": 2
+}
+
+### Delete product
+DELETE http://localhost:8080/api/products/admin/1
+Authorization: Bearer token
+

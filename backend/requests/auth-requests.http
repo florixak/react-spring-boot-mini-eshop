@@ -25,5 +25,5 @@ POST http://localhost:8080/api/auth/refresh-token
 Content-Type: application/json
 
 {
-  "refreshToken": "your-refresh-token"
+  "refreshToken": "your_refresh_token_here"
 }

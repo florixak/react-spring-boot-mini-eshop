@@ -7,12 +7,28 @@ Content-Type: application/json
 GET http://localhost:8080/api/categories/1
 
 ### Create Category
-POST http://localhost:8080/api/categories
+POST http://localhost:8080/api/categories/admin
 Content-Type: application/json
-Authorization: Bearer your-access-token
+Authorization: Bearer token
 
 {
-  "title": "New Category 12",
-  "description": "This is a new category.",
+  "title": "Computers",
+  "description": "This is a category about computers.",
+  "imageUrl": "https://placehold.co/600x400/EEE/31343C",
+  "enabled": true
+}
+
+### Update Category
+PUT http://localhost:8080/api/categories/admin/1
+Content-Type: application/json
+Authorization: Bearer token
+
+{
+  "title": "Updated Category Title",
+  "description": "Updated description for the category.",
   "imageUrl": "https://placehold.co/600x400/EEE/31343C"
 }
+
+### Delete Category
+DELETE http://localhost:8080/api/categories/admin/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZW1haWwiOiJmbG9yaXhAbWFpbC5jb20iLCJlbmFibGVkIjp0cnVlLCJ1c2VybmFtZSI6ImZsb3JpeCIsInN1YiI6ImZsb3JpeCIsImlhdCI6MTc1NTg0NjEyMiwiZXhwIjoxNzU1ODQ5NzIyfQ.cOhypx1-GaeIKOX5HBE1mHFOPb5MWzYXKn4MJZb0Ckc
