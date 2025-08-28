@@ -1,35 +1,8 @@
 services:
-
-  postgres:
-    image: postgres:latest
-    container_name: postgres
-    environment:
-      POSTGRES_DB: minieshop
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
+  backend:
+    build: .
+    container_name: backend
     ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - eshop-network
-
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@eshop.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    ports:
-      - "8081:80"
-    depends_on:
-      - postgres
-    networks:
-      - eshop-network
-
-volumes:
-  postgres_data:
-
-networks:
-  eshop-network:
-    driver: bridge
+      - "8080:8080"
+    env_file:
+      - .env
