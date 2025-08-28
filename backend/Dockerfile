@@ -15,6 +15,5 @@ RUN apt-get update && \
     echo "nameserver 1.1.1.1" >> /etc/resolv.conf
 
 COPY --from=build /app/target/*.jar app.jar
-COPY supabase-ca.crt /app/certs/root.crt
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
