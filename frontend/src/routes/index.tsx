@@ -1,13 +1,20 @@
+import CategoryProducts from "@/components/CategoryProducts";
+import Hero from "@/components/Hero";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
   component: Index,
+  validateSearch: (search) => ({
+    category: (search.category as string) ?? "all",
+    filter: (search.filter as string) ?? "no-filter",
+  }),
 });
 
 function Index() {
   return (
-    <div className="p-2">
-      <h3>Welcome Home!</h3>
-    </div>
+    <>
+      <Hero />
+      <CategoryProducts />
+    </>
   );
 }
