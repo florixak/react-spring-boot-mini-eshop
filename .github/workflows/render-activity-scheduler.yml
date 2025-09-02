@@ -1,0 +1,14 @@
+name: Render Activity Scheduler
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+jobs:
+  send-http-request:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send HTTP Request
+        run: curl https://react-spring-boot-mini-eshop.onrender.com/actuator/health
