@@ -3,7 +3,7 @@ import placeholderImg from "../assets/placeholder.svg";
 
 const Hero = () => {
   return (
-    <section className="min-h-screen flex flex-col xl:flex-row gap-8 lg:gap-0 px-6 md:px-16 lg:px-36 py-24 xl:py-0 items-center justify-evenly bg-secondary bg-amber-50">
+    <section className="min-h-screen flex flex-col xl:flex-row gap-8 lg:gap-0 px-6 md:px-16 lg:px-28 py-24 xl:py-0 items-center justify-between bg-secondary bg-amber-50">
       <div>
         <h1 className="text-4xl lg:text-6xl font-bold text-primary font-playfair">
           Minimal Design,
@@ -24,7 +24,7 @@ const Hero = () => {
         </div>
       </div>
 
-      <div className="relative w-full max-w-[500px] flex-shrink-0 rounded-lg overflow-hidden">
+      <div className="relative w-full max-w-[580px] flex-shrink-0 rounded-lg overflow-hidden">
         <img
           src={placeholderImg}
           alt="Hero Image"

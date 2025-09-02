@@ -25,7 +25,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         </span>
         <Button
           variant="default"
-          className="border-primary bg-primary text-primary-foreground w-full rounded-sm"
+          className="border-primary bg-primary text-primary-foreground w-full rounded-sm hover:bg-primary/90"
         >
           <ShoppingCart />
           Add to Cart

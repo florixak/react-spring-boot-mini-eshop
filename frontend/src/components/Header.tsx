@@ -3,6 +3,7 @@ import SearchBar from "./SearchBar";
 import { Heart, Menu, ShoppingCart, User } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
 
 const navLinks = [
   {
@@ -24,6 +25,7 @@ const navLinks = [
 ];
 
 const Header = () => {
+  const cartItems = 3;
   return (
     <header className="fixed flex flex-row items-center justify-between px-6 md:px-16 lg:px-36 py-4 bg-white shadow-sm font-playfair w-full z-50">
       <Link to="/" search={{ category: "all", filter: "no-filter" }}>
@@ -31,16 +33,45 @@ const Header = () => {
       </Link>
       <nav className="hidden lg:flex flex-row gap-10 items-center">
         {navLinks.map((link) => (
-          <Link key={link.title} to={link.href} className="text-primary">
+          <Link
+            key={link.title}
+            to={link.href}
+            className="text-primary hover:text-secondary-200"
+          >
             {link.title}
           </Link>
         ))}
       </nav>
-      <div className="flex flex-row gap-5 md:gap-10 items-center">
+      <div className="flex flex-row gap-2 md:gap-6 items-center">
         <SearchBar className="hidden md:block" />
-        <User className="text-primary size-6 md:size-8" />
-        <Heart className="text-primary size-6 md:size-8" />
-        <ShoppingCart className="text-primary size-6 md:size-8" />
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-primary hover:text-secondary-200"
+        >
+          <User className="h-5 w-5" />
+        </Button>
+
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-primary hover:text-secondary-200"
+        >
+          <Heart className="h-5 w-5" />
+        </Button>
+
+        <Button
+          variant="ghost"
+          size="icon"
+          className="relative text-primary hover:text-secondary-200"
+        >
+          <ShoppingCart className="h-5 w-5" />
+          {cartItems > 0 && (
+            <Badge className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-inter">
+              {cartItems}
+            </Badge>
+          )}
+        </Button>
         <Sheet>
           <SheetTrigger asChild>
             <Button

@@ -14,7 +14,7 @@ const CategoryProducts = () => {
   };
 
   return (
-    <section className="min-h-screen flex items-start flex-col px-4 md:px-20 lg:px-32 gap-8 py-24">
+    <section className="min-h-screen flex items-start flex-col px-4 md:px-20 lg:px-28 gap-8 py-24">
       <div className="flex flex-col md:flex-row items-start md:items-center gap-6 justify-between w-full">
         <h2 className="text-primary font-playfair text-xl font-semibold">
           Shop By Category
