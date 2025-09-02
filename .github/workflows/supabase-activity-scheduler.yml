@@ -11,4 +11,4 @@ jobs:
 
     steps:
       - name: Send HTTP Request
-        run: curl -H "X-SCHEDULER-TOKEN: ${{ secrets.SCHEDULER_TOKEN }}" "https://tvuj-backend.onrender.com/api/supabase-activity-scheduler"
+        run: curl -H "X-SCHEDULER-TOKEN: ${{ secrets.SCHEDULER_TOKEN }}" "https://react-spring-boot-mini-eshop.onrender.com/api/supabase-activity-scheduler"
