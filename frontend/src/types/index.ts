@@ -1,3 +1,5 @@
+import type { PAYMENT_METHODS } from "@/constants";
+
 type Category = {
   id: number;
   title: string;
@@ -29,11 +31,22 @@ type User = {
   role: Role;
 };
 
+type OrderStatus =
+  | "PENDING"
+  | "PAID"
+  | "PROCESSING"
+  | "COMPLETED"
+  | "CANCELLED";
+
 type Order = {
   id: number;
   user: User;
-  items: OrderItem[];
-  total: number;
+  order_items: OrderItem[];
+  total_price: number;
+  created_at: string;
+  updated_at: string;
+  status: OrderStatus;
+  payment_method: (typeof PAYMENT_METHODS)[number];
 };
 
 type OrderItem = {

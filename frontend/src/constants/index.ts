@@ -5,4 +5,11 @@ const PRODUCT_FILTERS = [
   "Best Rating",
 ];
 
-export { PRODUCT_FILTERS };
+const PAYMENT_METHODS = [
+  "CREDIT_CARD",
+  "PAYPAL",
+  "BANK_TRANSFER",
+  "CASH_ON_DELIVERY",
+];
+
+export { PRODUCT_FILTERS, PAYMENT_METHODS };
