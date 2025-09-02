@@ -31,14 +31,20 @@ public class ProductController {
 	}
 
 	@GetMapping
-	public ResponseEntity<Response<ProductListDataDTO>> getAllProducts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestBody ProductsRequest productsRequest) {
+	public ResponseEntity<Response<ProductListDataDTO>> getAllProducts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestBody(required = false) ProductsRequest productsRequest) {
 		try {
-			if (productsRequest == null || page < 0 || size <= 0) {
+			if (page < 0 || size <= 0) {
 				return ResponseEntity.badRequest().body(new Response<ProductListDataDTO>(false, null, "Invalid request parameters"));
 			}
 
 			Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
-			Page<Product> products = productService.getAllProducts(pageable);
+			Page<Product> products;
+			if (productsRequest != null && productsRequest.getCategoryId() != null) {
+				products = productService.getProductsByCategoryId(productsRequest.getCategoryId(), pageable);
+			} else {
+				products = productService.getAllProducts(pageable);
+			}
+
 			List<ProductDTO> productDTOs = products.getContent().stream()
 					.map(ProductMapper::convertToDto)
 					.toList();

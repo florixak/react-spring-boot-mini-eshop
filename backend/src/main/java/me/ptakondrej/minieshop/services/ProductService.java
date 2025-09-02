@@ -28,6 +28,11 @@ public class ProductService {
 		return productRepository.findAll(pageable);
 	}
 
+	@Transactional(readOnly = true)
+	public Page<Product> getProductsByCategoryId(Long categoryId, Pageable pageable) {
+		return productRepository.findAllByCategoryIdAndEnabledTrue(categoryId, pageable);
+	}
+
 	public Product getProductById(Long id) {
 		return productRepository.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + id));

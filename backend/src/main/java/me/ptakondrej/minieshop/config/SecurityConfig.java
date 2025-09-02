@@ -26,11 +26,12 @@ public class SecurityConfig {
 						.requestMatchers("/api/categories/admin", "/api/categories/admin/**").hasRole("ADMIN")
 						.requestMatchers("/api/products").permitAll()
 						.requestMatchers("/api/auth/**").permitAll()
-						.requestMatchers("/api/categories").permitAll()
+						.requestMatchers("/api/categories/**").permitAll()
 						.requestMatchers("/api/webhooks/**").permitAll()
 						.requestMatchers("/success", "/cancel").permitAll()
 						.requestMatchers("/actuator/health").permitAll()
 						.requestMatchers("/actuator/info").permitAll()
+						.requestMatchers("/api/supabase-activity-scheduler").permitAll()
 						.anyRequest().authenticated()
 				)
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -47,7 +48,7 @@ public class SecurityConfig {
 				"http://localhost:8080",
 				"http://localhost:5173"
 		));
-		config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Stripe-Signature"));
+		config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Stripe-Signature", "X-SCHEDULER-TOKEN"));
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

@@ -12,6 +12,5 @@ import lombok.Setter;
 public class CategoryRequest {
 	private String title;
 	private String description;
-	private String imageUrl;
 	private Boolean enabled;
 }
