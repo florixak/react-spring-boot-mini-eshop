@@ -1,0 +1,14 @@
+name: Supabase Activity Scheduler
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"  # every 15 minutes
+  workflow_dispatch:
+
+jobs:
+  send-http-request:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send HTTP Request
+        run: curl -H "X-SCHEDULER-TOKEN: ${{ secrets.SCHEDULER_TOKEN }}" "https://tvuj-backend.onrender.com/api/supabase-activity-scheduler"
