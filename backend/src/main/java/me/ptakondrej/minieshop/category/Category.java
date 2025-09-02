@@ -24,8 +24,6 @@ public class Category {
 	private String slug;
 	@Column(nullable = false, length = 500)
 	private String description;
-	@Column(name = "image_url", nullable = false)
-	private String imageUrl;
 	@Column(nullable = false, columnDefinition = "boolean default true")
 	private Boolean enabled = true;
 	@CreationTimestamp

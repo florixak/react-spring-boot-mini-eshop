@@ -12,7 +12,6 @@ public class CategoryDTO {
 	private Long id;
 	private String title;
 	private String description;
-	private String imageUrl;
 	private String slug;
 	private Boolean enabled;
 }

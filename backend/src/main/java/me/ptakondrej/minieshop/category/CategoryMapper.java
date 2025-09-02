@@ -10,8 +10,7 @@ public class CategoryMapper {
 				.title(category.getTitle())
 				.slug(category.getSlug())
 				.description(category.getDescription())
-				.imageUrl(category.getImageUrl())
-				.enabled(category.getDeleted())
+				.enabled(category.getEnabled())
 				.build();
 	}
 
@@ -21,7 +20,6 @@ public class CategoryMapper {
 				.title(categoryDTO.getTitle())
 				.slug(categoryDTO.getSlug())
 				.description(categoryDTO.getDescription())
-				.imageUrl(categoryDTO.getImageUrl())
 				.enabled(categoryDTO.getEnabled())
 				.build();
 	}

@@ -11,8 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 public class ProductListDataDTO {
 	private List<ProductDTO> products;
-	private int page;
-	private int size;
-	private long totalElements;
-	private int totalPages;
+	private Integer page;
+	private Integer size;
+	private Long totalItems;
+	private Integer totalPages;
 }

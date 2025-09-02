@@ -44,7 +44,6 @@ public class CategoryService {
 				.title(request.getTitle())
 				.slug(generateSlug(request.getTitle()))
 				.description(request.getDescription())
-				.imageUrl(request.getImageUrl())
 				.enabled(true)
 				.deleted(false)
 				.build();
@@ -68,7 +67,7 @@ public class CategoryService {
 		existingCategory.setTitle(request.getTitle());
 		existingCategory.setSlug(generateSlug(request.getTitle()));
 		existingCategory.setDescription(request.getDescription());
-		existingCategory.setImageUrl(request.getImageUrl());
+		existingCategory.setEnabled(request.getEnabled() != null ? request.getEnabled() : existingCategory.getEnabled());
 
 		return categoryRepository.save(existingCategory);
 	}
@@ -100,8 +99,7 @@ public class CategoryService {
 	private boolean validateCategoryRequest (CategoryRequest request){
 		return request != null
 				&& request.getTitle() != null && !request.getTitle().isEmpty()
-				&& request.getDescription() != null && !request.getDescription().isEmpty()
-				&& request.getImageUrl() != null && !request.getImageUrl().isEmpty();
+				&& request.getDescription() != null && !request.getDescription().isEmpty();
 	}
 
 }
