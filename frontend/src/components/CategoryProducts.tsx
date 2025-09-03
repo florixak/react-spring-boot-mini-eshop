@@ -1,29 +1,37 @@
-import Filter from "./Filter";
+import SortFilter from "./SortFilter";
 import { Route } from "@/routes/index";
 import Categories from "./Categories";
-import { slugify } from "@/lib/utils";
 import Products from "./Products";
 import { Separator } from "./ui/separator";
+import type { View } from "@/types";
+import ViewMode from "./ViewMode";
 
-const CategoryProducts = () => {
+type CategoryProductsProps = {
+  title?: string;
+};
+
+const CategoryProducts = ({ title }: CategoryProductsProps) => {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
 
-  const handleCategoryChange = (filterValue: string) => {
-    navigate({ search: { ...search, filter: slugify(filterValue) } });
+  const handleViewChange = (viewValue: View) => {
+    navigate({ search: { ...search, view: viewValue } });
   };
 
   return (
     <section className="min-h-screen flex items-start flex-col px-4 md:px-20 lg:px-28 gap-8 py-24">
-      <div className="flex flex-col md:flex-row items-start md:items-center gap-6 justify-between w-full">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between w-full">
         <h2 className="text-primary font-playfair text-xl font-semibold">
-          Shop By Category
+          {title}
         </h2>
-        <Filter onCategoryChange={handleCategoryChange} />
+        <div className="flex items-center space-x-4">
+          <SortFilter search={search} navigate={navigate} />
+          <ViewMode viewMode={search.view} onViewChange={handleViewChange} />
+        </div>
       </div>
-      <Categories />
+      <Categories search={search} navigate={navigate} />
       <Separator className="bg-secondary-100" />
-      <Products />
+      <Products search={search} viewMode={search.view} />
     </section>
   );
 };

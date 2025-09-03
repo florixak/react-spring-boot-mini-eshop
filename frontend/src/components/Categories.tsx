@@ -3,10 +3,12 @@ import { Route } from "@/routes";
 import Button from "./Button";
 import { categories } from "@/dummyData";
 
-const Categories = () => {
-  const search = Route.useSearch();
-  const navigate = Route.useNavigate();
+type CategoryProductsProps = {
+  search: ReturnType<typeof Route.useSearch>;
+  navigate: ReturnType<typeof Route.useNavigate>;
+};
 
+const Categories = ({ search, navigate }: CategoryProductsProps) => {
   return (
     <div className="flex flex-wrap items-center gap-4">
       <Button
