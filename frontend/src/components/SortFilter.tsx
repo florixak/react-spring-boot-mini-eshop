@@ -6,26 +6,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { slugify } from "@/lib/utils";
 import { Route } from "@/routes";
 import { PRODUCT_FILTERS } from "@/constants";
 
-type FilterProps = {
-  onCategoryChange: (category: string) => void;
+type SortFilterProps = {
+  search: ReturnType<typeof Route.useSearch>;
+  navigate: ReturnType<typeof Route.useNavigate>;
 };
 
-const Filter = ({ onCategoryChange }: FilterProps) => {
-  const search = Route.useSearch();
-  const handleCategoryChange = (category: string) => {
-    onCategoryChange(category);
+const SortFilter = ({ search, navigate }: SortFilterProps) => {
+  const handleCategoryChange = (
+    value: (typeof PRODUCT_FILTERS)[number]["value"]
+  ) => {
+    navigate({ search: { ...search, sortBy: value } });
   };
 
   return (
     <Select
       onValueChange={handleCategoryChange}
       defaultValue={
-        PRODUCT_FILTERS.find((filter) => slugify(filter) === search.filter) ||
-        "no-filter"
+        PRODUCT_FILTERS.find((filter) => filter.value === search.sortBy)
+          ?.value || "no-filter"
       }
     >
       <SelectTrigger className="max-w-[200px] border-1">
@@ -41,8 +42,8 @@ const Filter = ({ onCategoryChange }: FilterProps) => {
           <>
             <SelectItem value="no-filter">No Filter</SelectItem>
             {PRODUCT_FILTERS.map((item) => (
-              <SelectItem key={item} value={item}>
-                {item}
+              <SelectItem key={item.value} value={item.value}>
+                {item.label}
               </SelectItem>
             ))}
           </>
@@ -52,4 +53,4 @@ const Filter = ({ onCategoryChange }: FilterProps) => {
   );
 };
 
-export default Filter;
+export default SortFilter;
