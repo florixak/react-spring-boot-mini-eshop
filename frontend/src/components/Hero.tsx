@@ -1,5 +1,5 @@
 import { Button } from "./ui/button";
-import placeholderImg from "../assets/placeholder.svg";
+import LandingImage from "../assets/landing-image4.jpg";
 
 const Hero = () => {
   return (
@@ -24,11 +24,11 @@ const Hero = () => {
         </div>
       </div>
 
-      <div className="relative w-full max-w-[580px] flex-shrink-0 rounded-lg overflow-hidden">
+      <div className="relative w-full max-w-[580px] max-h-[580px] flex-shrink-0 rounded-lg overflow-hidden shadow-lg">
         <img
-          src={placeholderImg}
+          src={LandingImage}
           alt="Hero Image"
-          className="w-full h-auto object-cover"
+          className="w-full h-full object-cover object-center"
         />
       </div>
     </section>
