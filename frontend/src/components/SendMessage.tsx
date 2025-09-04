@@ -14,7 +14,7 @@ const SendMessage = () => {
       id="contact"
     >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full max-w-4xl h-auto">
-        <Card className="p-4">
+        <Card className="p-2">
           <CardHeader className="text-left p-2">
             <h3 className="text-2xl font-semibold text-primary">
               Contact Form
@@ -25,7 +25,7 @@ const SendMessage = () => {
           </CardHeader>
           <ContactForm />
         </Card>
-        <Card className="p-4">
+        <Card className="p-2">
           <CardHeader className="text-left p-2">
             <h3 className="text-2xl font-semibold text-primary">
               Need Immediate Help?
@@ -56,7 +56,7 @@ const SendMessage = () => {
             </Button>
           </CardContent>
         </Card>
-        <Card className="p-4 row-span-1 md:col-span-2">
+        <Card className="p-2 row-span-1 md:col-span-2">
           <CardHeader className="text-left p-2">
             <h3 className="text-2xl font-semibold text-primary flex items-center">
               <CircleQuestionMark className="inline-block mr-2" />

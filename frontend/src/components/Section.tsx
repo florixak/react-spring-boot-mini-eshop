@@ -21,7 +21,7 @@ const Section = ({
     <section
       id={id}
       className={cn(
-        `flex flex-col items-center justify-center text-center py-24 px-6 md:px-16 lg:px-28 font-playfair space-y-6 ${bgClassName}`,
+        `flex flex-col items-center justify-center text-center py-24 px-4 md:px-16 lg:px-28 font-playfair space-y-6 ${bgClassName}`,
         className
       )}
     >
