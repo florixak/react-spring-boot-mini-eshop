@@ -3,12 +3,38 @@ import AboutImage from "@/assets/landing-image2.jpg";
 import { createFileRoute } from "@tanstack/react-router";
 import Statistics from "@/components/Statistics";
 import OurMission from "@/components/OurMission";
+import OurValues from "@/components/OurValues";
+import OurTeam from "@/components/OurTeam";
+import Testimonials from "@/components/Testimonials";
+import GetInTouch from "@/components/GetInTouch";
+import AboutEnd from "@/components/AboutEnd";
 
 export const Route = createFileRoute("/about/")({
   component: About,
 });
 
 function About() {
+  const navigate = Route.useNavigate();
+  const handleNavigateToShop = () => {
+    navigate({
+      to: "/shop",
+      search: {
+        category: "all",
+        sortBy: "no-filter",
+        view: "grid",
+        query: "",
+        rating: "any-rating",
+        price: "0-1000",
+        stock: "in-stock",
+      },
+    });
+  };
+  const handleScrollToTeam = () => {
+    const teamSection = document.getElementById("team");
+    if (teamSection) {
+      teamSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   return (
     <>
       <Hero
@@ -17,16 +43,21 @@ function About() {
         description="Founded in 2009, Minimal began with a simple belief: that beautiful, functional design should be accessible to everyone. We curate timeless pieces that transform houses into homes."
         primaryButton={{
           text: "Shop Our Story",
-          onClick: () => {},
+          onClick: handleNavigateToShop,
         }}
         secondaryButton={{
-          text: "Learn More",
-          onClick: () => {},
+          text: "Meet Our Team",
+          onClick: handleScrollToTeam,
         }}
         image={AboutImage}
       />
       <Statistics />
       <OurMission />
+      <OurValues />
+      <OurTeam />
+      <Testimonials />
+      <GetInTouch />
+      <AboutEnd />
     </>
   );
 }
