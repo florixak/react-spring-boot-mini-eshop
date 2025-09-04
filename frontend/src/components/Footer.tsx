@@ -1,3 +1,5 @@
+import { Separator } from "./ui/separator";
+
 const FOOTER_SECTIONS = [
   {
     title: "Minimal",
@@ -22,6 +24,7 @@ const FOOTER_SECTIONS = [
 const Footer = () => {
   return (
     <div className="pt-24 pb-12 text-center font-playfair px-8 md:px-16 lg:px-36 space-y-12">
+      <Separator orientation="horizontal" className="bg-secondary-100" />
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         {FOOTER_SECTIONS.map((section, index) => (
           <div key={index} className="text-start space-y-4">
