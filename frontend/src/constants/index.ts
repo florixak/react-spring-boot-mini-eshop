@@ -1,11 +1,14 @@
 import {
+  CheckCircle,
   Clock,
+  CreditCard,
   Leaf,
   Mail,
   MapPin,
   Medal,
   Phone,
   Shield,
+  Truck,
   Users,
 } from "lucide-react";
 import PlaceholderImage from "@/assets/placeholder.svg";
@@ -205,6 +208,12 @@ const CONTACT_CATEGORIES = [
 
 const PRODUCT_RATINGS = ["Any Rating", "4+ Stars", "4,5+ Stars"];
 
+const CHECKOUT_STEPS = [
+  { number: 1, title: "Shipping", icon: Truck },
+  { number: 2, title: "Payment", icon: CreditCard },
+  { number: 3, title: "Confirmation", icon: CheckCircle },
+];
+
 export {
   PRODUCT_FILTERS,
   PAYMENT_METHODS,
@@ -216,4 +225,5 @@ export {
   CONTACT_INFO,
   FAQ_ITEMS,
   CONTACT_CATEGORIES,
+  CHECKOUT_STEPS,
 };

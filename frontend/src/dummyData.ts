@@ -25,7 +25,7 @@ export const categories: Category[] = [
   },
 ];
 
-const dummyProducts: Product[] = [
+export const dummyProducts: Product[] = [
   {
     id: 1,
     title: "Wireless Headphones",
