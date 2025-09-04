@@ -1,10 +1,10 @@
 import { Mail, Phone, MapPin } from "lucide-react";
-import AboutSection from "./AboutSection";
+import Section from "./Section";
 import { Card, CardContent } from "./ui/card";
 
 const GetInTouch = () => {
   return (
-    <AboutSection
+    <Section
       title="Get in Touch"
       description="Have questions about our products or need design advice? We'd love to hear from you."
       bgClassName="bg-secondary-50"
@@ -41,7 +41,7 @@ const GetInTouch = () => {
           </CardContent>
         </Card>
       </div>
-    </AboutSection>
+    </Section>
   );
 };
 

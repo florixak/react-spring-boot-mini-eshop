@@ -1,5 +1,5 @@
 import { Route } from "@/routes/about";
-import AboutSection from "./AboutSection";
+import Section from "./Section";
 import { Button } from "./ui/button";
 
 const AboutEnd = () => {
@@ -26,7 +26,7 @@ const AboutEnd = () => {
   };
 
   return (
-    <AboutSection
+    <Section
       title="Ready to Transform Your Space?"
       description="Discover our curated collection of minimalist home essentials and start creating your perfect space today."
     >
@@ -46,7 +46,7 @@ const AboutEnd = () => {
           Design Consultation
         </Button>
       </div>
-    </AboutSection>
+    </Section>
   );
 };
 

@@ -1,10 +1,10 @@
-import AboutSection from "./AboutSection";
+import Section from "./Section";
 import { TEAM } from "@/constants";
 import { Card, CardContent } from "./ui/card";
 
 const OurTeam = () => {
   return (
-    <AboutSection
+    <Section
       title="Meet Our Team"
       description="The passionate people behind Minimal, dedicated to bringing you exceptional design and service."
       bgClassName="bg-secondary-50"
@@ -37,7 +37,7 @@ const OurTeam = () => {
           </Card>
         ))}
       </div>
-    </AboutSection>
+    </Section>
   );
 };
 

@@ -1,22 +1,29 @@
-type AboutSectionProps = {
+import { cn } from "@/lib/utils";
+
+type Section = {
   title: string;
   description: string;
   bgClassName?: string;
   children: React.ReactNode;
   id?: string;
+  className?: string;
 };
 
-const AboutSection = ({
+const Section = ({
   title,
   description,
   bgClassName,
+  className,
   children,
   id,
-}: AboutSectionProps) => {
+}: Section) => {
   return (
     <section
       id={id}
-      className={`flex flex-col items-center justify-center text-center py-24 px-6 md:px-16 lg:px-28 font-playfair space-y-6 ${bgClassName}`}
+      className={cn(
+        `flex flex-col items-center justify-center text-center py-24 px-6 md:px-16 lg:px-28 font-playfair space-y-6 ${bgClassName}`,
+        className
+      )}
     >
       <h2 className="text-3xl font-bold text-primary">{title}</h2>
       <p className="max-w-3xl mx-auto text-secondary-200 text-lg">
@@ -27,4 +34,4 @@ const AboutSection = ({
   );
 };
 
-export default AboutSection;
+export default Section;

@@ -1,10 +1,10 @@
 import { VALUES } from "@/constants";
 import { Card, CardContent } from "./ui/card";
-import AboutSection from "./AboutSection";
+import Section from "./Section";
 
 const OurValues = () => {
   return (
-    <AboutSection
+    <Section
       title="Our Values"
       description="These principles guide everything we do, from product selection to customer service."
     >
@@ -28,7 +28,7 @@ const OurValues = () => {
           </Card>
         ))}
       </div>
-    </AboutSection>
+    </Section>
   );
 };
 

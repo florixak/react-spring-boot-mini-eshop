@@ -1,11 +1,11 @@
 import { TESTIMONIALS } from "@/constants";
-import AboutSection from "./AboutSection";
+import Section from "./Section";
 import { Card, CardContent } from "./ui/card";
 import { Star } from "lucide-react";
 
 const Testimonials = () => {
   return (
-    <AboutSection
+    <Section
       title="What Our Customers Say"
       description="Don't just take our word for it. Here's what our community has to say about their Minimal experience."
     >
@@ -34,7 +34,7 @@ const Testimonials = () => {
           </Card>
         ))}
       </div>
-    </AboutSection>
+    </Section>
   );
 };
 

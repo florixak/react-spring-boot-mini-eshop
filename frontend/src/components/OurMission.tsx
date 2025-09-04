@@ -1,9 +1,9 @@
 import { Quote } from "lucide-react";
-import AboutSection from "./AboutSection";
+import Section from "./Section";
 
 const OurMission = () => {
   return (
-    <AboutSection
+    <Section
       title="Our Mission"
       description="To make beautiful, sustainable, and functional design accessible to
         everyone. We believe that your home should be a reflection of your
@@ -20,7 +20,7 @@ const OurMission = () => {
           - Sarah Chen, Founder
         </cite>
       </div>
-    </AboutSection>
+    </Section>
   );
 };
 
