@@ -1,16 +1,23 @@
+import AccountContent from "@/components/AccountContent";
+import AccountHeader from "@/components/AccountHeader";
 import { createFileRoute } from "@tanstack/react-router";
 
 type AccountSearch = {
-  section: "general" | "orders" | "wishlist" | "settings";
+  section: "profile" | "orders" | "wishlist" | "settings";
 };
 
 export const Route = createFileRoute("/account/")({
   component: RouteComponent,
   validateSearch: (search): AccountSearch => ({
-    section: (search.section as AccountSearch["section"]) ?? "general",
+    section: (search.section as AccountSearch["section"]) ?? "profile",
   }),
 });
 
 function RouteComponent() {
-  return <div>Hello "/account/"!</div>;
+  return (
+    <>
+      <AccountHeader />
+      <AccountContent />
+    </>
+  );
 }

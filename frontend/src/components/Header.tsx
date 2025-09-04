@@ -49,7 +49,7 @@ const Header = () => {
         ))}
       </nav>
       <div className="flex flex-row gap-2 md:gap-6 items-center">
-        <Link to="/account" search={{ section: "general" }}>
+        <Link to="/account" search={{ section: "profile" }}>
           <Button
             variant="ghost"
             size="icon"
@@ -69,18 +69,20 @@ const Header = () => {
           </Button>
         </Link>
 
-        <Button
-          variant="ghost"
-          size="icon"
-          className="relative text-primary hover:text-secondary-200"
-        >
-          <ShoppingCart className="h-5 w-5" />
-          {cartItems > 0 && (
-            <Badge className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-inter">
-              {cartItems}
-            </Badge>
-          )}
-        </Button>
+        <Link to="/cart">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative text-primary hover:text-secondary-200"
+          >
+            <ShoppingCart className="h-5 w-5" />
+            {cartItems > 0 && (
+              <Badge className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-inter">
+                {cartItems}
+              </Badge>
+            )}
+          </Button>
+        </Link>
 
         <Sheet>
           <SheetTrigger asChild>
