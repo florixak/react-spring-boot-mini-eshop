@@ -25,6 +25,7 @@ const navLinks = [
 
 const Header = () => {
   const cartItems = 3;
+
   return (
     <header className="fixed flex flex-row items-center justify-between px-6 md:px-16 lg:px-36 py-4 bg-white shadow-sm font-playfair w-full z-50">
       <Link
@@ -48,21 +49,25 @@ const Header = () => {
         ))}
       </nav>
       <div className="flex flex-row gap-2 md:gap-6 items-center">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="text-primary hover:text-secondary-200"
-        >
-          <User className="h-5 w-5" />
-        </Button>
+        <Link to="/account" search={{ section: "general" }}>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-primary hover:text-secondary-200"
+          >
+            <User className="h-5 w-5" />
+          </Button>
+        </Link>
 
-        <Button
-          variant="ghost"
-          size="icon"
-          className="text-primary hover:text-secondary-200"
-        >
-          <Heart className="h-5 w-5" />
-        </Button>
+        <Link to="/account" search={{ section: "wishlist" }}>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-primary hover:text-secondary-200"
+          >
+            <Heart className="h-5 w-5" />
+          </Button>
+        </Link>
 
         <Button
           variant="ghost"
@@ -76,6 +81,7 @@ const Header = () => {
             </Badge>
           )}
         </Button>
+
         <Sheet>
           <SheetTrigger asChild>
             <Button
