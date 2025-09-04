@@ -40,7 +40,7 @@ function Shop() {
         title="Shop All Products"
         description="Discover our complete collection of minimalist home essentials, carefully curated for modern living."
       />
-      <section className="flex flex-col lg:flex-row gap-8 px-6 md:px-16 lg:px-28 py-12">
+      <section className="flex flex-col lg:flex-row gap-8 px-6 md:px-16 py-12">
         <FilterSidebar search={search} navigate={navigate} />
         <div className="flex-1">
           <Products
