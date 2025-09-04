@@ -1,4 +1,13 @@
-import { Leaf, Medal, Shield, Users } from "lucide-react";
+import {
+  Clock,
+  Leaf,
+  Mail,
+  MapPin,
+  Medal,
+  Phone,
+  Shield,
+  Users,
+} from "lucide-react";
 import PlaceholderImage from "@/assets/placeholder.svg";
 
 type ProductFilter = {
@@ -134,6 +143,66 @@ const TESTIMONIALS = [
   },
 ];
 
+const CONTACT_INFO = [
+  {
+    icon: MapPin,
+    title: "Visit Our Store",
+    details: ["123 Design Street", "Minimalist District", "New York, NY 10001"],
+    extra: "Open 7 days a week",
+  },
+  {
+    icon: Phone,
+    title: "Call Us",
+    details: ["+1 (555) 123-4567", "Toll-free: 1-800-MINIMAL"],
+    extra: "Mon-Fri: 9AM-8PM EST",
+  },
+  {
+    icon: Mail,
+    title: "Email Us",
+    details: ["hello@minimalshop.com", "support@minimalshop.com"],
+    extra: "We reply within 24 hours",
+  },
+  {
+    icon: Clock,
+    title: "Business Hours",
+    details: ["Mon-Fri: 9:00 AM - 8:00 PM", "Sat-Sun: 10:00 AM - 6:00 PM"],
+    extra: "EST (Eastern Standard Time)",
+  },
+];
+
+const FAQ_ITEMS = [
+  {
+    question: "What is your return policy?",
+    answer:
+      "We offer a 30-day return policy for all items in original condition. Free returns on orders over $100.",
+  },
+  {
+    question: "How long does shipping take?",
+    answer:
+      "Standard shipping takes 3-5 business days. Express shipping (1-2 days) and overnight options available.",
+  },
+  {
+    question: "Do you offer international shipping?",
+    answer:
+      "Yes, we ship worldwide. International shipping typically takes 7-14 business days depending on location.",
+  },
+  {
+    question: "Can I track my order?",
+    answer:
+      "You'll receive a tracking number via email once your order ships. You can also track orders in your account.",
+  },
+];
+
+const CONTACT_CATEGORIES = [
+  { value: "general", label: "General Inquiry" },
+  { value: "order", label: "Order Support" },
+  { value: "product", label: "Product Question" },
+  { value: "shipping", label: "Shipping & Returns" },
+  { value: "technical", label: "Technical Support" },
+  { value: "partnership", label: "Partnerships" },
+  { value: "feedback", label: "Feedback & Suggestions" },
+];
+
 const PRODUCT_RATINGS = ["Any Rating", "4+ Stars", "4,5+ Stars"];
 
 export {
@@ -144,4 +213,7 @@ export {
   VALUES,
   TEAM,
   TESTIMONIALS,
+  CONTACT_INFO,
+  FAQ_ITEMS,
+  CONTACT_CATEGORIES,
 };
