@@ -1,4 +1,4 @@
-import type { Product, Category } from "@/types";
+import type { Product, Category, OrderItem } from "@/types";
 import type { PRODUCT_FILTERS } from "./constants";
 
 export const categories: Category[] = [
@@ -150,6 +150,21 @@ export const getProducts = async (
 
       resolve(filtered);
     }, 500);
+  });
+};
+
+export const getCartProducts = async (productIds: number[]) => {
+  return new Promise<OrderItem[]>((resolve) => {
+    setTimeout(() => {
+      const products: OrderItem[] = dummyProducts
+        .filter((product) => productIds.includes(product.id))
+        .map((product) => ({
+          id: product.id,
+          product,
+          quantity: 1,
+        }));
+      resolve(products);
+    }, 300);
   });
 };
 
