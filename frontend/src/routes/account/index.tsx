@@ -7,13 +7,13 @@ type AccountSearch = {
 };
 
 export const Route = createFileRoute("/account/")({
-  component: RouteComponent,
+  component: Account,
   validateSearch: (search): AccountSearch => ({
     section: (search.section as AccountSearch["section"]) ?? "profile",
   }),
 });
 
-function RouteComponent() {
+function Account() {
   return (
     <>
       <AccountHeader />

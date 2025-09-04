@@ -3,10 +3,10 @@ import CartHeader from "@/components/CartHeader";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/cart/")({
-  component: RouteComponent,
+  component: Cart,
 });
 
-function RouteComponent() {
+function Cart() {
   return (
     <>
       <CartHeader />
