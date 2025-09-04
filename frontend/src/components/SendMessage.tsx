@@ -14,7 +14,7 @@ const SendMessage = () => {
       id="contact"
     >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full max-w-4xl h-auto">
-        <Card className="row-span-2 p-4">
+        <Card className="p-4">
           <CardHeader className="text-left p-2">
             <h3 className="text-2xl font-semibold text-primary">
               Contact Form
@@ -24,18 +24,6 @@ const SendMessage = () => {
             </p>
           </CardHeader>
           <ContactForm />
-        </Card>
-        <Card className="p-4">
-          <CardHeader className="text-left p-2">
-            <h3 className="text-2xl font-semibold text-primary flex items-center">
-              <CircleQuestionMark className="inline-block mr-2" />
-              Frequently Asked Questions
-            </h3>
-            <p className="text-secondary-200 mt-1">
-              Quick answers to common questions
-            </p>
-          </CardHeader>
-          <Faq />
         </Card>
         <Card className="p-4">
           <CardHeader className="text-left p-2">
@@ -67,6 +55,18 @@ const SendMessage = () => {
               Live Chat (9AM-8PM EST)
             </Button>
           </CardContent>
+        </Card>
+        <Card className="p-4 row-span-1 md:col-span-2">
+          <CardHeader className="text-left p-2">
+            <h3 className="text-2xl font-semibold text-primary flex items-center">
+              <CircleQuestionMark className="inline-block mr-2" />
+              Frequently Asked Questions
+            </h3>
+            <p className="text-secondary-200 mt-1">
+              Quick answers to common questions
+            </p>
+          </CardHeader>
+          <Faq />
         </Card>
       </div>
     </Section>
