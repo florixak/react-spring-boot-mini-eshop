@@ -55,6 +55,11 @@ type OrderItem = {
   quantity: number;
 };
 
+type CartItem = {
+  product: Product;
+  quantity: number;
+};
+
 type View = "grid" | "list";
 
-export type { Product, Category, User, Order, OrderItem, View };
+export type { Product, Category, User, Order, OrderItem, CartItem, View };
