@@ -1,13 +1,18 @@
 import type { View } from "@/types";
 import { Button } from "./ui/button";
 import { Grid3X3, List } from "lucide-react";
+import type { Route } from "@/routes";
 
 type ViewModeProps = {
   viewMode: View;
-  onViewChange: (view: View) => void;
+  navigate: ReturnType<typeof Route.useNavigate>;
+  search: ReturnType<typeof Route.useSearch>;
 };
 
-const ViewMode = ({ viewMode, onViewChange }: ViewModeProps) => {
+const ViewMode = ({ viewMode, navigate, search }: ViewModeProps) => {
+  const handleViewChange = (viewValue: View) => {
+    navigate({ search: { ...search, view: viewValue }, resetScroll: false });
+  };
   return (
     <div className="flex border rounded-md">
       <Button
@@ -16,7 +21,7 @@ const ViewMode = ({ viewMode, onViewChange }: ViewModeProps) => {
         className={`rounded-r-none ${
           viewMode === "grid" ? "bg-amber-900 text-white" : "text-amber-900"
         }`}
-        onClick={() => onViewChange("grid")}
+        onClick={() => handleViewChange("grid")}
       >
         <Grid3X3 className="h-4 w-4" />
       </Button>
@@ -26,7 +31,7 @@ const ViewMode = ({ viewMode, onViewChange }: ViewModeProps) => {
         className={`rounded-l-none ${
           viewMode === "list" ? "bg-amber-900 text-white" : "text-amber-900"
         }`}
-        onClick={() => onViewChange("list")}
+        onClick={() => handleViewChange("list")}
       >
         <List className="h-4 w-4" />
       </Button>

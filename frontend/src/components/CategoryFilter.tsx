@@ -15,7 +15,7 @@ type CategoryFilterProps = {
 
 const CategoryFilter = ({ search, navigate }: CategoryFilterProps) => {
   const handleCategoryChange = (value: string) => {
-    navigate({ search: { ...search, category: value } });
+    navigate({ search: { ...search, category: value }, resetScroll: false });
   };
 
   return (

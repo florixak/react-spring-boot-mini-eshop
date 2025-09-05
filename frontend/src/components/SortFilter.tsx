@@ -18,7 +18,7 @@ const SortFilter = ({ search, navigate }: SortFilterProps) => {
   const handleCategoryChange = (
     value: (typeof PRODUCT_FILTERS)[number]["value"]
   ) => {
-    navigate({ search: { ...search, sortBy: value } });
+    navigate({ search: { ...search, sortBy: value }, resetScroll: false });
   };
 
   return (

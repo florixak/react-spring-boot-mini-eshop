@@ -15,7 +15,7 @@ const SearchBar = ({ className, search, navigate }: SearchBarProps) => {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      navigate({ search: { ...search, query } });
+      navigate({ search: { ...search, query }, resetScroll: false });
     }, 300);
 
     return () => clearTimeout(timeoutId);

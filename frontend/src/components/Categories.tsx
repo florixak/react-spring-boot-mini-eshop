@@ -13,7 +13,10 @@ const Categories = ({ search, navigate }: CategoryProductsProps) => {
     <div className="flex flex-wrap items-center gap-4">
       <Button
         onClick={() =>
-          navigate({ search: { ...search, category: slugify("all") } })
+          navigate({
+            search: { ...search, category: slugify("all") },
+            resetScroll: false,
+          })
         }
         isActive={search.category === "all"}
       >
@@ -26,6 +29,7 @@ const Categories = ({ search, navigate }: CategoryProductsProps) => {
           onClick={() => {
             navigate({
               search: { ...search, category: slugify(cat.title) },
+              resetScroll: false,
             });
           }}
         >
