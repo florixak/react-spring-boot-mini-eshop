@@ -2,15 +2,18 @@ import { Link } from "@tanstack/react-router";
 import { Lock, RotateCcw, ShoppingBag, Truck } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader } from "./ui/card";
-import CartItem from "./CartItem";
-import { Separator } from "./ui/separator";
-import { Input } from "./ui/input";
 import type { OrderItem } from "@/types";
 import { useEffect, useState } from "react";
 import { getCartProducts } from "@/dummyData";
+import { formatPrice } from "@/lib/utils";
+import { useOrderCalculations } from "@/hooks/useOrderCalculations";
+import CartItem from "./CartItem";
+import OrderSummary from "./OrderSummary";
+import { FREE_SHIPPING_THRESHOLD } from "@/constants";
 
 const CartContent = () => {
   const [cartItems, setCartItems] = useState<OrderItem[]>([]);
+  const { shipping } = useOrderCalculations(cartItems, 0);
 
   useEffect(() => {
     const fetchCartItems = async () => {
@@ -52,14 +55,6 @@ const CartContent = () => {
     );
   }
 
-  const subtotal = cartItems.reduce(
-    (acc: number, item) => acc + item.product.price * item.quantity,
-    0
-  );
-  const shipping = subtotal > 50 ? 0 : 5.99;
-  const tax = subtotal * 0.07;
-  const total = subtotal + shipping + tax;
-
   const updateQuantity = (id: number, quantity: number) => {};
   const removeItem = (id: number) => {};
 
@@ -77,7 +72,7 @@ const CartContent = () => {
               <CardContent className="space-y-4">
                 {cartItems.map((item) => (
                   <CartItem
-                    key={item.id}
+                    key={item.product.id}
                     item={item}
                     onUpdateQuantity={updateQuantity}
                     onRemove={removeItem}
@@ -98,7 +93,7 @@ const CartContent = () => {
                   <div className="flex items-center justify-center space-x-2">
                     <Truck className="h-5 w-5 text-blue-600" />
                     <span className="text-sm text-secondary-200">
-                      Free Shipping $50+
+                      Free Shipping {formatPrice(FREE_SHIPPING_THRESHOLD)}+
                     </span>
                   </div>
                   <div className="flex items-center justify-center space-x-2">
@@ -113,73 +108,11 @@ const CartContent = () => {
           </div>
 
           <div className="lg:col-span-1">
-            <Card className="sticky top-6">
-              <CardHeader>
-                <h2 className="text-xl font-bold text-primary font-playfair">
-                  Order Summary
-                </h2>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-secondary-200">Subtotal</span>
-                    <span className="text-primary">${subtotal.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-secondary-200">Shipping</span>
-                    <span className="text-primary">${shipping.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-secondary-200">Tax</span>
-                    <span className="text-primary">${tax.toFixed(2)}</span>
-                  </div>
-                </div>
-
-                <Separator />
-
-                <div className="flex justify-between text-lg font-bold">
-                  <span className="text-primary">Total</span>
-                  <span className="text-primary">${total.toFixed(2)}</span>
-                </div>
-
-                <div className="flex flex-col space-y-2">
-                  <Link to="/cart/checkout">
-                    <Button className="w-full bg-primary hover:bg-primary/90 py-3">
-                      Proceed to Checkout
-                    </Button>
-                  </Link>
-
-                  <Link
-                    to="/shop"
-                    search={{
-                      category: "all",
-                      sortBy: "no-filter",
-                      view: "grid",
-                      query: "",
-                      rating: "any-rating",
-                      price: "0-1000",
-                      stock: "in-stock",
-                    }}
-                  >
-                    <Button variant="outline" className="w-full">
-                      Continue Shopping
-                    </Button>
-                  </Link>
-                </div>
-
-                <div className="space-y-2">
-                  <p className="text-sm font-semibold text-primary">
-                    Promo Code
-                  </p>
-                  <div className="flex space-x-2">
-                    <Input placeholder="Enter code" className="flex-1" />
-                    <Button variant="outline" size="sm">
-                      Apply
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <OrderSummary
+              cartItems={cartItems}
+              shippingCost={shipping}
+              isCartPage
+            />
           </div>
         </div>
       </div>

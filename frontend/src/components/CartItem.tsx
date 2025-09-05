@@ -3,6 +3,7 @@ import { Input } from "./ui/input";
 import { Badge } from "./ui/badge";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import type { OrderItem } from "@/types";
+import { formatPrice } from "@/lib/utils";
 
 type CartItemProps = {
   item: OrderItem;
@@ -31,7 +32,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
           <div>
             <h3 className="font-semibold text-primary text-lg">{title}</h3>
-            <p className="text-2xl font-bold text-primary">${price}</p>
+            <p className="text-md text-secondary-200">{formatPrice(price)}</p>
           </div>
 
           {!inStock && (
@@ -106,7 +107,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
 
       <div className="hidden md:block text-right min-w-24">
         <p className="text-lg font-bold text-primary">
-          ${(price * quantity).toFixed(2)}
+          {formatPrice(price * quantity)}
         </p>
       </div>
 

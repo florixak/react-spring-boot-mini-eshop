@@ -1,30 +1,35 @@
-import type { Product } from "@/types";
+import type { CartItem } from "@/types";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import { Separator } from "./ui/separator";
+import { formatPrice } from "@/lib/utils";
+import { useOrderCalculations } from "@/hooks/useOrderCalculations";
+import { Link } from "@tanstack/react-router";
+import { Button } from "./ui/button";
+import { FREE_SHIPPING_THRESHOLD } from "@/constants";
 
 type OrderSummaryProps = {
-  orderItems: {
-    product: Product;
-    quantity: number;
-  }[];
+  cartItems: CartItem[];
+  shippingCost: number;
+  isCartPage?: boolean;
 };
 
-const OrderSummary = ({ orderItems }: OrderSummaryProps) => {
-  const quantity = orderItems.reduce((total, item) => total + item.quantity, 0);
-  const subtotal = orderItems
-    .reduce((total, item) => total + item.product.price * item.quantity, 0)
-    .toFixed(2);
-  const shipping = 5.0;
-  const tax = (parseFloat(subtotal) * 0.1).toFixed(2);
-  const total = (parseFloat(subtotal) + parseFloat(tax) + shipping).toFixed(2);
+const OrderSummary = ({
+  cartItems,
+  shippingCost,
+  isCartPage,
+}: OrderSummaryProps) => {
+  const { quantity, subtotal, shipping, tax, total, isFreeShipping } =
+    useOrderCalculations(cartItems, shippingCost);
 
   return (
-    <Card className="w-full md:w-1/3 lg:w-1/4 font-playfair">
-      <CardHeader className="text-2xl font-semibold text-primary">
-        Order Summary
+    <Card className="sticky top-6">
+      <CardHeader>
+        <h2 className="text-xl font-bold text-primary font-playfair">
+          Order Summary
+        </h2>
       </CardHeader>
       <CardContent className="space-y-4">
-        {orderItems.map((item) => (
+        {cartItems.map((item) => (
           <div key={item.product.id} className="flex items-center space-x-4">
             <img
               src={item.product.image_url}
@@ -48,25 +53,65 @@ const OrderSummary = ({ orderItems }: OrderSummaryProps) => {
           <span className="text-secondary-200">
             Subtotal ({quantity} items)
           </span>
-          <span className="font-semibold">${subtotal}</span>
+          <span className="font-semibold">{formatPrice(subtotal)}</span>
         </div>
 
         <div className="w-full flex justify-between text-sm text-primary font-inter">
           <span className="text-secondary-200">Shipping</span>
-          <span className="font-semibold">${shipping}</span>
+          {isFreeShipping ? (
+            <span className="font-semibold">
+              Free (over {formatPrice(FREE_SHIPPING_THRESHOLD)})
+            </span>
+          ) : (
+            <span className="font-semibold">{formatPrice(shipping)}</span>
+          )}
         </div>
 
         <div className="w-full flex justify-between text-sm text-primary font-inter">
           <span className="text-secondary-200">Tax (10%)</span>
-          <span className="font-semibold">${tax}</span>
+          <span className="font-semibold">{formatPrice(tax)}</span>
         </div>
 
         <Separator className="bg-secondary-100" />
 
         <div className="w-full flex justify-between text-lg font-semibold text-primary font-inter">
           <span>Total</span>
-          <span>${total}</span>
+          <span>{formatPrice(total)}</span>
         </div>
+        {isCartPage && (
+          <div className="flex flex-col w-full mt-2">
+            <Separator className="bg-secondary-100 mb-2" />
+
+            <p className="text-secondary-200 text-xs text-center mb-2">
+              Shipping calculated at checkout.
+            </p>
+
+            <div className="flex flex-col gap-2">
+              <Link to="/cart/checkout" search={{ step: 1 }}>
+                <Button className="w-full bg-primary hover:bg-primary/90 py-3">
+                  Proceed to Checkout
+                </Button>
+              </Link>
+
+              <Link
+                to="/shop"
+                search={{
+                  category: "all",
+                  sortBy: "no-filter",
+                  view: "grid",
+                  query: "",
+                  rating: "any-rating",
+                  price: "0-1000",
+                  stock: "in-stock",
+                }}
+              >
+                <Button variant="outline" className="w-full">
+                  Continue Shopping
+                </Button>
+              </Link>
+            </div>
+          </div>
+        )}
       </CardFooter>
     </Card>
   );
