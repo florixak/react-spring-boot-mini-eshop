@@ -24,3 +24,40 @@ export const getStatusColor = (status: Order["status"]) => {
       return "bg-gray-100 text-gray-800";
   }
 };
+
+export const formatPrice = (price: number | string) => {
+  try {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(Number(price));
+  } catch {
+    return `$${price}`;
+  }
+};
+
+export const formatPriceSimple = (price: number) => {
+  if (price >= 1000) {
+    return `$${(price / 1000).toFixed(price % 1000 === 0 ? 0 : 1)}k`;
+  }
+  return `$${price}`;
+};
+
+export const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
+
+export const calculateTotal = (
+  items: { price: number; quantity: number }[]
+) => {
+  return items.reduce((total, item) => total + item.price * item.quantity, 0);
+};
+
+export const formatOrderNumber = (orderId: number) => {
+  return `#${orderId.toString().padStart(6, "0")}`;
+};

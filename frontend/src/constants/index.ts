@@ -12,6 +12,7 @@ import {
   Users,
 } from "lucide-react";
 import PlaceholderImage from "@/assets/placeholder.svg";
+import { formatPrice } from "@/lib/utils";
 
 type ProductFilter = {
   value:
@@ -176,8 +177,9 @@ const CONTACT_INFO = [
 const FAQ_ITEMS = [
   {
     question: "What is your return policy?",
-    answer:
-      "We offer a 30-day return policy for all items in original condition. Free returns on orders over $100.",
+    answer: `We offer a 30-day return policy for all items in original condition. Free returns on orders over ${formatPrice(
+      100
+    )}.`,
   },
   {
     question: "How long does shipping take?",
@@ -214,9 +216,39 @@ const CHECKOUT_STEPS = [
   { number: 3, title: "Confirmation", icon: CheckCircle },
 ];
 
+type ShippingMethodKey = "STANDARD" | "EXPRESS" | "OVERNIGHT";
+
+type ShippingMethod = {
+  label: string;
+  description: string;
+  cost: number;
+};
+
+const SHIPPING_METHODS: Record<ShippingMethodKey, ShippingMethod> = {
+  STANDARD: {
+    label: "Standard Shipping",
+    description: "Delivered in 3-5 business days",
+    cost: 5.99,
+  },
+  EXPRESS: {
+    label: "Express Shipping",
+    description: "Delivered in 1-2 business days",
+    cost: 12.99,
+  },
+  OVERNIGHT: {
+    label: "Overnight Shipping",
+    description: "Delivered by next business day",
+    cost: 24.99,
+  },
+};
+
+const FREE_SHIPPING_THRESHOLD = 50;
+
 export {
   PRODUCT_FILTERS,
   PAYMENT_METHODS,
+  SHIPPING_METHODS,
+  FREE_SHIPPING_THRESHOLD,
   PRODUCT_RATINGS,
   STATISTICS,
   VALUES,

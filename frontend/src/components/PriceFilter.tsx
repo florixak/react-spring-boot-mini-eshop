@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Slider } from "@/components/ui/slider";
 import type { Route } from "@/routes/shop";
+import { formatPriceSimple } from "@/lib/utils";
 
 type PriceFilterProps = {
   search: ReturnType<typeof Route.useSearch>;
@@ -30,6 +31,7 @@ const PriceFilter = ({
           ...search,
           price: `${priceRange[0]}-${priceRange[1]}`,
         },
+        resetScroll: false,
       });
     }, 300);
 
@@ -50,8 +52,8 @@ const PriceFilter = ({
       </div>
 
       <div className="flex justify-between text-sm text-gray-600">
-        <span>${priceRange[0]}</span>
-        <span>${priceRange[1]}</span>
+        <span>{formatPriceSimple(priceRange[0])}</span>
+        <span>{formatPriceSimple(priceRange[1])}</span>
       </div>
 
       <div className="flex gap-2 items-center text-sm">

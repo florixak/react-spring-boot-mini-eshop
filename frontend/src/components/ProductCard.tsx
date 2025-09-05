@@ -2,6 +2,7 @@ import type { Product, View } from "@/types";
 import { Card } from "./ui/card";
 import Button from "./Button";
 import { ShoppingCart } from "lucide-react";
+import { formatPrice } from "@/lib/utils";
 
 type ProductCardProps = {
   product: Product;
@@ -9,7 +10,6 @@ type ProductCardProps = {
 };
 
 const ProductCard = ({ product, viewMode }: ProductCardProps) => {
-  // Use flex-col for grid, flex-row for list (on md+ screens)
   const isList = viewMode === "list";
   const cardClass = isList
     ? "flex flex-col md:flex-row items-stretch min-h-[180px]"
@@ -48,7 +48,7 @@ const ProductCard = ({ product, viewMode }: ProductCardProps) => {
           } justify-between mt-4 gap-2`}
         >
           <span className="text-primary font-bold text-lg font-inter">
-            ${product.price.toFixed(2)}
+            {formatPrice(product.price)}
           </span>
           <Button
             variant="default"
