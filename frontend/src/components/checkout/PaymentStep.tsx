@@ -83,16 +83,11 @@ const PaymentStep = ({
           </div>
 
           <div className="flex items-center justify-center space-x-4 py-4 bg-gray-50 rounded-lg">
-            <img src="/visa.svg" alt="Visa" className="h-8 opacity-70" />
+            <img src="/visa.svg" alt="Visa" className="h-10 opacity-70" />
             <img
               src="/mastercard.svg"
               alt="Mastercard"
-              className="h-8 opacity-70"
-            />
-            <img
-              src="/amex.svg"
-              alt="American Express"
-              className="h-8 opacity-70"
+              className="h-10 opacity-70"
             />
             <span className="text-sm text-secondary-200">+ more</span>
           </div>
