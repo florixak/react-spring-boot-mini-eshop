@@ -72,12 +72,6 @@ const CheckoutContent = ({ step }: CheckoutContentProps) => {
     try {
       const shippingData = form.getValues();
 
-      navigate({
-        to: "/cart/checkout",
-        search: { step: 3 },
-        replace: false,
-      });
-
       //window.location.href = checkoutUrl;
     } catch (error) {
       console.error("Checkout failed:", error);
