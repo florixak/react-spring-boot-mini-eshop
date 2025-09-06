@@ -19,7 +19,7 @@ const FormField = <T extends FieldValues>({
   <div>
     <label
       htmlFor={String(id)}
-      className="block text-sm font-medium text-gray-700"
+      className="block text-sm font-medium text-secondary-200"
     >
       {label} *
     </label>

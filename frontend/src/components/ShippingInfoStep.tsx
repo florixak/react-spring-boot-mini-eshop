@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { type UseFormReturn } from "react-hook-form";
-import { type CheckoutFormData, type ShippingFormData } from "@/lib/schema";
+import { type CheckoutFormData } from "@/lib/schema";
 import { Input } from "./ui/input";
 import { ArrowLeft, Truck } from "lucide-react";
 import { SHIPPING_METHODS } from "@/constants";
@@ -11,18 +11,15 @@ import FormField from "./FormField";
 
 type ShippingInfoStepProps = {
   form: UseFormReturn<CheckoutFormData>;
+  onSubmit: () => void;
 };
 
-const ShippingInfoStep = ({ form }: ShippingInfoStepProps) => {
+const ShippingInfoStep = ({ form, onSubmit }: ShippingInfoStepProps) => {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = form;
-
-  const onSubmit = (data: ShippingFormData) => {
-    console.log("Shipping Info Submitted:", data);
-  };
 
   return (
     <Card>
@@ -131,17 +128,16 @@ const ShippingInfoStep = ({ form }: ShippingInfoStepProps) => {
               </label>
             </div>
           ))}
-          <div className="flex justify-between mt-6">
+          <div className="flex items-center justify-between mt-6">
             <Link to="/cart" className="text-sm text-secondary-200">
               <Button variant="link" className="text-sm text-secondary-200">
                 <ArrowLeft /> Back to Cart
               </Button>
             </Link>
-            <Link to="/cart/checkout" search={{ step: 2 }}>
-              <Button type="button" className="w-full">
-                Continue to Payment
-              </Button>
-            </Link>
+
+            <Button type="button" onClick={onSubmit}>
+              Continue to Payment
+            </Button>
           </div>
         </form>
       </CardContent>
