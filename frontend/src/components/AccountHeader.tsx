@@ -35,6 +35,14 @@ const AccountHeader = () => {
   return (
     <section className="bg-secondary-50 py-12 px-6 md:px-16 lg:px-28 pt-24">
       <div className="max-w-6xl mx-auto">
+        <div className="mb-8 text-center">
+          <h1 className="text-3xl font-bold text-primary font-playfair mb-2">
+            My Account
+          </h1>
+          <p className="text-secondary-200">
+            Manage your account settings and preferences
+          </p>
+        </div>
         <nav className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {ACCOUNT_NAV.map((link) => {
             const Icon = link.icon;
