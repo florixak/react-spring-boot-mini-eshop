@@ -1,6 +1,6 @@
-import CategoryProducts from "@/components/CategoryProducts";
-import Hero from "@/components/Hero";
-import StayUpdated from "@/components/StayUpdated";
+import CategoryProducts from "@/components/home/CategoryProducts";
+import Hero from "@/components/home/Hero";
+import StayUpdated from "@/components/home/StayUpdated";
 import type { PRODUCT_FILTERS } from "@/constants";
 import type { categories } from "@/dummyData";
 import type { View } from "@/types";

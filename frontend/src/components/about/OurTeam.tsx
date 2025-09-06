@@ -1,6 +1,6 @@
-import Section from "./Section";
+import Section from "../Section";
 import { TEAM } from "@/constants";
-import { Card, CardContent } from "./ui/card";
+import { Card, CardContent } from "../ui/card";
 
 const OurTeam = () => {
   return (

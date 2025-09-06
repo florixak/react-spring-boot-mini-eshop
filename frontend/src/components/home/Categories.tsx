@@ -1,6 +1,6 @@
 import { slugify } from "@/lib/utils";
 import { Route } from "@/routes";
-import Button from "./Button";
+import Button from "../Button";
 import { categories } from "@/dummyData";
 
 type CategoryProductsProps = {

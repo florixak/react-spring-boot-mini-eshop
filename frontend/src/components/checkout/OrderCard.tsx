@@ -1,7 +1,7 @@
 import { cn, getStatusColor } from "@/lib/utils";
 import { Eye, Package } from "lucide-react";
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
 import type { Order } from "@/types";
 
 type OrderCardProps = {

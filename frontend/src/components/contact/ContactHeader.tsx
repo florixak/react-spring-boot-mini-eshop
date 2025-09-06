@@ -1,6 +1,6 @@
 import { MessageSquare, Star, Phone } from "lucide-react";
-import Section from "./Section";
-import { Badge } from "./ui/badge";
+import Section from "../Section";
+import { Badge } from "../ui/badge";
 
 const ContactHeader = () => {
   return (

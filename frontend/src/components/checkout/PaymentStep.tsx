@@ -1,5 +1,3 @@
-import { Card, CardContent, CardHeader } from "../ui/card";
-import { Button } from "../ui/button";
 import { CreditCard, Shield, Lock, ArrowLeft } from "lucide-react";
 import type { CartItem } from "@/types";
 import type { CheckoutFormData } from "@/lib/schema";
@@ -7,6 +5,8 @@ import { formatPrice } from "@/lib/utils";
 import { useOrderCalculations } from "@/hooks/useOrderCalculations";
 import { SHIPPING_METHODS } from "@/constants";
 import { Link } from "@tanstack/react-router";
+import { Card, CardHeader, CardContent } from "../ui/card";
+import { Button } from "../ui/button";
 
 type PaymentStepProps = {
   shippingData: CheckoutFormData;

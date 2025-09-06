@@ -1,6 +1,6 @@
 import { TESTIMONIALS } from "@/constants";
-import Section from "./Section";
-import { Card, CardContent } from "./ui/card";
+import Section from "../Section";
+import { Card, CardContent } from "../ui/card";
 import { Star } from "lucide-react";
 
 const Testimonials = () => {

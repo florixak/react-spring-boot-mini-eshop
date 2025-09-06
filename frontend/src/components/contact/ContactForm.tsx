@@ -1,7 +1,7 @@
 import { CONTACT_CATEGORIES } from "@/constants";
-import { Input } from "./ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger } from "./ui/select";
-import { Textarea } from "./ui/textarea";
+import { Input } from "../ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
+import { Textarea } from "../ui/textarea";
 
 const ContactForm = () => {
   return (

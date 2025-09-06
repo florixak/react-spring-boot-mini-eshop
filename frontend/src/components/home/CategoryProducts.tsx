@@ -1,9 +1,9 @@
-import SortFilter from "./SortFilter";
+import SortFilter from "../SortFilter";
 import { Route } from "@/routes/index";
 import Categories from "./Categories";
-import Products from "./Products";
-import { Separator } from "./ui/separator";
-import ViewMode from "./ViewMode";
+import Products from "../Products";
+import { Separator } from "../ui/separator";
+import ViewMode from "../ViewMode";
 
 type CategoryProductsProps = {
   title?: string;

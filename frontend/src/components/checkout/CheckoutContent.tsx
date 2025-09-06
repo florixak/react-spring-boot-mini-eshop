@@ -1,7 +1,5 @@
 import type { CartItem } from "@/types";
-import CheckoutSteps from "../CheckoutSteps";
-import OrderSummary from "../OrderSummary";
-import ShippingInfoStep from "../ShippingInfoStep";
+import CheckoutSteps from "./CheckoutSteps";
 import { dummyProducts } from "@/dummyData";
 import { checkoutSchema, type CheckoutFormData } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,6 +7,8 @@ import { useForm } from "react-hook-form";
 import PaymentStep from "./PaymentStep";
 import { SHIPPING_METHODS } from "@/constants";
 import { Route } from "@/routes/cart/checkout";
+import ShippingInfoStep from "./ShippingInfoStep";
+import OrderSummary from "./OrderSummary";
 
 type CheckoutContentProps = {
   step: number;
@@ -70,8 +70,7 @@ const CheckoutContent = ({ step }: CheckoutContentProps) => {
 
   const handlePaymentSubmit = async () => {
     try {
-      const shippingData = form.getValues();
-
+      //const shippingData = form.getValues();
       //window.location.href = checkoutUrl;
     } catch (error) {
       console.error("Checkout failed:", error);

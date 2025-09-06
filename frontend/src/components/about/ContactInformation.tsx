@@ -1,6 +1,6 @@
 import { CONTACT_INFO } from "@/constants";
-import Section from "./Section";
-import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
+import Section from "../Section";
+import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 
 const ContactInformation = () => {
   return (

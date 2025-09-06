@@ -1,6 +1,6 @@
 import { Mail, Phone, MapPin } from "lucide-react";
-import Section from "./Section";
-import { Card, CardContent } from "./ui/card";
+import Section from "../Section";
+import { Card, CardContent } from "../ui/card";
 
 const GetInTouch = () => {
   return (

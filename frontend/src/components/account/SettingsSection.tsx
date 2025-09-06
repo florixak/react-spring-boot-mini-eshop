@@ -1,8 +1,8 @@
-import { Card, CardContent, CardHeader } from "./ui/card";
-import { Switch } from "./ui/switch";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import { Separator } from "./ui/separator";
+import { Card, CardContent, CardHeader } from "../ui/card";
+import { Switch } from "../ui/switch";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { Separator } from "../ui/separator";
 
 const SettingsSection = () => {
   return (

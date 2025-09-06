@@ -1,6 +1,6 @@
 import { MapPin } from "lucide-react";
-import Section from "./Section";
-import { Button } from "./ui/button";
+import Section from "../Section";
+import { Button } from "../ui/button";
 
 const VisitOurStore = () => {
   return (

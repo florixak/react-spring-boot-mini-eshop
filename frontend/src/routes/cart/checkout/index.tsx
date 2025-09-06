@@ -1,5 +1,5 @@
 import CheckoutContent from "@/components/checkout/CheckoutContent";
-import CheckoutHeader from "@/components/CheckoutHeader";
+import CheckoutHeader from "@/components/checkout/CheckoutHeader";
 import { CHECKOUT_STEPS } from "@/constants";
 import { createFileRoute } from "@tanstack/react-router";
 

@@ -1,5 +1,5 @@
 import { Quote } from "lucide-react";
-import Section from "./Section";
+import Section from "../Section";
 
 const OurMission = () => {
   return (

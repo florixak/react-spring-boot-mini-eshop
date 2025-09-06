@@ -1,8 +1,8 @@
 import type { Route } from "@/routes/shop";
-import SearchBar from "./SearchBar";
+import SearchBar from "../SearchBar";
+import PriceFilter from "../shop/PriceFilter";
 import CategoryFilter from "./CategoryFilter";
-import PriceFilter from "./PriceFilter";
-import SortFilter from "./SortFilter";
+import SortFilter from "../SortFilter";
 
 type FilterSidebarProps = {
   search: ReturnType<typeof Route.useSearch>;

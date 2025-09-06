@@ -1,7 +1,8 @@
 import type { Order } from "@/types";
-import OrderCard from "./OrderCard";
-import { Card, CardContent, CardHeader } from "./ui/card";
+
+import { Card, CardContent, CardHeader } from "../ui/card";
 import { PackageOpen } from "lucide-react";
+import OrderCard from "../checkout/OrderCard";
 
 const OrdersSection = () => {
   const orders: Order[] = [];

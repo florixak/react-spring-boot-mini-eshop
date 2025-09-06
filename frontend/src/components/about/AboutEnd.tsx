@@ -1,6 +1,6 @@
 import { Route } from "@/routes/about";
-import Section from "./Section";
-import { Button } from "./ui/button";
+import Section from "../Section";
+import { Button } from "../ui/button";
 
 const AboutEnd = () => {
   const navigate = Route.useNavigate();

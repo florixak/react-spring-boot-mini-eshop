@@ -1,5 +1,5 @@
-import AccountContent from "@/components/AccountContent";
-import AccountHeader from "@/components/AccountHeader";
+import AccountContent from "@/components/account/AccountContent";
+import AccountHeader from "@/components/account/AccountHeader";
 import { createFileRoute } from "@tanstack/react-router";
 
 type AccountSearch = {

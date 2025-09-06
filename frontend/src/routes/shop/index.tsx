@@ -1,4 +1,4 @@
-import FilterSidebar from "@/components/FilterSidebar";
+import FilterSidebar from "@/components/shop/FilterSidebar";
 import Products from "@/components/Products";
 import SectionHeader from "@/components/SectionHeader";
 import type { PRODUCT_FILTERS, PRODUCT_RATINGS } from "@/constants";

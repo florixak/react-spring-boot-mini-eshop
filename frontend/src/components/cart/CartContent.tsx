@@ -1,15 +1,16 @@
 import { Link } from "@tanstack/react-router";
 import { Lock, RotateCcw, ShoppingBag, Truck } from "lucide-react";
-import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader } from "./ui/card";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardHeader } from "../ui/card";
 import type { OrderItem } from "@/types";
 import { useEffect, useState } from "react";
 import { getCartProducts } from "@/dummyData";
 import { formatPrice } from "@/lib/utils";
 import { useOrderCalculations } from "@/hooks/useOrderCalculations";
-import CartItem from "./CartItem";
-import OrderSummary from "./OrderSummary";
+import CartItem from "../cart/CartItem";
+
 import { FREE_SHIPPING_THRESHOLD } from "@/constants";
+import OrderSummary from "../checkout/OrderSummary";
 
 const CartContent = () => {
   const [cartItems, setCartItems] = useState<OrderItem[]>([]);

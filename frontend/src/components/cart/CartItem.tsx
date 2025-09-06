@@ -1,6 +1,6 @@
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Badge } from "./ui/badge";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Badge } from "../ui/badge";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import type { OrderItem } from "@/types";
 import { formatPrice } from "@/lib/utils";

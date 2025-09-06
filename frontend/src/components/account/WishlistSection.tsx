@@ -1,5 +1,5 @@
-import { Card, CardHeader, CardContent } from "./ui/card";
-import ProductCard from "./ProductCard";
+import { Card, CardHeader, CardContent } from "../ui/card";
+import ProductCard from "../ProductCard";
 import { getProducts } from "@/dummyData";
 import { useEffect, useState } from "react";
 import type { Product } from "@/types";

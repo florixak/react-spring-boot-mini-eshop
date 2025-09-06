@@ -1,6 +1,6 @@
 import { VALUES } from "@/constants";
-import { Card, CardContent } from "./ui/card";
-import Section from "./Section";
+import { Card, CardContent } from "../ui/card";
+import Section from "../Section";
 
 const OurValues = () => {
   return (

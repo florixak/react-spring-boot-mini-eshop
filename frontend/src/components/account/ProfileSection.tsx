@@ -1,7 +1,7 @@
 import { Separator } from "@radix-ui/react-separator";
-import { Button } from "./ui/button";
-import { Card, CardHeader, CardContent } from "./ui/card";
-import { Input } from "./ui/input";
+import { Button } from "../ui/button";
+import { Card, CardHeader, CardContent } from "../ui/card";
+import { Input } from "../ui/input";
 
 const ProfileSection = () => {
   return (

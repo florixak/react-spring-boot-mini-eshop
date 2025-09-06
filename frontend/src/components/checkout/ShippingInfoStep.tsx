@@ -1,13 +1,13 @@
-import { Card, CardContent, CardHeader } from "./ui/card";
+import { Card, CardContent, CardHeader } from "../ui/card";
 import { type UseFormReturn } from "react-hook-form";
 import { type CheckoutFormData } from "@/lib/schema";
-import { Input } from "./ui/input";
+import { Input } from "../ui/input";
 import { ArrowLeft, Truck } from "lucide-react";
 import { SHIPPING_METHODS } from "@/constants";
 import { formatPrice } from "@/lib/utils";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { Link } from "@tanstack/react-router";
-import FormField from "./FormField";
+import FormField from "../FormField";
 
 type ShippingInfoStepProps = {
   form: UseFormReturn<CheckoutFormData>;

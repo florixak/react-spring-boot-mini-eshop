@@ -1,9 +1,9 @@
-import Section from "./Section";
+import Section from "../Section";
 import ContactForm from "./ContactForm";
-import { Card, CardContent, CardHeader } from "./ui/card";
+import { Card, CardContent, CardHeader } from "../ui/card";
 import Faq from "./Faq";
 import { Phone, Mail, MessageSquare, CircleQuestionMark } from "lucide-react";
-import Button from "./Button";
+import Button from "../Button";
 
 const SendMessage = () => {
   return (
