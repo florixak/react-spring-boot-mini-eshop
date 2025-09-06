@@ -58,6 +58,7 @@ const AccountHeader = () => {
                     ? "bg-white border-primary shadow-lg scale-105"
                     : "bg-white/80 border-secondary-100 hover:border-primary hover:shadow-md hover:scale-102"
                 }`}
+                resetScroll={false}
               >
                 <div className="flex flex-row items-start gap-4">
                   <div
