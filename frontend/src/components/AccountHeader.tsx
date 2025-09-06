@@ -45,7 +45,7 @@ const AccountHeader = () => {
                 key={link.name}
                 to="/account"
                 search={{ ...search, section: link.section }}
-                className={`group relative p-6 rounded-lg border transition-all duration-300 cursor-pointer ${
+                className={`group relative px-6 py-4 rounded-lg border transition-all duration-300 cursor-pointer ${
                   isActive
                     ? "bg-white border-primary shadow-lg scale-105"
                     : "bg-white/80 border-secondary-100 hover:border-primary hover:shadow-md hover:scale-102"
