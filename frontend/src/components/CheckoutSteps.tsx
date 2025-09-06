@@ -34,7 +34,7 @@ const CheckoutSteps = ({ currentStep }: CheckoutStepsProps) => {
           </div>
           {index < CHECKOUT_STEPS.length - 1 && (
             <div
-              className={`hidden sm:block w-56 h-0.5 ml-4 ${
+              className={`hidden sm:block w-72 h-0.5 ml-4 ${
                 currentStep > step.number ? "bg-primary" : "bg-secondary-100"
               }`}
             />
