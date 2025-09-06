@@ -2,7 +2,6 @@ import type { CartItem } from "@/types";
 import CheckoutSteps from "../CheckoutSteps";
 import OrderSummary from "../OrderSummary";
 import ShippingInfoStep from "../ShippingInfoStep";
-import OrderConfirmation from "./OrderConfirmation";
 import { dummyProducts } from "@/dummyData";
 import { checkoutSchema, type CheckoutFormData } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -60,8 +59,6 @@ const CheckoutContent = ({ step }: CheckoutContentProps) => {
       "country",
     ]);
 
-    console.log("Shipping form valid:", isValid);
-
     if (isValid) {
       navigate({
         to: "/cart/checkout",
@@ -93,13 +90,10 @@ const CheckoutContent = ({ step }: CheckoutContentProps) => {
     const shippingValid = form.formState.isValid;
     if (requestedStep >= 2 && !shippingValid) return 1;
 
-    if (requestedStep >= 3 && step < 2) return Math.min(step, 2);
-
-    return Math.min(requestedStep, 3);
+    return Math.min(requestedStep, 2);
   };
 
   const validStep = getValidStep(step);
-  console.log("Rendering step:", validStep);
 
   const renderStepContent = () => {
     switch (validStep) {
@@ -114,8 +108,6 @@ const CheckoutContent = ({ step }: CheckoutContentProps) => {
             onSubmit={handlePaymentSubmit}
           />
         );
-      case 3:
-        return <OrderConfirmation />;
       default:
         return <div>Invalid step</div>;
     }

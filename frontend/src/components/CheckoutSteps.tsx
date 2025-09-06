@@ -7,7 +7,7 @@ type CheckoutStepsProps = {
 
 const CheckoutSteps = ({ currentStep }: CheckoutStepsProps) => {
   return (
-    <div className="flex items-center justify-between max-w-xl mx-auto">
+    <div className="flex items-center justify-evenly max-w-xl mx-auto">
       {CHECKOUT_STEPS.map((step, index) => (
         <div key={step.number} className="flex items-center">
           <div
@@ -34,7 +34,7 @@ const CheckoutSteps = ({ currentStep }: CheckoutStepsProps) => {
           </div>
           {index < CHECKOUT_STEPS.length - 1 && (
             <div
-              className={`hidden sm:block w-16 h-0.5 ml-4 ${
+              className={`hidden sm:block w-56 h-0.5 ml-4 ${
                 currentStep > step.number ? "bg-primary" : "bg-secondary-100"
               }`}
             />

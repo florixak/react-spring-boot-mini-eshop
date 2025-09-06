@@ -1,5 +1,4 @@
 import {
-  CheckCircle,
   Clock,
   CreditCard,
   Leaf,
@@ -213,7 +212,6 @@ const PRODUCT_RATINGS = ["Any Rating", "4+ Stars", "4,5+ Stars"];
 const CHECKOUT_STEPS = [
   { number: 1, title: "Shipping", icon: Truck },
   { number: 2, title: "Payment", icon: CreditCard },
-  { number: 3, title: "Confirmation", icon: CheckCircle },
 ];
 
 type ShippingMethodKey = "STANDARD" | "EXPRESS" | "OVERNIGHT";
