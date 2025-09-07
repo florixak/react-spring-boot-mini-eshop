@@ -5,7 +5,7 @@ import { formatPrice } from "@/lib/utils";
 import { useOrderCalculations } from "@/hooks/useOrderCalculations";
 import { SHIPPING_METHODS } from "@/constants";
 import { Link } from "@tanstack/react-router";
-import { Card, CardHeader, CardContent } from "../ui/card";
+import { Card, CardHeader, CardContent, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
 
 type PaymentStepProps = {
@@ -49,6 +49,8 @@ const PaymentStep = ({
               <p>{shippingData.phone}</p>
             </div>
           </div>
+        </CardContent>
+        <CardFooter>
           <Button
             variant="link"
             className="text-sm text-primary hover:underline"
@@ -59,7 +61,7 @@ const PaymentStep = ({
               Edit Shipping Info
             </Link>
           </Button>
-        </CardContent>
+        </CardFooter>
       </Card>
 
       <Card>
