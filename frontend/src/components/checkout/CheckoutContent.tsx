@@ -115,7 +115,6 @@ const CheckoutContent = ({ step }: CheckoutContentProps) => {
         </div>
         <div className="lg:col-span-1">
           <OrderSummary
-            cartItems={orderItems}
             shippingCost={
               SHIPPING_METHODS[form.getValues().shippingMethod].cost || 0
             }

@@ -3,17 +3,23 @@ import { Card } from "./ui/card";
 import Button from "./Button";
 import { ShoppingCart } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
+import type { CartState } from "@/stores/useCartStore";
 
 type ProductCardProps = {
   product: Product;
   viewMode: View;
+  onAddToCart: CartState["addToCart"];
 };
 
-const ProductCard = ({ product, viewMode }: ProductCardProps) => {
+const ProductCard = ({ product, viewMode, onAddToCart }: ProductCardProps) => {
   const isList = viewMode === "list";
   const cardClass = isList
     ? "flex flex-col md:flex-row items-stretch min-h-[180px]"
     : "flex flex-col";
+
+  const handleAddToCart = () => {
+    onAddToCart({ product, quantity: 1 });
+  };
 
   return (
     <Card
@@ -47,12 +53,22 @@ const ProductCard = ({ product, viewMode }: ProductCardProps) => {
             isList ? "flex-col md:flex-row md:items-center" : "flex-col"
           } justify-between mt-4 gap-2`}
         >
-          <span className="text-primary font-bold text-lg font-inter">
-            {formatPrice(product.price)}
-          </span>
+          <p className="text-primary font-bold text-lg font-inter flex items-center justify-between gap-1">
+            {formatPrice(product.price)}{" "}
+            <span className="text-secondary-200 text-xs">
+              (
+              {product.stock_quantity > 0
+                ? product.stock_quantity > 5
+                  ? ">5"
+                  : ` ${product.stock_quantity}>`
+                : "Out of stock"}
+              )
+            </span>
+          </p>
           <Button
             variant="default"
             className="border-primary bg-primary text-primary-foreground rounded-sm hover:bg-primary/90 flex items-center gap-2"
+            onClick={handleAddToCart}
           >
             <ShoppingCart />
             Add to Cart

@@ -5,6 +5,7 @@ import type { Product, View } from "@/types";
 import { Route } from "@/routes";
 import { Skeleton } from "./ui/skeleton";
 import { Card } from "./ui/card";
+import { useCartStore } from "@/stores/useCartStore";
 
 type ProductsProps = {
   search: ReturnType<typeof Route.useSearch>;
@@ -13,6 +14,7 @@ type ProductsProps = {
 };
 
 const Products = ({ search, viewMode }: ProductsProps) => {
+  const { addToCart } = useCartStore();
   const [getPro, setGetPro] = useState<Product[]>([]);
   const { category } = search;
 
@@ -49,6 +51,7 @@ const Products = ({ search, viewMode }: ProductsProps) => {
                 key={product.id}
                 product={product}
                 viewMode={viewMode}
+                onAddToCart={addToCart}
               />
             ))
           : Array.from({ length: 8 }).map((_, index) => (

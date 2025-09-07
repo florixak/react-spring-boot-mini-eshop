@@ -1,4 +1,3 @@
-import type { CartItem } from "@/types";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { Separator } from "../ui/separator";
 import { formatPrice } from "@/lib/utils";
@@ -6,18 +5,15 @@ import { useOrderCalculations } from "@/hooks/useOrderCalculations";
 import { Link } from "@tanstack/react-router";
 import { Button } from "../ui/button";
 import { FREE_SHIPPING_THRESHOLD } from "@/constants";
+import { useCartStore } from "@/stores/useCartStore";
 
 type OrderSummaryProps = {
-  cartItems: CartItem[];
   shippingCost: number;
   isCartPage?: boolean;
 };
 
-const OrderSummary = ({
-  cartItems,
-  shippingCost,
-  isCartPage,
-}: OrderSummaryProps) => {
+const OrderSummary = ({ shippingCost, isCartPage }: OrderSummaryProps) => {
+  const { cartItems } = useCartStore();
   const { quantity, subtotal, shipping, tax, total, isFreeShipping } =
     useOrderCalculations(cartItems, shippingCost);
 
@@ -87,28 +83,40 @@ const OrderSummary = ({
             </p>
 
             <div className="flex flex-col gap-2">
-              <Link to="/cart/checkout" search={{ step: 1 }}>
-                <Button className="w-full bg-primary hover:bg-primary/90 py-3">
+              {cartItems.length === 0 ? (
+                <Button
+                  className="w-full bg-primary hover:bg-primary/90 py-3"
+                  disabled={true}
+                >
                   Proceed to Checkout
                 </Button>
-              </Link>
-
-              <Link
-                to="/shop"
-                search={{
-                  category: "all",
-                  sortBy: "no-filter",
-                  view: "grid",
-                  query: "",
-                  rating: "any-rating",
-                  price: "0-1000",
-                  stock: "in-stock",
-                }}
-              >
-                <Button variant="outline" className="w-full">
-                  Continue Shopping
+              ) : (
+                <Button
+                  className="w-full bg-primary hover:bg-primary/90 py-3"
+                  asChild
+                >
+                  <Link to="/cart/checkout" search={{ step: 1 }}>
+                    Proceed to Checkout
+                  </Link>
                 </Button>
-              </Link>
+              )}
+
+              <Button variant="outline" className="w-full" asChild>
+                <Link
+                  to="/shop"
+                  search={{
+                    category: "all",
+                    sortBy: "no-filter",
+                    view: "grid",
+                    query: "",
+                    rating: "any-rating",
+                    price: "0-1000",
+                    stock: "in-stock",
+                  }}
+                >
+                  Continue Shopping
+                </Link>
+              </Button>
             </div>
           </div>
         )}

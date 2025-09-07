@@ -2,18 +2,26 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Badge } from "../ui/badge";
 import { Minus, Plus, Trash2 } from "lucide-react";
-import type { OrderItem } from "@/types";
+import type { CartItem as CartItemType } from "@/types";
 import { formatPrice } from "@/lib/utils";
+import type { CartState } from "@/stores/useCartStore";
 
 type CartItemProps = {
-  item: OrderItem;
-  onUpdateQuantity: (id: number, quantity: number) => void;
+  item: CartItemType;
+  onIncrement: CartState["incrementItemQuantity"];
+  onDecrement: CartState["decrementItemQuantity"];
+  onUpdateQuantity: CartState["updateItemQuantity"];
   onRemove: (id: number) => void;
 };
 
-const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
+const CartItem = ({
+  item,
+  onIncrement,
+  onDecrement,
+  onUpdateQuantity,
+  onRemove,
+}: CartItemProps) => {
   const {
-    id,
     product: { title, image_url, price, stock_quantity },
     quantity,
   } = item;
@@ -47,7 +55,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => onUpdateQuantity(id, quantity - 1)}
+              onClick={() => onUpdateQuantity(item.product.id, quantity - 1)}
               disabled={!inStock}
             >
               <Minus className="h-4 w-4" />
@@ -56,7 +64,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
               type="number"
               value={quantity}
               onChange={(e) =>
-                onUpdateQuantity(item.id, parseInt(e.target.value))
+                onUpdateQuantity(item.product.id, parseInt(e.target.value))
               }
               className="w-16 text-center"
               min="1"
@@ -65,14 +73,18 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => onUpdateQuantity(id, quantity + 1)}
+              onClick={() => onUpdateQuantity(item.product.id, quantity + 1)}
               disabled={!inStock}
             >
               <Plus className="h-4 w-4" />
             </Button>
           </div>
 
-          <Button variant="outline" size="sm" onClick={() => onRemove(item.id)}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onRemove(item.product.id)}
+          >
             <Trash2 className="h-4 w-4" />
           </Button>
         </div>
@@ -82,7 +94,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => onUpdateQuantity(id, quantity - 1)}
+          onClick={() => onDecrement(item.product.id)}
           disabled={!inStock}
         >
           <Minus className="h-4 w-4" />
@@ -90,7 +102,9 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
         <Input
           type="number"
           value={item.quantity}
-          onChange={(e) => onUpdateQuantity(item.id, parseInt(e.target.value))}
+          onChange={(e) =>
+            onUpdateQuantity(item.product.id, parseInt(e.target.value))
+          }
           className="w-16 text-center"
           min="1"
           disabled={!inStock}
@@ -98,7 +112,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => onUpdateQuantity(id, quantity + 1)}
+          onClick={() => onIncrement(item.product.id)}
           disabled={!inStock}
         >
           <Plus className="h-4 w-4" />
@@ -114,7 +128,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
       <Button
         variant="outline"
         size="sm"
-        onClick={() => onRemove(item.id)}
+        onClick={() => onRemove(item.product.id)}
         className="hidden md:flex"
       >
         <Trash2 className="h-4 w-4" />

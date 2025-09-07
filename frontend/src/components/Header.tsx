@@ -3,6 +3,7 @@ import { Heart, Menu, ShoppingCart, User } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
+import { useCartStore } from "@/stores/useCartStore";
 
 const navLinks = [
   {
@@ -24,7 +25,7 @@ const navLinks = [
 ];
 
 const Header = () => {
-  const cartItems = 3;
+  const { getTotalItems } = useCartStore();
 
   return (
     <header className="fixed flex flex-row items-center justify-between px-6 md:px-16 lg:px-36 py-4 bg-white shadow-sm font-playfair w-full z-50">
@@ -49,40 +50,41 @@ const Header = () => {
         ))}
       </nav>
       <div className="flex flex-row gap-2 md:gap-6 items-center">
-        <Link to="/account" search={{ section: "profile" }}>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-primary hover:text-secondary-200"
-          >
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-primary hover:text-secondary-200"
+          asChild
+        >
+          <Link to="/account" search={{ section: "profile" }}>
             <User className="h-5 w-5" />
-          </Button>
-        </Link>
-
-        <Link to="/account" search={{ section: "wishlist" }}>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-primary hover:text-secondary-200"
-          >
+          </Link>
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-primary hover:text-secondary-200"
+          asChild
+        >
+          <Link to="/account" search={{ section: "wishlist" }}>
             <Heart className="h-5 w-5" />
-          </Button>
-        </Link>
-
-        <Link to="/cart">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="relative text-primary hover:text-secondary-200"
-          >
+          </Link>
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="relative text-primary hover:text-secondary-200"
+          asChild
+        >
+          <Link to="/cart">
             <ShoppingCart className="h-5 w-5" />
-            {cartItems > 0 && (
+            {getTotalItems() > 0 && (
               <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-inter">
-                {cartItems}
+                {getTotalItems()}
               </Badge>
             )}
-          </Button>
-        </Link>
+          </Link>
+        </Button>
 
         <Sheet>
           <SheetTrigger asChild>
