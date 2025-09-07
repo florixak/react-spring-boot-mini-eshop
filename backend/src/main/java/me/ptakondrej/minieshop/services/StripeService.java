@@ -39,16 +39,15 @@ public class StripeService {
 
 		SessionCreateParams.Builder paramsBuilder = SessionCreateParams.builder()
 				.setMode(SessionCreateParams.Mode.PAYMENT)
-				.setSuccessUrl(frontendUrl + "/checkout/success?sessionId={CHECKOUT_SESSION_ID}")
-				.setCancelUrl(frontendUrl + "/checkout/cancel")
+				.setSuccessUrl(frontendUrl + "/cart/checkout?orderId=" + request.getId())
+				.setCancelUrl(frontendUrl + "/cart/checkout/cancel?orderId=" + request.getId())
 				.addAllLineItem(lineItems)
 				.putMetadata("orderId", request.getId().toString());
 
+		paramsBuilder.setCustomerEmail(request.getCustomerEmail());
+
 		if (request.getUser() != null) {
 			paramsBuilder.putMetadata("userId", request.getUser().getId().toString());
-			if (request.getUser().getEmail() != null) {
-				paramsBuilder.setCustomerEmail(request.getUser().getEmail());
-			}
 		}
 
 		Session session = Session.create(paramsBuilder.build());

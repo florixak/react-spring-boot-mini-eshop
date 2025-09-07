@@ -25,8 +25,14 @@ public class Order {
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id", nullable = false)
+	@JoinColumn(name = "user_id")
 	private User user;
+
+	@Column(name = "customer_email")
+	private String customerEmail;
+
+	@Column(name = "customer_phone")
+	private String customerPhone;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status", nullable = false)
@@ -37,9 +43,6 @@ public class Order {
 
 	@Column(name = "shipping_address", nullable = false)
 	private String shippingAddress;
-
-	@Column(name = "billing_address", nullable = false)
-	private String billingAddress;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "payment_method", nullable = false)

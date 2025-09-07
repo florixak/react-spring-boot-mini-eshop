@@ -50,7 +50,7 @@ public class OrderController {
 				);
 			}
 
-			Order order = orderService.getOrderById(userId, orderId);
+			Order order = orderService.getOrderByUserIdAndOrderId(userId, orderId);
 			if (order == null) {
 				return ResponseEntity.status(404).body(
 						new Response<OrderDTO>(false, null, "Order not found")

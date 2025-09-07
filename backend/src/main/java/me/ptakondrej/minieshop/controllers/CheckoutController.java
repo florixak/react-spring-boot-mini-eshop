@@ -30,7 +30,7 @@ public class CheckoutController {
 	}
 
 	@PostMapping("/create-checkout-session")
-	public ResponseEntity<Response<CheckoutDTO>> createCheckoutSession(@RequestAttribute("userId") Long userId, @RequestBody OrderCreationRequest checkoutRequest) {
+	public ResponseEntity<Response<CheckoutDTO>> createCheckoutSession(@RequestAttribute(value = "userId", required = false) Long userId, @RequestBody OrderCreationRequest checkoutRequest) {
 		try {
 			Order order = orderService.createOrder(userId, checkoutRequest);
 			String checkoutUrl = stripeService.createCheckoutSession(order);
@@ -47,7 +47,7 @@ public class CheckoutController {
 	@PostMapping("/pay/{orderId}")
 	public ResponseEntity<Response<CheckoutDTO>> payExistingOrder(@RequestAttribute("userId") Long userId, @PathVariable Long orderId) {
 		try {
-			Order order = orderService.getOrderById(userId, orderId);
+			Order order = orderService.getOrderByUserIdAndOrderId(userId, orderId);
 			if (order == null) {
 				return ResponseEntity.status(404).body(new Response<>(false, null, "Order not found"));
 			}
@@ -78,17 +78,29 @@ public class CheckoutController {
 			}
 
 			String orderId = session.getMetadata().get("orderId");
-			String userId = session.getMetadata().get("userId");
+			if (session.getMetadata().get("userId") != null) {
+				String userId = session.getMetadata().get("userId");
+				Order order = orderService.getOrderByUserIdAndOrderId(Long.valueOf(userId), Long.valueOf(orderId));
 
-			Order order = orderService.getOrderById(Long.valueOf(userId), Long.valueOf(orderId));
-			if (order == null) {
-				return ResponseEntity.status(404).body(new Response<>(false, null, "Order not found"));
+				if (order == null) {
+					return ResponseEntity.status(404).body(new Response<>(false, null, "Order not found"));
+				}
+
+				if (order.getStatus() != OrderStatus.PAID) {
+					orderService.updateOrderStatus(Long.valueOf(userId), Long.valueOf(orderId), OrderStatus.PAID);
+				}
+
+			} else {
+				Order order = orderService.getOrderById(Long.valueOf(orderId));
+
+				if (order == null) {
+					return ResponseEntity.status(404).body(new Response<>(false, null, "Order not found"));
+				}
+
+				if (order.getStatus() != OrderStatus.PAID) {
+					orderService.updateOrderStatus(Long.valueOf(orderId), OrderStatus.PAID);
+				}
 			}
-
-			if (order.getStatus() != OrderStatus.PAID) {
-				orderService.updateOrderStatus(Long.valueOf(userId), Long.valueOf(orderId), OrderStatus.PAID);
-			}
-
 			return ResponseEntity.ok().body(new Response<>(true, new RedirectUrlDTO(frontendUrl + "/payment-success"), "Payment successful"));
 
 		} catch (StripeException e) {

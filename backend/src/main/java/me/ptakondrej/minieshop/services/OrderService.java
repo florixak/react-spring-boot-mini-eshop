@@ -9,7 +9,6 @@ import me.ptakondrej.minieshop.orderItem.OrderItem;
 import me.ptakondrej.minieshop.product.Product;
 import me.ptakondrej.minieshop.requests.OrderCreationRequest;
 import me.ptakondrej.minieshop.user.User;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +34,11 @@ public class OrderService {
 		this.productService = productService;
 	}
 
-	public Order getOrderById(Long userId, Long orderId) {
+	public Order getOrderById(Long orderId) {
+		return orderRepository.findById(orderId).orElse(null);
+	}
+
+	public Order getOrderByUserIdAndOrderId(Long userId, Long orderId) {
 		return orderRepository.findByUserIdAndId(userId, orderId).orElse(null);
 	}
 
@@ -45,21 +48,17 @@ public class OrderService {
 
 	@Transactional
 	public Order createOrder(Long userId, OrderCreationRequest request) {
-		if (userId == null) {
-			throw new IllegalArgumentException("User ID is required");
-		}
 
 		if (request == null) {
 			throw new IllegalArgumentException("Order creation request cannot be null");
 		}
-		User user = userService.findById(userId);
-
-		if (user == null) {
-			throw new IllegalArgumentException("User not found with ID: " + userId);
-		}
 
 		if (request.getShippingAddress() == null || request.getShippingAddress().isEmpty()) {
 			throw new IllegalArgumentException("Shipping address is required");
+		}
+
+		if (request.getCustomerEmail() == null || request.getCustomerEmail().isEmpty()) {
+			throw new IllegalArgumentException("Customer email is required");
 		}
 
 		if (request.getOrderItems() == null || request.getOrderItems().isEmpty()) {
@@ -68,10 +67,6 @@ public class OrderService {
 
 		if (request.getPaymentMethod() == null) {
 			throw new IllegalArgumentException("Payment method is required");
-		}
-
-		if (request.getBillingAddress() == null || request.getBillingAddress().isEmpty()) {
-			throw new IllegalArgumentException("Billing address is required");
 		}
 
 		BigDecimal totalPrice = BigDecimal.valueOf(request.getOrderItems().stream().mapToDouble(item -> {
@@ -83,14 +78,19 @@ public class OrderService {
 		}).sum());
 
 		Order order = Order.builder()
-				.user(user)
 				.shippingAddress(request.getShippingAddress())
-				.billingAddress(request.getBillingAddress())
+				.customerEmail(request.getCustomerEmail())
+				.customerPhone(request.getCustomerPhone())
 				.paymentMethod(request.getPaymentMethod())
 				.status(OrderStatus.PENDING)
 				.totalPrice(totalPrice)
 				.expiresAt(LocalDateTime.now().plusMinutes(30))
 				.build();
+
+		if (userId != null) {
+			User user = userService.findById(userId);
+			order.setUser(user);
+		}
 
 		Order savedOrder = orderRepository.save(order);
 
@@ -108,8 +108,18 @@ public class OrderService {
 	}
 
 	@Transactional
+	public Order updateOrderStatus(Long orderId, OrderStatus status) {
+		Order order = getOrderById(orderId);
+		if (order == null) {
+			throw new IllegalArgumentException("Order not found with ID: " + orderId);
+		}
+		order.setStatus(status);
+		return orderRepository.save(order);
+	}
+
+	@Transactional
 	public Order updateOrderStatus(Long userId, Long orderId, OrderStatus status) {
-		Order order = getOrderById(userId, orderId);
+		Order order = getOrderByUserIdAndOrderId(userId, orderId);
 		if (order == null) {
 			throw new IllegalArgumentException("Order not found with ID: " + orderId);
 		}
@@ -145,19 +155,6 @@ public class OrderService {
 		Order order = orderRepository.findById(orderId).orElse(null);
 		if (order != null && order.getStatus() == OrderStatus.PENDING) {
 			order.setStripeSessionId(null);
-			orderRepository.save(order);
-		}
-	}
-
-	@Scheduled(cron = "0 0 0 * * ?")
-	@Transactional
-	public void cancelStalePendingOrders() {
-		List<Order> staleOrders = orderRepository.findAllByStatusAndExpiresAtBefore(OrderStatus.PENDING, LocalDateTime.now());
-		for (Order order : staleOrders) {
-			order.setStatus(OrderStatus.CANCELLED);
-			for (OrderItem item : order.getOrderItems()) {
-				productService.increaseStock(item.getProduct().getId(), item.getQuantity());
-			}
 			orderRepository.save(order);
 		}
 	}
