@@ -8,6 +8,7 @@ import { formatPrice } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { Link } from "@tanstack/react-router";
 import FormField from "../FormField";
+import { Label } from "../ui/label";
 
 type ShippingInfoStepProps = {
   form: UseFormReturn<CheckoutFormData>;
@@ -115,7 +116,7 @@ const ShippingInfoStep = ({ form, onSubmit }: ShippingInfoStepProps) => {
                 disabled={isSubmitting}
                 defaultChecked={key === "STANDARD"}
               />
-              <label
+              <Label
                 htmlFor={key}
                 className="text-sm flex justify-between w-full"
               >
@@ -125,7 +126,7 @@ const ShippingInfoStep = ({ form, onSubmit }: ShippingInfoStepProps) => {
                 <span className="font-semibold">
                   {formatPrice(method.cost)}
                 </span>
-              </label>
+              </Label>
             </div>
           ))}
           <div className="flex items-center justify-between mt-6">

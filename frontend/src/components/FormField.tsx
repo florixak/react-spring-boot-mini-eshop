@@ -2,6 +2,7 @@ import type { useForm, Path } from "react-hook-form";
 import { Input } from "./ui/input";
 
 import type { FieldValues } from "react-hook-form";
+import { Label } from "./ui/label";
 
 const FormField = <T extends FieldValues>({
   label,
@@ -17,12 +18,12 @@ const FormField = <T extends FieldValues>({
   isSubmitting: boolean;
 }) => (
   <div>
-    <label
+    <Label
       htmlFor={String(id)}
       className="block text-sm font-medium text-secondary-200"
     >
       {label} *
-    </label>
+    </Label>
     <Input
       {...register(id)}
       className={error ? "border-red-500" : ""}
