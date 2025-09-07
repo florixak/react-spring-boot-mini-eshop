@@ -2,8 +2,11 @@ import { Separator } from "@radix-ui/react-separator";
 import { Button } from "../ui/button";
 import { Card, CardHeader, CardContent } from "../ui/card";
 import { Input } from "../ui/input";
+import { useUserStore } from "@/stores/useUserStore";
 
 const ProfileSection = () => {
+  const { user } = useUserStore();
+
   return (
     <div className="space-y-6">
       <Card>
@@ -21,13 +24,13 @@ const ProfileSection = () => {
               <label className="text-sm font-semibold text-primary">
                 First Name
               </label>
-              <Input defaultValue="John" className="mt-1" />
+              <Input defaultValue={user?.first_name} className="mt-1" />
             </div>
             <div>
               <label className="text-sm font-semibold text-primary">
                 Last Name
               </label>
-              <Input defaultValue="Doe" className="mt-1" />
+              <Input defaultValue={user?.last_name} className="mt-1" />
             </div>
           </div>
 
@@ -35,22 +38,14 @@ const ProfileSection = () => {
             <label className="text-sm font-semibold text-primary">
               Email Address
             </label>
-            <Input
-              type="email"
-              defaultValue="john.doe@example.com"
-              className="mt-1"
-            />
+            <Input type="email" defaultValue={user?.email} className="mt-1" />
           </div>
 
           <div>
             <label className="text-sm font-semibold text-primary">
               Phone Number
             </label>
-            <Input
-              type="tel"
-              defaultValue="+1 (555) 123-4567"
-              className="mt-1"
-            />
+            <Input type="tel" defaultValue={user?.phone} className="mt-1" />
           </div>
 
           <Separator className="my-6" />
