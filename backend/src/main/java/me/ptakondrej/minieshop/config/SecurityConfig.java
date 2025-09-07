@@ -3,6 +3,7 @@ package me.ptakondrej.minieshop.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -20,7 +21,8 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationProvider authenticationProvider, JwtAuthFilter jwtAuthFilter) throws Exception {
-		http.csrf(csrf -> csrf.disable())
+		http.cors(Customizer.withDefaults())
+				.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(authorize -> authorize
 						.requestMatchers("/api/products/admin", "/api/products/admin/**").hasRole("ADMIN")
 						.requestMatchers("/api/categories/admin", "/api/categories/admin/**").hasRole("ADMIN")
