@@ -49,15 +49,16 @@ const PaymentStep = ({
               <p>{shippingData.phone}</p>
             </div>
           </div>
-          <Link to="/cart/checkout" search={{ step: 1 }}>
-            <Button
-              variant="link"
-              className="text-sm text-primary hover:underline"
-            >
+          <Button
+            variant="link"
+            className="text-sm text-primary hover:underline"
+            asChild
+          >
+            <Link to="/cart/checkout" search={{ step: 1 }}>
               <ArrowLeft className="h-4 w-4 mr-1" />
               Edit Shipping Info
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </CardContent>
       </Card>
 

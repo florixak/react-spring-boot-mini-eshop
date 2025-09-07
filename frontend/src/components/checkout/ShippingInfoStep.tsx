@@ -129,11 +129,15 @@ const ShippingInfoStep = ({ form, onSubmit }: ShippingInfoStepProps) => {
             </div>
           ))}
           <div className="flex items-center justify-between mt-6">
-            <Link to="/cart" className="text-sm text-secondary-200">
-              <Button variant="link" className="text-sm text-secondary-200">
+            <Button
+              variant="link"
+              className="text-sm text-secondary-200"
+              asChild
+            >
+              <Link to="/cart" className="text-sm text-secondary-200">
                 <ArrowLeft /> Back to Cart
-              </Button>
-            </Link>
+              </Link>
+            </Button>
 
             <Button type="button" onClick={onSubmit}>
               Continue to Payment

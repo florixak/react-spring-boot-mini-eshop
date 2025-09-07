@@ -8,23 +8,23 @@ const CartHeader = () => {
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col-reverse gap-4 md:gap-0 md:flex-row items-center justify-between">
           <div className="flex items-center space-x-4">
-            <Link
-              to="/shop"
-              search={{
-                category: "all",
-                sortBy: "no-filter",
-                view: "grid",
-                query: "",
-                rating: "any-rating",
-                price: "0-1000",
-                stock: "in-stock",
-              }}
-            >
-              <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" asChild>
+              <Link
+                to="/shop"
+                search={{
+                  category: "all",
+                  sortBy: "no-filter",
+                  view: "grid",
+                  query: "",
+                  rating: "any-rating",
+                  price: "0-1000",
+                  stock: "in-stock",
+                }}
+              >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Continue Shopping
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
 
           <div className="text-center">
