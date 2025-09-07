@@ -25,6 +25,7 @@ type Role = "USER" | "ADMIN";
 type User = {
   id: number;
   email: string;
+  phone: string;
   username: string;
   first_name: string;
   last_name: string;
