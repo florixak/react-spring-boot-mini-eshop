@@ -1,7 +1,7 @@
 import FilterSidebar from "@/components/shop/FilterSidebar";
 import Products from "@/components/Products";
 import SectionHeader from "@/components/SectionHeader";
-import type { PRODUCT_FILTERS, PRODUCT_RATINGS } from "@/constants";
+import type { PRODUCT_FILTERS } from "@/constants";
 import type { categories } from "@/dummyData";
 import type { View } from "@/types";
 import { createFileRoute } from "@tanstack/react-router";
@@ -11,7 +11,6 @@ type ShopSearch = {
   sortBy: (typeof PRODUCT_FILTERS)[number]["value"];
   view: View;
   query: string;
-  rating: (typeof PRODUCT_RATINGS)[number];
   price: string;
   stock: string;
 };
@@ -25,10 +24,18 @@ export const Route = createFileRoute("/shop/")({
       "no-filter",
     view: (search.view as View) ?? "grid",
     query: (search.query as string) ?? "",
-    rating: (search.rating as (typeof PRODUCT_RATINGS)[number]) ?? "any-rating",
     price: (search.price as string) ?? "0-1000",
     stock: (search.stock as string) ?? "in-stock",
   }),
+  loaderDeps: ({ search: { category } }) => ({
+    category,
+  }),
+  loader: async ({ deps: { category } }) => {
+    console.log("Loading products for category:", category);
+    return {
+      products: [],
+    };
+  },
 });
 
 function Shop() {
@@ -44,7 +51,7 @@ function Shop() {
         <FilterSidebar search={search} navigate={navigate} />
         <div className="flex-1">
           <Products
-            search={search}
+            products={[]}
             viewMode={search.view}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           />

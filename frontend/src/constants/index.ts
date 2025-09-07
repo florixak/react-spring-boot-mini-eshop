@@ -18,7 +18,6 @@ type ProductFilter = {
     | "price_low_to_high"
     | "price_high_to_low"
     | "newest_arrivals"
-    | "best_rating"
     | "no-filter";
   label: string;
 };
@@ -35,10 +34,6 @@ const PRODUCT_FILTERS: ProductFilter[] = [
   {
     value: "newest_arrivals",
     label: "Newest Arrivals",
-  },
-  {
-    value: "best_rating",
-    label: "Best Rating",
   },
 ];
 
@@ -207,8 +202,6 @@ const CONTACT_CATEGORIES = [
   { value: "feedback", label: "Feedback & Suggestions" },
 ];
 
-const PRODUCT_RATINGS = ["Any Rating", "4+ Stars", "4,5+ Stars"];
-
 const CHECKOUT_STEPS = [
   { number: 1, title: "Shipping", icon: Truck },
   { number: 2, title: "Payment", icon: CreditCard },
@@ -247,7 +240,6 @@ export {
   PAYMENT_METHODS,
   SHIPPING_METHODS,
   FREE_SHIPPING_THRESHOLD,
-  PRODUCT_RATINGS,
   STATISTICS,
   VALUES,
   TEAM,

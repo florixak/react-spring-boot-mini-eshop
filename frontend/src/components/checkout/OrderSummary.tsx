@@ -109,7 +109,6 @@ const OrderSummary = ({ shippingCost, isCartPage }: OrderSummaryProps) => {
                     sortBy: "no-filter",
                     view: "grid",
                     query: "",
-                    rating: "any-rating",
                     price: "0-1000",
                     stock: "in-stock",
                   }}

@@ -12,6 +12,7 @@ type CategoryProductsProps = {
 const CategoryProducts = ({ title }: CategoryProductsProps) => {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
+  const { products } = Route.useLoaderData();
 
   return (
     <section className="min-h-screen flex items-start flex-col px-4 md:px-20 lg:px-28 gap-8 py-24">
@@ -30,7 +31,7 @@ const CategoryProducts = ({ title }: CategoryProductsProps) => {
       </div>
       <Categories search={search} navigate={navigate} />
       <Separator className="bg-secondary-100" />
-      <Products search={search} viewMode={search.view} />
+      <Products products={products} viewMode={search.view} />
     </section>
   );
 };

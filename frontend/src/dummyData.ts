@@ -140,8 +140,6 @@ export const getProducts = async (
               return b.price - a.price;
             case "newest_arrivals":
               return b.id - a.id;
-            /*case "best_rating":
-              return (b.rating || 0) - (a.rating || 0);*/
             default:
               return 0;
           }
