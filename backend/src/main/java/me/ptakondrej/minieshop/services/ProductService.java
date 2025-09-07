@@ -64,6 +64,7 @@ public class ProductService {
 				.price(BigDecimal.valueOf(request.getPrice()))
 				.category(category)
 				.imageUrl(request.getImageUrl())
+				.stockQuantity(request.getStockQuantity())
 				.enabled(true)
 				.deleted(false)
 				.build();
@@ -81,7 +82,6 @@ public class ProductService {
 			throw new IllegalArgumentException("Product not found with id: " + id);
 		}
 
-
 		Category category = categoryService.getCategoryById(request.getCategoryId());
 		if (category == null) {
 			throw new IllegalArgumentException("Category not found with id: " + request.getCategoryId());
@@ -94,6 +94,7 @@ public class ProductService {
 		product.setPrice(BigDecimal.valueOf(request.getPrice()));
 		product.setCategory(category);
 		product.setImageUrl(request.getImageUrl());
+		product.setStockQuantity(request.getStockQuantity());
 		product.setSlug(SlugUtils.generateSlug(product.getTitle()));
 		product.setEnabled(request.getEnabled());
 		return productRepository.save(product);
@@ -112,19 +113,6 @@ public class ProductService {
 			throw new IllegalArgumentException("Insufficient stock for product id: " + productId);
 		}
 		product.setStockQuantity(product.getStockQuantity() - quantity);
-		productRepository.save(product);
-	}
-
-	@Transactional
-	public void increaseStock(Long productId, int quantity) throws IllegalArgumentException {
-		Product product = getProductById(productId);
-		if (product == null) {
-			throw new IllegalArgumentException("Product not found with id: " + productId);
-		}
-		if (quantity <= 0) {
-			throw new IllegalArgumentException("Quantity must be greater than zero");
-		}
-		product.setStockQuantity(product.getStockQuantity() + quantity);
 		productRepository.save(product);
 	}
 

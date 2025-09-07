@@ -13,6 +13,7 @@ public class ProductMapper {
 				.description(product.getDescription())
 				.imageUrl(product.getImageUrl())
 				.price(product.getPrice())
+				.stockQuantity(product.getStockQuantity())
 				.category(CategoryMapper.convertToDto(product.getCategory()))
 				.enabled(product.getEnabled())
 				.build();
@@ -26,6 +27,7 @@ public class ProductMapper {
 				.description(productDTO.getDescription())
 				.imageUrl(productDTO.getImageUrl())
 				.price(productDTO.getPrice())
+				.stockQuantity(productDTO.getStockQuantity())
 				.category(CategoryMapper.convertToEntity(productDTO.getCategory()))
 				.enabled(productDTO.getEnabled())
 				.build();
