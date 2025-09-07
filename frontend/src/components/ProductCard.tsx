@@ -59,8 +59,8 @@ const ProductCard = ({ product, viewMode, onAddToCart }: ProductCardProps) => {
               (
               {product.stock_quantity > 0
                 ? product.stock_quantity > 5
-                  ? ">5"
-                  : ` ${product.stock_quantity}>`
+                  ? ">5 in stock"
+                  : `Less than ${product.stock_quantity} in stock`
                 : "Out of stock"}
               )
             </span>

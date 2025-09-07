@@ -66,7 +66,7 @@ export const dummyProducts: Product[] = [
     description: "Comfortable cotton t-shirt in various sizes.",
     price: 19.99,
     image_url: "https://placehold.co/400x300?text=T-Shirt",
-    stock_quantity: 100,
+    stock_quantity: 2,
     category: categories[2],
     enabled: true,
   },
