@@ -55,11 +55,8 @@ export const useUserStore = create<UserState>()(
           );
 
           const {
-            data: { user, token, refreshToken },
+            data: { user },
           } = loginResponse;
-
-          localStorage.setItem("authToken", token);
-          localStorage.setItem("refreshToken", refreshToken);
 
           set((state) => {
             state.user = user;
@@ -109,21 +106,10 @@ export const useUserStore = create<UserState>()(
           state.error = null;
         });
         try {
-          const refreshToken = localStorage.getItem("refreshToken");
-          const authToken = localStorage.getItem("authToken");
-          await fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${authToken}`,
-            },
-            body: JSON.stringify({ refreshToken: refreshToken }),
-          });
+          //await logout();
         } catch (error) {
           console.error("Logout error:", error);
         } finally {
-          localStorage.removeItem("authToken");
-          localStorage.removeItem("refreshToken");
           set((state) => {
             state.user = null;
             state.isAuthenticated = false;
@@ -146,9 +132,9 @@ export const useUserStore = create<UserState>()(
             `${import.meta.env.VITE_API_URL}/users/${user.id}`,
             {
               method: "PUT",
+              credentials: "include",
               headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
               },
               body: JSON.stringify(updatedData),
             }
@@ -184,35 +170,22 @@ export const useUserStore = create<UserState>()(
       },
       refreshToken: async () => {
         try {
-          const refreshToken = localStorage.getItem("refreshToken");
-          if (!refreshToken) throw new Error("No refresh token available");
-
           const response = await fetch(
             `${import.meta.env.VITE_API_URL}/auth/refresh-token`,
             {
               method: "POST",
+              credentials: "include",
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({ refreshToken }),
             }
           );
 
           if (!response.ok) {
             throw new Error("Failed to refresh token");
           }
-
-          const { authToken, refreshToken: newRefreshToken } =
-            await response.json();
-          localStorage.setItem("authToken", authToken);
-          if (newRefreshToken) {
-            localStorage.setItem("refreshToken", newRefreshToken);
-          }
           return true;
         } catch (error) {
-          localStorage.removeItem("authToken");
-          localStorage.removeItem("refreshToken");
-
           set((state) => {
             state.isLoading = false;
             state.error =
@@ -224,15 +197,6 @@ export const useUserStore = create<UserState>()(
         }
       },
       fetchUser: async () => {
-        const authToken = localStorage.getItem("authToken");
-        if (!authToken) {
-          set((state) => {
-            state.user = null;
-            state.isAuthenticated = false;
-          });
-          return;
-        }
-
         set((state) => {
           state.isLoading = true;
           state.error = null;
@@ -242,9 +206,7 @@ export const useUserStore = create<UserState>()(
           const response = await fetch(
             `${import.meta.env.VITE_API_URL}/auth/me`,
             {
-              headers: {
-                Authorization: `Bearer ${authToken}`,
-              },
+              credentials: "include",
             }
           );
 
@@ -268,9 +230,6 @@ export const useUserStore = create<UserState>()(
             state.isLoading = false;
           });
         } catch (error) {
-          localStorage.removeItem("authToken");
-          localStorage.removeItem("refreshToken");
-
           set((state) => {
             state.user = null;
             state.isAuthenticated = false;

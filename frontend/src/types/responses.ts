@@ -12,8 +12,6 @@ type CreateOrderResponse = {
 };
 
 type LoginResponse = {
-  token: string;
-  refreshToken: string;
   user: User;
 };
 
