@@ -1,46 +1,78 @@
-import { categories, getProducts } from "@/dummyData";
 import ProductCard from "./ProductCard";
-import { useEffect, useState } from "react";
-import type { Product } from "@/types";
-import { Route } from "@/routes";
-import { slugify } from "@/lib/utils";
+import type { Product, View } from "@/types";
 
-const Products = () => {
-  const [getPro, setGetPro] = useState<Product[]>([]);
-  const { category, filter } = Route.useSearch();
+import { Skeleton } from "./ui/skeleton";
+import { Card } from "./ui/card";
+import { useCartStore } from "@/stores/useCartStore";
+import { Button } from "./ui/button";
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const fetchedProducts = await getProducts(
-        categories.find((cat) => cat.slug === category)?.id
-      );
+type ProductsProps = {
+  products?: Product[] | undefined;
+  isLoading?: boolean;
+  isError?: boolean;
+  retry?: () => void;
+  viewMode: View;
+  className?: string;
+};
 
-      setGetPro(fetchedProducts);
-    };
+const Products = ({
+  products,
+  isLoading,
+  isError,
+  retry,
+  viewMode,
+  className,
+}: ProductsProps) => {
+  const { addToCart } = useCartStore();
 
-    fetchProducts();
-  }, [category]);
+  if (!products || products.length === 0) {
+    return (
+      <div className="w-full">
+        <p className="text-center text-secondary-500">No products found.</p>
+      </div>
+    );
+  }
 
-  const filteredProducts = () => {
-    switch (filter) {
-      case slugify("Price: Low to High"):
-        return [...getPro].sort((a, b) => a.price - b.price);
-      case slugify("Price: High to Low"):
-        return [...getPro].sort((a, b) => b.price - a.price);
-      /*case slugify("Newest Arrivals"):
-        return [...getPro].sort((a, b) => b.createdAt - a.createdAt);
-      case slugify("Best Rating"):
-        return [...getPro].sort((a, b) => b.rating - a.rating);*/
-      default:
-        return getPro;
-    }
-  };
+  if (isError) {
+    return (
+      <div className="w-full">
+        <p className="text-center text-red-500">Error loading products.</p>
+        {retry && (
+          <Button onClick={retry} variant="outline">
+            Retry
+          </Button>
+        )}
+      </div>
+    );
+  }
 
   return (
-    <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      {filteredProducts().map((product) => (
-        <ProductCard key={product.id} product={product} />
-      ))}
+    <div className="w-full">
+      <div
+        className={`grid gap-6 ${
+          viewMode === "grid"
+            ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"
+            : "grid-cols-1 max-w-4xl mx-auto"
+        }`}
+      >
+        {!isLoading
+          ? products.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                viewMode={viewMode}
+                onAddToCart={addToCart}
+              />
+            ))
+          : Array.from({ length: 8 }).map((_, index) => (
+              <Card
+                key={index}
+                className="h-80 p-0 border-secondary-100 rounded-md"
+              >
+                <Skeleton className="h-full" />
+              </Card>
+            ))}
+      </div>
     </div>
   );
 };

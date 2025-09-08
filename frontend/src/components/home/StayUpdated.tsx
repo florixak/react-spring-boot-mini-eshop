@@ -1,5 +1,5 @@
-import Button from "./Button";
-import { Input } from "./ui/input";
+import Button from "../Button";
+import { Input } from "../ui/input";
 
 const StayUpdated = () => {
   return (

@@ -1,4 +1,5 @@
-import type { Product, Category } from "@/types";
+import type { Product, Category, OrderItem } from "@/types";
+import type { PRODUCT_FILTERS } from "./constants";
 
 export const categories: Category[] = [
   {
@@ -24,7 +25,7 @@ export const categories: Category[] = [
   },
 ];
 
-const dummyProducts: Product[] = [
+export const dummyProducts: Product[] = [
   {
     id: 1,
     title: "Wireless Headphones",
@@ -65,7 +66,7 @@ const dummyProducts: Product[] = [
     description: "Comfortable cotton t-shirt in various sizes.",
     price: 19.99,
     image_url: "https://placehold.co/400x300?text=T-Shirt",
-    stock_quantity: 100,
+    stock_quantity: 2,
     category: categories[2],
     enabled: true,
   },
@@ -82,18 +83,94 @@ const dummyProducts: Product[] = [
   },
 ];
 
+type FilterOptions = {
+  categorySlug?: string;
+  query?: string;
+  priceRange?: [number, number];
+  sortBy?: (typeof PRODUCT_FILTERS)[number]["value"];
+  inStockOnly?: boolean;
+};
+
 export const getProducts = async (
-  categoryId: Category["id"] | undefined
+  filters: FilterOptions = {}
 ): Promise<Product[]> => {
-  if (categoryId === undefined) {
-    return Promise.resolve(dummyProducts);
-  }
+  const {
+    categorySlug,
+    query,
+    priceRange,
+    sortBy,
+    inStockOnly = false,
+  } = filters;
 
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(
-        dummyProducts.filter((product) => product.category.id === categoryId)
-      );
-    }, 1000);
+      let filtered = [...dummyProducts];
+
+      if (categorySlug && categorySlug !== "all") {
+        filtered = filtered.filter(
+          (product) => product.category.slug === categorySlug
+        );
+      }
+
+      if (query && query.trim()) {
+        filtered = filtered.filter(
+          (product) =>
+            product.title.toLowerCase().includes(query.toLowerCase()) ||
+            product.description.toLowerCase().includes(query.toLowerCase())
+        );
+      }
+
+      if (priceRange) {
+        const [minPrice, maxPrice] = priceRange;
+        filtered = filtered.filter(
+          (product) => product.price >= minPrice && product.price <= maxPrice
+        );
+      }
+
+      if (inStockOnly) {
+        filtered = filtered.filter((product) => product.stock_quantity > 0);
+      }
+
+      if (sortBy) {
+        filtered.sort((a, b) => {
+          switch (sortBy) {
+            case "price_low_to_high":
+              return a.price - b.price;
+            case "price_high_to_low":
+              return b.price - a.price;
+            case "newest_arrivals":
+              return b.id - a.id;
+            default:
+              return 0;
+          }
+        });
+      }
+
+      resolve(filtered);
+    }, 500);
   });
+};
+
+export const getCartProducts = async (productIds: number[]) => {
+  return new Promise<OrderItem[]>((resolve) => {
+    setTimeout(() => {
+      const products: OrderItem[] = dummyProducts
+        .filter((product) => productIds.includes(product.id))
+        .map((product) => ({
+          id: product.id,
+          product,
+          quantity: 1,
+        }));
+      resolve(products);
+    }, 300);
+  });
+};
+
+export const getCategoryBySlug = (slug: string): Category | undefined => {
+  return categories.find((cat) => cat.slug === slug);
+};
+
+export const parsePriceRange = (priceString: string): [number, number] => {
+  const [min, max] = priceString.split("-").map(Number);
+  return [min || 0, max || 1000];
 };

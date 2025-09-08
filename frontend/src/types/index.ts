@@ -25,6 +25,7 @@ type Role = "USER" | "ADMIN";
 type User = {
   id: number;
   email: string;
+  phone: string;
   username: string;
   first_name: string;
   last_name: string;
@@ -55,4 +56,11 @@ type OrderItem = {
   quantity: number;
 };
 
-export type { Product, Category, User, Order, OrderItem };
+type CartItem = {
+  product: Product;
+  quantity: number;
+};
+
+type View = "grid" | "list";
+
+export type { Product, Category, User, Order, OrderItem, CartItem, View };

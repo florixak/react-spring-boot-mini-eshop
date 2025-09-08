@@ -22,7 +22,7 @@ const Button = ({
       onClick={onClick}
       disabled={loading}
       className={cn(
-        "px-6 py-5 rounded-lg border-secondary-200",
+        "px-6 py-5 rounded-lg border-secondary-200 hover:bg-secondary-50 transition-colors",
         isActive ? "bg-primary text-white" : "bg-transparent text-primary",
         className
       )}
