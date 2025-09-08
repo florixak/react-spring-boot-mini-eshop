@@ -24,7 +24,7 @@ const FilterSidebar = ({ search, navigate }: FilterSidebarProps) => {
           <span className="text-sm font-medium text-primary">
             Filter by category
           </span>
-          <CategoryFilter search={search} navigate={navigate} />
+          <CategoryFilter />
         </div>
         <div>
           <span className="text-sm font-medium text-primary">Sort by</span>

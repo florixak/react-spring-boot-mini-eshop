@@ -9,6 +9,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { Route } from "@/routes/auth";
 import { Separator } from "../ui/separator";
 import { registerSchema, type RegisterFormData } from "@/lib/schema";
+import { useUserStore } from "@/stores/useUserStore";
 
 type RegisterFormProps = {
   redirectTo?: string;
@@ -21,6 +22,7 @@ const RegisterForm = ({ redirectTo }: RegisterFormProps) => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const navigate = Route.useNavigate();
+  const { register: registerUser } = useUserStore();
 
   const {
     register,
@@ -36,27 +38,14 @@ const RegisterForm = ({ redirectTo }: RegisterFormProps) => {
     setError(null);
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/auth/register`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email,
-            username: data.username,
-            password: data.password,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Registration failed");
-      }
+      await registerUser({
+        email: data.email,
+        username: data.username,
+        password: data.password,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        phone: "",
+      });
 
       setSuccess(true);
       reset();

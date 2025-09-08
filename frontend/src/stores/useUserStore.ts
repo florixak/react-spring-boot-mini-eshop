@@ -1,12 +1,9 @@
+import { login, register } from "@/lib/api";
 import type { User } from "@/types";
+import type { LoginCredentials, RegisterCredentials } from "@/types/auth";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-
-type LoginCredentials = {
-  emailOrUsername: string;
-  password: string;
-};
 
 interface UserState {
   user: User | null;
@@ -17,6 +14,7 @@ interface UserState {
   setUser: (user: User | null) => void;
   clearUser: () => void;
   login: (credentials: LoginCredentials) => Promise<void>;
+  register: (credentials: RegisterCredentials) => Promise<void>;
   logout: () => Promise<void>;
   updateUser: (updatedData: Partial<User>) => Promise<void>;
   fetchUser: () => Promise<void>;
@@ -51,22 +49,14 @@ export const useUserStore = create<UserState>()(
         });
 
         try {
-          const response = await fetch(
-            `${import.meta.env.VITE_API_URL}/auth/login`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(credentials),
-            }
+          const loginResponse = await login(
+            credentials.emailOrUsername,
+            credentials.password
           );
 
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-
-          const { user, token, refreshToken } = await response.json();
+          const {
+            data: { user, token, refreshToken },
+          } = loginResponse;
 
           localStorage.setItem("authToken", token);
           localStorage.setItem("refreshToken", refreshToken);
@@ -84,6 +74,33 @@ export const useUserStore = create<UserState>()(
               error instanceof Error ? error.message : "Login failed";
           });
           throw error;
+        }
+      },
+      register: async (credentials) => {
+        set((state) => {
+          state.isLoading = true;
+          state.error = null;
+        });
+
+        try {
+          await register(
+            credentials.username,
+            credentials.password,
+            credentials.email,
+            credentials.firstName,
+            credentials.lastName,
+            credentials.phone
+          );
+        } catch (error) {
+          set((state) => {
+            state.error =
+              error instanceof Error ? error.message : "Registration failed";
+          });
+          throw error;
+        } finally {
+          set((state) => {
+            state.isLoading = false;
+          });
         }
       },
       logout: async () => {

@@ -4,15 +4,47 @@ import type { Product, View } from "@/types";
 import { Skeleton } from "./ui/skeleton";
 import { Card } from "./ui/card";
 import { useCartStore } from "@/stores/useCartStore";
+import { Button } from "./ui/button";
 
 type ProductsProps = {
-  products?: Product[];
+  products?: Product[] | undefined;
+  isLoading?: boolean;
+  isError?: boolean;
+  retry?: () => void;
   viewMode: View;
   className?: string;
 };
 
-const Products = ({ products, viewMode }: ProductsProps) => {
+const Products = ({
+  products,
+  isLoading,
+  isError,
+  retry,
+  viewMode,
+  className,
+}: ProductsProps) => {
   const { addToCart } = useCartStore();
+
+  if (!products || products.length === 0) {
+    return (
+      <div className="w-full">
+        <p className="text-center text-secondary-500">No products found.</p>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="w-full">
+        <p className="text-center text-red-500">Error loading products.</p>
+        {retry && (
+          <Button onClick={retry} variant="outline">
+            Retry
+          </Button>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">
@@ -23,7 +55,7 @@ const Products = ({ products, viewMode }: ProductsProps) => {
             : "grid-cols-1 max-w-4xl mx-auto"
         }`}
       >
-        {products && products.length > 0
+        {!isLoading
           ? products.map((product) => (
               <ProductCard
                 key={product.id}

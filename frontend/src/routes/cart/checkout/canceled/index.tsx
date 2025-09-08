@@ -3,22 +3,40 @@ import { XCircle, ArrowLeft, CreditCard, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { fetchOrder } from "@/lib/api";
 
 type CheckoutCanceledSearch = {
-  sessionId?: string;
   orderId?: string;
 };
 
 export const Route = createFileRoute("/cart/checkout/canceled/")({
   component: CheckoutCanceled,
   validateSearch: (search): CheckoutCanceledSearch => ({
-    sessionId: search.sessionId as string,
     orderId: search.orderId as string,
   }),
 });
 
 function CheckoutCanceled() {
-  const { sessionId, orderId } = Route.useSearch();
+  const { orderId } = Route.useSearch();
+
+  const {
+    data: order,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["order", orderId],
+    queryFn: async () => await fetchOrder(orderId!),
+    enabled: !!orderId,
+  });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error loading order details.</div>;
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen container mx-auto py-8 px-4">
@@ -107,11 +125,7 @@ function CheckoutCanceled() {
 
           {orderId && (
             <Button variant="outline" asChild className="w-full">
-              <Link
-                to="/order/$orderId"
-                params={{ orderId: orderId }}
-                search={{}}
-              >
+              <Link to="/order/$orderId" params={{ orderId: orderId }}>
                 View Order Details
               </Link>
             </Button>

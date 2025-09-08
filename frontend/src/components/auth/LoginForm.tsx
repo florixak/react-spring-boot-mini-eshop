@@ -45,6 +45,8 @@ const LoginForm = ({ redirectTo }: LoginFormProps) => {
         password: data.password,
       });
 
+      reset();
+
       navigate({
         to: "/account",
         replace: true,

@@ -1,4 +1,4 @@
-import type { Route } from "@/routes/shop";
+import { Route } from "@/routes/shop";
 import {
   Select,
   SelectContent,
@@ -6,17 +6,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { categories } from "@/dummyData";
+import type { Category } from "@/types";
+import type { Response } from "@/types/responses";
 
-type CategoryFilterProps = {
-  search: ReturnType<typeof Route.useSearch>;
-  navigate: ReturnType<typeof Route.useNavigate>;
-};
+import { fetchCategories } from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
 
-const CategoryFilter = ({ search, navigate }: CategoryFilterProps) => {
+const CategoryFilter = () => {
+  const search = Route.useSearch();
+  const navigate = Route.useNavigate();
   const handleCategoryChange = (value: string) => {
     navigate({ search: { ...search, category: value }, resetScroll: false });
   };
+
+  const {
+    data: { data: categories } = { data: [] },
+    isLoading,
+    isError,
+  } = useQuery<Response<Category[]>>({
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
+  });
 
   return (
     <Select onValueChange={handleCategoryChange} defaultValue={search.category}>
