@@ -9,7 +9,4 @@ import lombok.Setter;
 @AllArgsConstructor
 public class LoginDataDTO {
 	private UserDTO user;
-	private String token;
-	private long expiresIn;
-	private String refreshToken;
 }

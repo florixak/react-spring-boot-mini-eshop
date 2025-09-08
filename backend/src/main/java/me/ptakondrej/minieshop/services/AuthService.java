@@ -1,5 +1,7 @@
 package me.ptakondrej.minieshop.services;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import me.ptakondrej.minieshop.models.LoginUserDTO;
 import me.ptakondrej.minieshop.models.RegisterUserDTO;
 import me.ptakondrej.minieshop.user.Role;
@@ -20,14 +22,18 @@ public class AuthService {
 	private final PasswordEncoder passwordEncoder;
 	private final AuthenticationManager authenticationManager;
 	private final WishlistService wishlistService;
+	private final JwtService jwtService;
+	private final RefreshTokenService refreshTokenService;
 
 	public AuthService(UserRepository userRepository, UserService userService, PasswordEncoder passwordEncoder,
-			AuthenticationManager authenticationManager, WishlistService wishlistService) {
+			AuthenticationManager authenticationManager, WishlistService wishlistService, JwtService jwtService, RefreshTokenService refreshTokenService) {
 		this.userRepository = userRepository;
 		this.userService = userService;
 		this.passwordEncoder = passwordEncoder;
 		this.authenticationManager = authenticationManager;
 		this.wishlistService = wishlistService;
+		this.jwtService = jwtService;
+		this.refreshTokenService = refreshTokenService;
 	}
 
 	public User signUp(RegisterUserDTO registerUserDTO) {
@@ -68,6 +74,28 @@ public class AuthService {
 		userDetails.put("enabled", user.isEnabled());
 		userDetails.put("role", user.getRole().name());
 		return userDetails;
+	}
+
+	public void setCookies(HttpServletResponse response, String token, String refreshToken) {
+		Cookie jwtCookie = new Cookie("accessToken", token);
+		jwtCookie.setHttpOnly(true);
+		jwtCookie.setPath("/");
+		jwtCookie.setSecure(false);
+		jwtCookie.setMaxAge((int) (jwtService.getExpirationTime() / 1000));
+		response.addCookie(jwtCookie);
+
+		Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+		refreshTokenCookie.setHttpOnly(true);
+		refreshTokenCookie.setPath("/");
+		refreshTokenCookie.setSecure(false);
+		refreshTokenCookie.setMaxAge((int) (refreshTokenService.getRefreshTokenDurationMs() / 1000));
+		response.addCookie(refreshTokenCookie);
+
+		response.setHeader("Set-Cookie",
+				"accessToken=" + token + "; HttpOnly; Path=/; Max-Age=" + (jwtService.getExpirationTime() / 1000) + "; SameSite=Lax");
+
+		response.addHeader("Set-Cookie",
+				"refreshToken=" + refreshToken + "; HttpOnly; Path=/; Max-Age=" + (refreshTokenService.getRefreshTokenDurationMs() / 1000) + "; SameSite=Lax");
 	}
 
 

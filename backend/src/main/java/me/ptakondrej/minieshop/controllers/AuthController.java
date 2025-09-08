@@ -1,5 +1,7 @@
 package me.ptakondrej.minieshop.controllers;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import me.ptakondrej.minieshop.auth.RefreshToken;
 import me.ptakondrej.minieshop.models.LoginDataDTO;
 import me.ptakondrej.minieshop.models.LoginUserDTO;
@@ -14,10 +16,7 @@ import me.ptakondrej.minieshop.services.RefreshTokenService;
 import me.ptakondrej.minieshop.user.User;
 import me.ptakondrej.minieshop.user.UserMapper;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
@@ -52,7 +51,7 @@ public class AuthController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDTO loginUserDTO) {
+	public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDTO loginUserDTO, HttpServletResponse response) {
 		try {
 			User authenticatedUser = authService.authenticate(loginUserDTO);
 			HashMap<String, Object> userDetails = authService.createUserDetails(authenticatedUser);
@@ -60,25 +59,24 @@ public class AuthController {
 			UserDTO userDTO = UserMapper.convertToDto(authenticatedUser);
 			RefreshToken refreshToken = refreshTokenService.createRefreshToken(authenticatedUser);
 
+			authService.setCookies(response, token, refreshToken.getToken());
+
 			return ResponseEntity.ok(new LoginResponse(
 					true,
-					new LoginDataDTO(userDTO,
-					token,
-					jwtService.getExpirationTime(),
-					refreshToken.getToken()),
+					new LoginDataDTO(userDTO),
 					"Login successful"
 			));
 
 		} catch (RuntimeException e) {
-			return ResponseEntity.badRequest().body(new LoginResponse(false, new LoginDataDTO(null, null, -1, null),  e.getMessage()));
+			return ResponseEntity.badRequest().body(new LoginResponse(false, new LoginDataDTO(null),  e.getMessage()));
 		}
 	}
 
 	@PostMapping("/refresh-token")
-	public ResponseEntity<LoginResponse> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+	public ResponseEntity<LoginResponse> refreshToken(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
 		try {
 			RefreshToken oldRefreshToken = refreshTokenService
-					.findByToken(refreshTokenRequest.getRefreshToken())
+					.findByToken(refreshToken)
 					.map(refreshTokenService::verifyExpiration)
 					.orElseThrow(() -> new RuntimeException("Invalid refresh token."));
 
@@ -89,19 +87,53 @@ public class AuthController {
 			String newAccessToken = jwtService.generateToken(userDetails, user);
 			UserDTO userDTO = UserMapper.convertToDto(user);
 
+			authService.setCookies(response, newAccessToken, newRefreshToken.getToken());
+
 			return ResponseEntity.ok(new LoginResponse(
 					true,
 					new LoginDataDTO(
-							userDTO,
-							newAccessToken,
-							jwtService.getExpirationTime(),
-							newRefreshToken.getToken()
-					),
+							userDTO),
 					"Token refreshed successfully"
 			));
 		} catch (RuntimeException e) {
-			return ResponseEntity.badRequest().body(new LoginResponse(false, new LoginDataDTO(null, null, -1, null), e.getMessage()));
+			return ResponseEntity.badRequest().body(new LoginResponse(false, new LoginDataDTO(null), e.getMessage()));
 		}
 	}
 
+	@DeleteMapping("/logout")
+	public ResponseEntity<Response<String>> logout(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
+		try {
+			if (refreshToken != null) {
+				System.out.println("Deleting refresh token: " + refreshToken);
+				refreshTokenService.deleteByOldRefreshToken(refreshToken);
+			}
+
+			Cookie jwtCookie = new Cookie("accessToken", null);
+			jwtCookie.setHttpOnly(true);
+			jwtCookie.setPath("/");
+			jwtCookie.setMaxAge(0);
+			jwtCookie.setSecure(false);
+			response.addCookie(jwtCookie);
+
+			Cookie refreshTokenCookie = new Cookie("refreshToken", null);
+			refreshTokenCookie.setHttpOnly(true);
+			refreshTokenCookie.setPath("/");
+			refreshTokenCookie.setMaxAge(0);
+			refreshTokenCookie.setSecure(false);
+			response.addCookie(refreshTokenCookie);
+
+			response.setHeader("Set-Cookie",
+					"accessToken=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax");
+
+			response.addHeader("Set-Cookie",
+					"refreshToken=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax");
+
+			return ResponseEntity.ok(new Response<String>(true, null, "Logged out successfully."));
+		} catch (RuntimeException e) {
+			return ResponseEntity.badRequest().body(new Response<String>(false, null, e.getMessage()));
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(new Response<String>(false, null, "An error occurred during logout."));
+		}
+
+	}
 }

@@ -2,6 +2,7 @@ package me.ptakondrej.minieshop.config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import me.ptakondrej.minieshop.services.JwtService;
@@ -47,7 +48,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 		}
 
 		try {
-			final String token = authHeader.substring(7);
+			final String token = request.getCookies() != null ?
+					java.util.Arrays.stream(request.getCookies())
+					.filter(cookie -> "accessToken".equals(cookie.getName()))
+					.findFirst()
+					.map(Cookie::getValue)
+					.orElse(null) : null;
 			final String username = jwtService.extractUsername(token);
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 

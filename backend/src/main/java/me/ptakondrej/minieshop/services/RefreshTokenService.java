@@ -28,6 +28,10 @@ public class RefreshTokenService {
 		return refreshTokenRepository.save(refreshToken);
 	}
 
+	public long getRefreshTokenDurationMs() {
+		return 604800000;
+	}
+
 	@Transactional
 	public RefreshToken verifyExpiration(RefreshToken refreshToken) {
 		if (refreshToken.getExpiryDate().isBefore(LocalDateTime.now())) {
