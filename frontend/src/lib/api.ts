@@ -56,9 +56,9 @@ export const fetchOrder = async (orderId: string): Promise<Response<Order>> => {
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/orders/${orderId}`,
     {
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
       },
     }
   );
@@ -77,11 +77,9 @@ export const createOrder = async (
     `${import.meta.env.VITE_API_URL}/checkout/create-checkout-session`,
     {
       method: "POST",
+      credentials: isLoggedIn ? "include" : "omit",
       headers: {
         "Content-Type": "application/json",
-        ...(isLoggedIn && {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        }),
       },
       body: JSON.stringify(orderData),
     }
@@ -100,9 +98,9 @@ export const payOrder = async (
     `${import.meta.env.VITE_API_URL}/checkout/pay/${orderId}`,
     {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
       },
     }
   );
@@ -113,14 +111,17 @@ export const payOrder = async (
   return data;
 };
 
-export const cancelOrder = async (orderId: number): Promise<Response<null>> => {
+export const cancelOrder = async (
+  orderId: number,
+  isLoggedIn: boolean
+): Promise<Response<null>> => {
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/orders/cancel/${orderId}`,
     {
       method: "POST",
+      credentials: isLoggedIn ? "include" : "omit",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
       },
     }
   );
@@ -137,6 +138,7 @@ export const login = async (
 ): Promise<Response<LoginResponse>> => {
   const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -187,6 +189,7 @@ export const refreshToken = async (): Promise<Response<LoginResponse>> => {
     `${import.meta.env.VITE_API_URL}/auth/refresh-token`,
     {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
