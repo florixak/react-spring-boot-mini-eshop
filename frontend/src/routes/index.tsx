@@ -22,14 +22,6 @@ export const Route = createFileRoute("/")({
       "no-filter",
     view: (search.view as View) ?? "grid",
   }),
-  loaderDeps: ({ search: { category } }) => ({
-    category,
-  }),
-  loader: async ({ deps: { category } }) => {
-    return {
-      products: [],
-    };
-  },
 });
 
 function Index() {

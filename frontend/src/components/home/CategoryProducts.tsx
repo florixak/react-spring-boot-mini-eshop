@@ -4,6 +4,7 @@ import Categories from "./Categories";
 import Products from "../Products";
 import { Separator } from "../ui/separator";
 import ViewMode from "../ViewMode";
+import { useQuery } from "@tanstack/react-query";
 
 type CategoryProductsProps = {
   title?: string;
@@ -12,7 +13,24 @@ type CategoryProductsProps = {
 const CategoryProducts = ({ title }: CategoryProductsProps) => {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
-  const { products } = Route.useLoaderData();
+  const { category } = Route.useSearch();
+
+  const {
+    data: products,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["categoryProducts", category],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/products?category=${category}&limit=6`
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    },
+  });
 
   return (
     <section className="min-h-screen flex items-start flex-col px-4 md:px-20 lg:px-28 gap-8 py-24">
