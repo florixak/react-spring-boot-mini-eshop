@@ -19,13 +19,15 @@ public class AuthService {
 	private final UserService userService;
 	private final PasswordEncoder passwordEncoder;
 	private final AuthenticationManager authenticationManager;
+	private final WishlistService wishlistService;
 
 	public AuthService(UserRepository userRepository, UserService userService, PasswordEncoder passwordEncoder,
-			AuthenticationManager authenticationManager) {
+			AuthenticationManager authenticationManager, WishlistService wishlistService) {
 		this.userRepository = userRepository;
 		this.userService = userService;
 		this.passwordEncoder = passwordEncoder;
 		this.authenticationManager = authenticationManager;
+		this.wishlistService = wishlistService;
 	}
 
 	public User signUp(RegisterUserDTO registerUserDTO) {
@@ -38,7 +40,9 @@ public class AuthService {
 				.role(Role.USER)
 				.enabled(true)
 				.build();
-		return userRepository.save(user);
+		User createdUser = userRepository.save(user);
+		wishlistService.createWishlist(user.getId());
+		return createdUser;
 	}
 
 	public User authenticate(LoginUserDTO loginUserDTO) {

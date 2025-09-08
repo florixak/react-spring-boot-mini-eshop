@@ -16,5 +16,6 @@ public class ProductRequest {
 	private String imageUrl;
 	private double price;
 	private long categoryId;
+	private Integer stockQuantity;
 	private Boolean enabled;
 }

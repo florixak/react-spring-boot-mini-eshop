@@ -16,7 +16,8 @@ import java.util.List;
 public class OrderCreationRequest {
 
 	private String shippingAddress;
-	private String billingAddress;
+	private String customerEmail;
+	private String customerPhone;
 	private PaymentMethod paymentMethod;
 	private List<OrderItemDataDTO> orderItems;
 }

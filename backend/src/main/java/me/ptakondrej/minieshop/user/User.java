@@ -2,6 +2,7 @@ package me.ptakondrej.minieshop.user;
 
 import jakarta.persistence.*;
 import lombok.*;
+import me.ptakondrej.minieshop.wishlist.Wishlist;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,12 +27,22 @@ public class User implements UserDetails {
 	private String username;
 	@Column(nullable = false, unique = true)
 	private String email;
+	@Column
+	private String phone;
 	@Column(nullable = false)
 	private String password;
 	@Column(name = "first_name")
 	private String firstName;
 	@Column(name = "last_name")
 	private String lastName;
+	@Column(name = "address")
+	private String address;
+	@Column(name = "city")
+	private String city;
+	@Column(name = "postal_code")
+	private String postalCode;
+	@Column(name = "country")
+	private String country;
 	@Enumerated(EnumType.STRING)
 	@Column(name = "role", nullable = false)
 	private Role role;

@@ -17,6 +17,8 @@ public class OrderDTO {
 
 	private Long id;
 	private UserDTO user;
+	private String customerEmail;
+	private String customerPhone;
 	private List<OrderItemDTO> orderItems;
 	private BigDecimal totalPrice;
 	private LocalDateTime createdAt;
