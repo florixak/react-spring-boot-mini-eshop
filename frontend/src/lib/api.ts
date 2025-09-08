@@ -202,3 +202,18 @@ export const refreshToken = async (): Promise<Response<LoginResponse>> => {
   const data = (await response.json()) as Response<LoginResponse>;
   return data;
 };
+
+export const logout = async (): Promise<Response<null>> => {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
+    method: "DELETE",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    throw new Error("Failed to logout");
+  }
+  const data = (await response.json()) as Response<null>;
+  return data;
+};
