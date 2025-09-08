@@ -132,7 +132,7 @@ export const cancelOrder = async (orderId: number): Promise<Response<null>> => {
 };
 
 export const login = async (
-  username: string,
+  usernameOrEmail: string,
   password: string
 ): Promise<Response<LoginResponse>> => {
   const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
@@ -140,7 +140,7 @@ export const login = async (
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify({ usernameOrEmail, password }),
   });
   if (!response.ok) {
     throw new Error("Failed to login");
