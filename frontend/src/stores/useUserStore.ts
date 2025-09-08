@@ -1,4 +1,4 @@
-import { login, register } from "@/lib/api";
+import { login, logout, register } from "@/lib/api";
 import type { User } from "@/types";
 import type { LoginCredentials, RegisterCredentials } from "@/types/auth";
 import { create } from "zustand";
@@ -109,16 +109,7 @@ export const useUserStore = create<UserState>()(
           state.error = null;
         });
         try {
-          const refreshToken = localStorage.getItem("refreshToken");
-          const authToken = localStorage.getItem("authToken");
-          await fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${authToken}`,
-            },
-            body: JSON.stringify({ refreshToken: refreshToken }),
-          });
+          await logout();
         } catch (error) {
           console.error("Logout error:", error);
         } finally {
