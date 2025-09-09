@@ -96,6 +96,11 @@ public class CategoryService {
 				.orElseThrow(() -> new IllegalArgumentException("Category not found with id: " + id));
 	}
 
+	public Category getCategoryBySlug (String slug){
+		return categoryRepository.findBySlug(slug)
+				.orElseThrow(() -> new IllegalArgumentException("Category not found with slug: " + slug));
+	}
+
 	private boolean validateCategoryRequest (CategoryRequest request){
 		return request != null
 				&& request.getTitle() != null && !request.getTitle().isEmpty()
