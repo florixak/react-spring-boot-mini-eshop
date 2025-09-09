@@ -32,8 +32,8 @@ export const dummyProducts: Product[] = [
     slug: "wireless-headphones",
     description: "High-quality wireless headphones with noise cancellation.",
     price: 99.99,
-    image_url: "https://placehold.co/400x300?text=Headphones",
-    stock_quantity: 25,
+    imageUrl: "https://placehold.co/400x300?text=Headphones",
+    stockQuantity: 25,
     category: categories[0],
     enabled: true,
   },
@@ -43,8 +43,8 @@ export const dummyProducts: Product[] = [
     slug: "smartphone",
     description: "Latest model smartphone with advanced features.",
     price: 699.99,
-    image_url: "https://placehold.co/400x300?text=Smartphone",
-    stock_quantity: 15,
+    imageUrl: "https://placehold.co/400x300?text=Smartphone",
+    stockQuantity: 15,
     category: categories[0],
     enabled: true,
   },
@@ -54,8 +54,8 @@ export const dummyProducts: Product[] = [
     slug: "classic-novel",
     description: "A timeless classic novel for your collection.",
     price: 14.99,
-    image_url: "https://placehold.co/400x300?text=Book",
-    stock_quantity: 50,
+    imageUrl: "https://placehold.co/400x300?text=Book",
+    stockQuantity: 50,
     category: categories[1],
     enabled: true,
   },
@@ -65,8 +65,8 @@ export const dummyProducts: Product[] = [
     slug: "t-shirt",
     description: "Comfortable cotton t-shirt in various sizes.",
     price: 19.99,
-    image_url: "https://placehold.co/400x300?text=T-Shirt",
-    stock_quantity: 2,
+    imageUrl: "https://placehold.co/400x300?text=T-Shirt",
+    stockQuantity: 2,
     category: categories[2],
     enabled: true,
   },
@@ -76,8 +76,8 @@ export const dummyProducts: Product[] = [
     slug: "jeans",
     description: "Stylish denim jeans for everyday wear.",
     price: 49.99,
-    image_url: "https://placehold.co/400x300?text=Jeans",
-    stock_quantity: 60,
+    imageUrl: "https://placehold.co/400x300?text=Jeans",
+    stockQuantity: 60,
     category: categories[2],
     enabled: true,
   },
@@ -128,7 +128,7 @@ export const getProducts = async (
       }
 
       if (inStockOnly) {
-        filtered = filtered.filter((product) => product.stock_quantity > 0);
+        filtered = filtered.filter((product) => product.stockQuantity > 0);
       }
 
       if (sortBy) {

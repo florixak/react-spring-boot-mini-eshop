@@ -33,7 +33,7 @@ const ProductCard = ({ product, viewMode, onAddToCart }: ProductCardProps) => {
         }
       >
         <img
-          src={product.image_url}
+          src={product.imageUrl}
           alt="Product Image"
           className="w-full h-full object-cover object-center"
         />
@@ -57,10 +57,10 @@ const ProductCard = ({ product, viewMode, onAddToCart }: ProductCardProps) => {
             {formatPrice(product.price)}{" "}
             <span className="text-secondary-200 text-xs">
               (
-              {product.stock_quantity > 0
-                ? product.stock_quantity > 5
+              {product.stockQuantity > 0
+                ? product.stockQuantity > 5
                   ? ">5 in stock"
-                  : `Less than ${product.stock_quantity} in stock`
+                  : `Less than ${product.stockQuantity} in stock`
                 : "Out of stock"}
               )
             </span>

@@ -24,13 +24,13 @@ const ProfileSection = () => {
               <label className="text-sm font-semibold text-primary">
                 First Name
               </label>
-              <Input defaultValue={user?.first_name} className="mt-1" />
+              <Input defaultValue={user?.firstName} className="mt-1" />
             </div>
             <div>
               <label className="text-sm font-semibold text-primary">
                 Last Name
               </label>
-              <Input defaultValue={user?.last_name} className="mt-1" />
+              <Input defaultValue={user?.lastName} className="mt-1" />
             </div>
           </div>
 
@@ -58,17 +58,17 @@ const ProfileSection = () => {
               <label className="text-sm font-semibold text-primary">
                 Street Address
               </label>
-              <Input defaultValue="123 Main Street" className="mt-1" />
+              <Input defaultValue={user?.address} className="mt-1" />
             </div>
             <div>
               <label className="text-sm font-semibold text-primary">City</label>
-              <Input defaultValue="New York" className="mt-1" />
+              <Input defaultValue={user?.city} className="mt-1" />
             </div>
             <div>
               <label className="text-sm font-semibold text-primary">
                 ZIP Code
               </label>
-              <Input defaultValue="10001" className="mt-1" />
+              <Input defaultValue={user?.postalCode} className="mt-1" />
             </div>
           </div>
 

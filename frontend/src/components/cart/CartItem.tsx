@@ -22,7 +22,12 @@ const CartItem = ({
   onRemove,
 }: CartItemProps) => {
   const {
-    product: { title, image_url, price, stock_quantity },
+    product: {
+      title,
+      imageUrl: image_url,
+      price,
+      stockQuantity: stock_quantity,
+    },
     quantity,
   } = item;
   const inStock = stock_quantity > 0;

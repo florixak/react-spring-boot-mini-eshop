@@ -28,7 +28,7 @@ const OrderSummary = ({ shippingCost, isCartPage }: OrderSummaryProps) => {
         {cartItems.map((item) => (
           <div key={item.product.id} className="flex items-center space-x-4">
             <img
-              src={item.product.image_url}
+              src={item.product.imageUrl}
               alt={item.product.title}
               className="w-16 h-16 object-cover rounded-lg"
             />

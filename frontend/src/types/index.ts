@@ -14,8 +14,8 @@ type Product = {
   slug: string;
   description: string;
   price: number;
-  image_url: string;
-  stock_quantity: number;
+  imageUrl: string;
+  stockQuantity: number;
   category: Category;
   enabled: boolean;
 };
@@ -27,9 +27,14 @@ type User = {
   email: string;
   phone: string;
   username: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   role: Role;
+  address?: string;
+  city?: string;
+  postalCode?: string;
+  country?: string;
+  created_at: string;
 };
 
 type OrderStatus =
