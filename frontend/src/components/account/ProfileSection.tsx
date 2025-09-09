@@ -1,9 +1,9 @@
-import { Separator } from "@radix-ui/react-separator";
 import { Button } from "../ui/button";
 import { Card, CardHeader, CardContent } from "../ui/card";
 import { Input } from "../ui/input";
 import { useUserStore } from "@/stores/useUserStore";
 import { Label } from "../ui/label";
+import { Separator } from "../ui/separator";
 
 const ProfileSection = () => {
   const { user } = useUserStore();
@@ -49,7 +49,7 @@ const ProfileSection = () => {
             <Input type="tel" defaultValue={user?.phone} className="mt-1" />
           </div>
 
-          <Separator className="my-6" />
+          <Separator className="my-6 bg-secondary-100" />
 
           <h3 className="text-lg font-semibold text-primary font-playfair">
             Shipping Address
@@ -67,9 +67,21 @@ const ProfileSection = () => {
             </div>
             <div>
               <Label className="text-sm font-semibold text-primary">
+                State
+              </Label>
+              <Input defaultValue={user?.state} className="mt-1" />
+            </div>
+            <div>
+              <Label className="text-sm font-semibold text-primary">
                 ZIP Code
               </Label>
               <Input defaultValue={user?.postalCode} className="mt-1" />
+            </div>
+            <div>
+              <Label className="text-sm font-semibold text-primary">
+                Country
+              </Label>
+              <Input defaultValue={user?.country} className="mt-1" />
             </div>
           </div>
 
