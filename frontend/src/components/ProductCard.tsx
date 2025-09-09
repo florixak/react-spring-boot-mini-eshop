@@ -1,9 +1,10 @@
 import type { Product, View } from "@/types";
-import { Card } from "./ui/card";
+import { Card, CardContent, CardHeader } from "./ui/card";
 import Button from "./Button";
 import { Heart, ShoppingCart } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 import type { CartState } from "@/stores/useCartStore";
+import { Badge } from "./ui/badge";
 
 type ProductCardProps = {
   product: Product;
@@ -23,16 +24,16 @@ const ProductCard = ({ product, viewMode, onAddToCart }: ProductCardProps) => {
 
   return (
     <Card
-      className={`group relative p-0 border-secondary-100 rounded-md font-playfair ${cardClass}`}
+      className={`group relative p-0 border-secondary-100 rounded-md font-playfair gap-0 ${cardClass}`}
     >
       <div className="absolute top-2 right-2 z-10 p-1 rounded-full bg-white border border-secondary-200 text-secondary-200 hover:bg-primary hover:text-primary-foreground cursor-pointer transition">
         <Heart />
       </div>
-      <div
+      <CardHeader
         className={
           isList
-            ? "w-full md:max-w-[16rem] md:h-auto flex-shrink-0 overflow-hidden rounded-t-md md:rounded-l-md md:rounded-tr-none"
-            : "w-full aspect-[4/3] overflow-hidden rounded-t-md"
+            ? "w-full md:max-w-[16rem] md:h-auto flex-shrink-0 overflow-hidden rounded-t-md md:rounded-l-md md:rounded-tr-none p-0"
+            : "w-full aspect-[4/3] overflow-hidden rounded-t-md p-0"
         }
       >
         <img
@@ -40,10 +41,13 @@ const ProductCard = ({ product, viewMode, onAddToCart }: ProductCardProps) => {
           alt="Product Image"
           className="w-full h-full object-cover object-center"
         />
-      </div>
+      </CardHeader>
 
-      <div className="flex flex-col flex-1 justify-between px-4 py-3">
-        <div>
+      <CardContent className="flex flex-col flex-1 justify-between px-4 pb-3">
+        <Badge variant="default" className="absolute top-2 left-2">
+          {product.category.title}
+        </Badge>
+        <div className="mb-6">
           <h2 className="text-lg text-primary font-semibold">
             {product.title}
           </h2>
@@ -77,7 +81,7 @@ const ProductCard = ({ product, viewMode, onAddToCart }: ProductCardProps) => {
             Add to Cart
           </Button>
         </div>
-      </div>
+      </CardContent>
     </Card>
   );
 };
