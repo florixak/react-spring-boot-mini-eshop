@@ -1,7 +1,7 @@
 import type { Product, View } from "@/types";
 import { Card } from "./ui/card";
 import Button from "./Button";
-import { ShoppingCart } from "lucide-react";
+import { Heart, ShoppingCart } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 import type { CartState } from "@/stores/useCartStore";
 
@@ -23,8 +23,11 @@ const ProductCard = ({ product, viewMode, onAddToCart }: ProductCardProps) => {
 
   return (
     <Card
-      className={`relative p-0 border-secondary-100 rounded-md font-playfair ${cardClass}`}
+      className={`group relative p-0 border-secondary-100 rounded-md font-playfair ${cardClass}`}
     >
+      <div className="absolute top-2 right-2 z-10 p-1 rounded-full bg-white border border-secondary-200 text-secondary-200 hover:bg-primary hover:text-primary-foreground cursor-pointer transition">
+        <Heart />
+      </div>
       <div
         className={
           isList
