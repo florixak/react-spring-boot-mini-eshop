@@ -16,6 +16,7 @@ public class UserMapper {
 				.city(user.getCity())
 				.postalCode(user.getPostalCode())
 				.country(user.getCountry())
+				.state(user.getState())
 				.createdAt(user.getCreatedAt())
 				.role(user.getRole())
 				.enabled(user.isEnabled())
@@ -34,6 +35,7 @@ public class UserMapper {
 				.city(userDTO.getCity())
 				.postalCode(userDTO.getPostalCode())
 				.country(userDTO.getCountry())
+				.state(userDTO.getState())
 				.role(userDTO.getRole())
 				.enabled(userDTO.isEnabled())
 				.build();

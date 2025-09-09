@@ -22,6 +22,7 @@ public class UserDTO {
 	private String city;
 	private String postalCode;
 	private String country;
+	private String state;
 	private LocalDateTime createdAt;
 	private Role role;
 	private boolean enabled;

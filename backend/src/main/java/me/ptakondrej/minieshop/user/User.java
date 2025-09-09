@@ -43,6 +43,8 @@ public class User implements UserDetails {
 	private String postalCode;
 	@Column(name = "country")
 	private String country;
+	@Column(name = "state")
+	private String state;
 	@Enumerated(EnumType.STRING)
 	@Column(name = "role", nullable = false)
 	private Role role;
