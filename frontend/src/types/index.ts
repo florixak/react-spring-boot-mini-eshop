@@ -34,6 +34,7 @@ type User = {
   city?: string;
   postalCode?: string;
   country?: string;
+  state?: string;
   created_at: string;
 };
 

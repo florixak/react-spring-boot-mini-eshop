@@ -9,6 +9,7 @@ import { SHIPPING_METHODS } from "@/constants";
 import { Route } from "@/routes/cart/checkout";
 import ShippingInfoStep from "./ShippingInfoStep";
 import OrderSummary from "./OrderSummary";
+import { useUserStore } from "@/stores/useUserStore";
 
 type CheckoutContentProps = {
   step: number;
@@ -26,21 +27,22 @@ const orderItems: CartItem[] = [
 ];
 
 const CheckoutContent = ({ step }: CheckoutContentProps) => {
+  const { user } = useUserStore();
   const navigate = Route.useNavigate();
 
   const form = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutSchema),
     mode: "onChange",
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      address: "",
-      city: "",
-      state: "",
-      postalCode: "",
-      country: "",
+      firstName: user?.firstName || "",
+      lastName: user?.lastName || "",
+      email: user?.email || "",
+      phone: user?.phone || "",
+      address: user?.address || "",
+      city: user?.city || "",
+      state: user?.state || "",
+      postalCode: user?.postalCode || "",
+      country: user?.country || "",
       shippingMethod: "STANDARD",
     },
   });
