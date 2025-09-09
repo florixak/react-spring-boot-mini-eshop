@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import { Card, CardHeader, CardContent } from "../ui/card";
 import { Input } from "../ui/input";
 import { useUserStore } from "@/stores/useUserStore";
+import { Label } from "../ui/label";
 
 const ProfileSection = () => {
   const { user } = useUserStore();
@@ -21,30 +22,30 @@ const ProfileSection = () => {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-semibold text-primary">
+              <Label className="text-sm font-semibold text-primary">
                 First Name
-              </label>
+              </Label>
               <Input defaultValue={user?.firstName} className="mt-1" />
             </div>
             <div>
-              <label className="text-sm font-semibold text-primary">
+              <Label className="text-sm font-semibold text-primary">
                 Last Name
-              </label>
+              </Label>
               <Input defaultValue={user?.lastName} className="mt-1" />
             </div>
           </div>
 
           <div>
-            <label className="text-sm font-semibold text-primary">
+            <Label className="text-sm font-semibold text-primary">
               Email Address
-            </label>
+            </Label>
             <Input type="email" defaultValue={user?.email} className="mt-1" />
           </div>
 
           <div>
-            <label className="text-sm font-semibold text-primary">
+            <Label className="text-sm font-semibold text-primary">
               Phone Number
-            </label>
+            </Label>
             <Input type="tel" defaultValue={user?.phone} className="mt-1" />
           </div>
 
@@ -55,19 +56,19 @@ const ProfileSection = () => {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
-              <label className="text-sm font-semibold text-primary">
+              <Label className="text-sm font-semibold text-primary">
                 Street Address
-              </label>
+              </Label>
               <Input defaultValue={user?.address} className="mt-1" />
             </div>
             <div>
-              <label className="text-sm font-semibold text-primary">City</label>
+              <Label className="text-sm font-semibold text-primary">City</Label>
               <Input defaultValue={user?.city} className="mt-1" />
             </div>
             <div>
-              <label className="text-sm font-semibold text-primary">
+              <Label className="text-sm font-semibold text-primary">
                 ZIP Code
-              </label>
+              </Label>
               <Input defaultValue={user?.postalCode} className="mt-1" />
             </div>
           </div>
