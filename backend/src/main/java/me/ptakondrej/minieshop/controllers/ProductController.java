@@ -5,7 +5,6 @@ import me.ptakondrej.minieshop.models.ProductListDataDTO;
 import me.ptakondrej.minieshop.product.Product;
 import me.ptakondrej.minieshop.product.ProductMapper;
 import me.ptakondrej.minieshop.requests.ProductRequest;
-import me.ptakondrej.minieshop.requests.ProductsRequest;
 import me.ptakondrej.minieshop.responses.Response;
 import me.ptakondrej.minieshop.services.CategoryService;
 import me.ptakondrej.minieshop.services.ProductService;
@@ -31,24 +30,27 @@ public class ProductController {
 	}
 
 	@GetMapping
-	public ResponseEntity<Response<ProductListDataDTO>> getAllProducts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestBody(required = false) ProductsRequest productsRequest) {
+	public ResponseEntity<Response<ProductListDataDTO>> getAllProducts(
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size,
+			@RequestParam(required = false) String categorySlug,
+			@RequestParam(required = false) Double minPrice,
+			@RequestParam(required = false) Double maxPrice,
+			@RequestParam(required = false) String search,
+			@RequestParam(defaultValue = "false") boolean inStock,
+			@RequestParam(defaultValue = "id,asc") String[] sort) {
 		try {
+			System.out.println("Received parameters - page: " + page + ", size: " + size + ", categorySlug: " + categorySlug + ", minPrice: " + minPrice + ", maxPrice: " + maxPrice + ", search: " + search + ", inStock: " + inStock + ", sort: " + String.join(",", sort));
 			if (page < 0 || size <= 0) {
 				return ResponseEntity.badRequest().body(new Response<ProductListDataDTO>(false, null, "Invalid request parameters"));
 			}
 
 			Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
-			Page<Product> products;
-			if (productsRequest != null && productsRequest.getCategoryId() != null) {
-				products = productService.getProductsByCategoryId(productsRequest.getCategoryId(), pageable);
-			} else {
-				products = productService.getAllProducts(pageable);
-			}
-
-			List<ProductDTO> productDTOs = products.getContent().stream()
+			Page<Product> products = productService.filterProducts(categorySlug, minPrice, maxPrice, search, inStock, pageable);
+			List<ProductDTO> productDTOs = products.stream()
 					.map(ProductMapper::convertToDto)
 					.toList();
-
+			System.out.println(productDTOs);
 			return ResponseEntity.ok(
 					new Response<ProductListDataDTO>(
 							true,

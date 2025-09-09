@@ -3,10 +3,12 @@ package me.ptakondrej.minieshop.services;
 import me.ptakondrej.minieshop.category.Category;
 import me.ptakondrej.minieshop.product.Product;
 import me.ptakondrej.minieshop.product.ProductRepository;
+import me.ptakondrej.minieshop.product.ProductSpecification;
 import me.ptakondrej.minieshop.requests.ProductRequest;
 import me.ptakondrej.minieshop.utils.SlugUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,9 +30,18 @@ public class ProductService {
 		return productRepository.findAll(pageable);
 	}
 
-	@Transactional(readOnly = true)
-	public Page<Product> getProductsByCategoryId(Long categoryId, Pageable pageable) {
-		return productRepository.findAllByCategoryIdAndEnabledTrue(categoryId, pageable);
+	public Page<Product> filterProducts(
+			String categorySlug,
+			Double minPrice,
+			Double maxPrice,
+			String search,
+			boolean inStock,
+			Pageable pageable
+	) {
+		Category category = categorySlug != null ? categoryService.getCategoryBySlug(categorySlug) : null;
+		Long categoryId = category != null ? category.getId() : null;
+		Specification<Product> spec = ProductSpecification.filter(categoryId, minPrice, maxPrice, search, inStock);
+		return productRepository.findAll(spec, pageable);
 	}
 
 	public Product getProductById(Long id) {
