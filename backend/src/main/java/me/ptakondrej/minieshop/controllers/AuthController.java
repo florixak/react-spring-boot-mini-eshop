@@ -7,12 +7,12 @@ import me.ptakondrej.minieshop.models.LoginDataDTO;
 import me.ptakondrej.minieshop.models.LoginUserDTO;
 import me.ptakondrej.minieshop.models.RegisterUserDTO;
 import me.ptakondrej.minieshop.models.UserDTO;
-import me.ptakondrej.minieshop.requests.RefreshTokenRequest;
 import me.ptakondrej.minieshop.responses.LoginResponse;
 import me.ptakondrej.minieshop.responses.Response;
 import me.ptakondrej.minieshop.services.AuthService;
 import me.ptakondrej.minieshop.services.JwtService;
 import me.ptakondrej.minieshop.services.RefreshTokenService;
+import me.ptakondrej.minieshop.services.UserService;
 import me.ptakondrej.minieshop.user.User;
 import me.ptakondrej.minieshop.user.UserMapper;
 import org.springframework.http.ResponseEntity;
@@ -27,11 +27,13 @@ public class AuthController {
 	private final AuthService authService;
 	private final JwtService jwtService;
 	private final RefreshTokenService refreshTokenService;
+	private final UserService userService;
 
-	public AuthController(AuthService authService, JwtService jwtService, RefreshTokenService refreshTokenService) {
+	public AuthController(AuthService authService, JwtService jwtService, RefreshTokenService refreshTokenService, UserService userService) {
 		this.authService = authService;
 		this.jwtService = jwtService;
 		this.refreshTokenService = refreshTokenService;
+		this.userService = userService;
 	}
 
 	@PostMapping("/signup")
@@ -134,6 +136,19 @@ public class AuthController {
 		} catch (Exception e) {
 			return ResponseEntity.status(500).body(new Response<String>(false, null, "An error occurred during logout."));
 		}
+	}
 
+	@GetMapping("/me")
+	public ResponseEntity<Response<UserDTO>> getCurrentUser(@RequestAttribute Long userId) {
+		try {
+			if (userId == null) {
+				return ResponseEntity.status(401).body(new Response<UserDTO>(false, null, "Unauthorized"));
+			}
+			User user = userService.findById(userId);
+			UserDTO userDTO = UserMapper.convertToDto(user);
+			return ResponseEntity.ok(new Response<UserDTO>(true, userDTO, "User retrieved successfully"));
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(new Response<UserDTO>(false, null, "An error occurred while retrieving the user: " + e.getMessage()));
+		}
 	}
 }

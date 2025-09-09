@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -35,25 +36,26 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 									@NonNull FilterChain filterChain) throws ServletException, IOException {
 		String requestPath = request.getRequestURI();
 
-		if (requestPath.startsWith("/api/auth/")) {
+		if (requestPath.equals("/api/auth/login") || requestPath.equals("/api/auth/signup")) {
 			filterChain.doFilter(request, response);
 			return;
 		}
 
-		final String authHeader = request.getHeader("Authorization");
-
-		if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+		if (request.getCookies() == null || Arrays.stream(request.getCookies()).noneMatch(cookie -> "accessToken".equals(cookie.getName()))) {
 			filterChain.doFilter(request, response);
 			return;
 		}
 
 		try {
-			final String token = request.getCookies() != null ?
-					java.util.Arrays.stream(request.getCookies())
-					.filter(cookie -> "accessToken".equals(cookie.getName()))
-					.findFirst()
-					.map(Cookie::getValue)
-					.orElse(null) : null;
+			final String token = (request.getCookies() != null ?
+					Arrays.stream(request.getCookies())
+							.filter(cookie -> "accessToken".equals(cookie.getName()))
+							.findFirst()
+							.map(Cookie::getValue)
+							.orElse(null)
+					: null
+			);
+			System.out.println(token);
 			final String username = jwtService.extractUsername(token);
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
