@@ -35,11 +35,21 @@ const CategoryFilter = () => {
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="all">All</SelectItem>
-        {categories.map((category) => (
-          <SelectItem key={category.id} value={category.slug}>
-            {category.title}
+        {isLoading ? (
+          categories.map((category) => (
+            <SelectItem key={category.id} value={category.slug}>
+              {category.title}
+            </SelectItem>
+          ))
+        ) : isError ? (
+          <SelectItem value="error" disabled>
+            Error loading categories
           </SelectItem>
-        ))}
+        ) : (
+          <SelectItem value="loading" disabled>
+            Loading...
+          </SelectItem>
+        )}
       </SelectContent>
     </Select>
   );
