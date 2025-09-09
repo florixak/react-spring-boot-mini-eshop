@@ -59,7 +59,6 @@ export const fetchProducts = async (
   }
 
   const data = (await response.json()) as Response<ProductPageResponse>;
-  console.log("fetchProducts", { data });
   return data;
 };
 
