@@ -15,10 +15,10 @@ export const Route = createFileRoute("/account/")({
 });
 
 function Account() {
-  const isAuth = useAuthCheck();
+  const { isAuthenticated } = useAuthCheck();
   const navigate = Route.useNavigate();
 
-  if (!isAuth) {
+  if (!isAuthenticated) {
     navigate({
       to: "/auth",
       search: { mode: "login", redirectTo: "/account" },

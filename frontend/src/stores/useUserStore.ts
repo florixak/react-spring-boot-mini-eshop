@@ -1,4 +1,10 @@
-import { login, logout, register } from "@/lib/api";
+import {
+  fetchCurrentUser,
+  login,
+  logout,
+  refreshToken,
+  register,
+} from "@/lib/api";
 import type { User } from "@/types";
 import type { LoginCredentials, RegisterCredentials } from "@/types/auth";
 import { create } from "zustand";
@@ -170,20 +176,7 @@ export const useUserStore = create<UserState>()(
       },
       refreshToken: async () => {
         try {
-          const response = await fetch(
-            `${import.meta.env.VITE_API_URL}/auth/refresh-token`,
-            {
-              method: "POST",
-              credentials: "include",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-
-          if (!response.ok) {
-            throw new Error("Failed to refresh token");
-          }
+          await refreshToken();
           return true;
         } catch (error) {
           set((state) => {
@@ -203,12 +196,7 @@ export const useUserStore = create<UserState>()(
         });
 
         try {
-          const response = await fetch(
-            `${import.meta.env.VITE_API_URL}/auth/me`,
-            {
-              credentials: "include",
-            }
-          );
+          const response = await fetchCurrentUser();
 
           if (response.status === 401) {
             const refreshSuccess = await get().refreshToken?.();

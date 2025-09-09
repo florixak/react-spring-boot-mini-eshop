@@ -217,3 +217,13 @@ export const logout = async (): Promise<Response<null>> => {
   const data = (await response.json()) as Response<null>;
   return data;
 };
+
+export const fetchCurrentUser = async (): Promise<globalThis.Response> => {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response;
+};

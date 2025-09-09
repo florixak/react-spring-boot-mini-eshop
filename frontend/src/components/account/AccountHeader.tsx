@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { Route } from "@/routes/account";
-import { User, Package, Heart, Settings } from "lucide-react";
+import { User, Package, Heart, Settings, LogOut } from "lucide-react";
+import { Button } from "../ui/button";
+import { useUserStore } from "@/stores/useUserStore";
 
 const ACCOUNT_NAV = [
   {
@@ -31,18 +33,37 @@ const ACCOUNT_NAV = [
 
 const AccountHeader = () => {
   const search = Route.useSearch();
+  const { logout } = useUserStore();
+
+  const handleLogout = async () => {
+    await logout();
+  };
 
   return (
     <section className="bg-secondary-50 py-12 px-6 md:px-16 lg:px-28 pt-24">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-primary font-playfair mb-2">
-            My Account
-          </h1>
-          <p className="text-secondary-200">
-            Manage your account settings and preferences
-          </p>
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div className="text-left">
+              <h1 className="text-3xl font-bold text-primary font-playfair mb-2">
+                My Account
+              </h1>
+              <p className="text-secondary-200">
+                Manage your account settings and preferences
+              </p>
+            </div>
+
+            <Button
+              variant="outline"
+              onClick={handleLogout}
+              className="flex items-center gap-2 hover:bg-red-50 hover:border-red-200 hover:text-red-600 transition-colors"
+            >
+              <LogOut className="h-4 w-4" />
+              <span className="hidden sm:inline">Sign Out</span>
+            </Button>
+          </div>
         </div>
+
         <nav className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {ACCOUNT_NAV.map((link) => {
             const Icon = link.icon;

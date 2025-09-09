@@ -2,15 +2,25 @@ import { useUserStore } from "@/stores/useUserStore";
 import { useEffect } from "react";
 
 const useAuthCheck = () => {
-  const { isAuthenticated, fetchUser } = useUserStore();
+  const { isAuthenticated, isLoading, user, fetchUser } = useUserStore();
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      fetchUser();
-    }
+    const checkAuth = async () => {
+      try {
+        await fetchUser();
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
+    checkAuth();
   }, []);
 
-  return isAuthenticated;
+  return {
+    isAuthenticated,
+    user,
+    isLoading,
+  };
 };
 
 export default useAuthCheck;
