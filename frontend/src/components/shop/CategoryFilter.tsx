@@ -23,6 +23,7 @@ const CategoryFilter = () => {
     data: { data: categories } = { data: [] },
     isLoading,
     isError,
+    refetch,
   } = useQuery<Response<Category[]>>({
     queryKey: ["categories"],
     queryFn: fetchCategories,
@@ -35,21 +36,13 @@ const CategoryFilter = () => {
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="all">All</SelectItem>
-        {isLoading ? (
-          categories.map((category) => (
-            <SelectItem key={category.id} value={category.slug}>
-              {category.title}
-            </SelectItem>
-          ))
-        ) : isError ? (
-          <SelectItem value="error" disabled>
-            Error loading categories
-          </SelectItem>
-        ) : (
-          <SelectItem value="loading" disabled>
-            Loading...
-          </SelectItem>
-        )}
+        {!isLoading && !isError
+          ? categories.map((cat) => (
+              <SelectItem key={cat.id} value={cat.slug}>
+                {cat.title}
+              </SelectItem>
+            ))
+          : null}
       </SelectContent>
     </Select>
   );
