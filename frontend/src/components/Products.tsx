@@ -25,14 +25,6 @@ const Products = ({
 }: ProductsProps) => {
   const { addToCart } = useCartStore();
 
-  if (!products || products.length === 0) {
-    return (
-      <div className="w-full">
-        <p className="text-center text-secondary-500">No products found.</p>
-      </div>
-    );
-  }
-
   if (isError) {
     return (
       <div className="w-full">
@@ -46,6 +38,14 @@ const Products = ({
     );
   }
 
+  if ((!products || products.length === 0) && !isLoading) {
+    return (
+      <div className="w-full">
+        <p className="text-center text-gray-500">No products found.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full">
       <div
@@ -55,7 +55,7 @@ const Products = ({
             : "grid-cols-1 max-w-4xl mx-auto"
         }`}
       >
-        {!isLoading
+        {!isLoading && products
           ? products.map((product) => (
               <ProductCard
                 key={product.id}

@@ -40,10 +40,21 @@ function Shop() {
     Response<ProductPageResponse>
   >({
     queryKey: ["shopProducts", search],
-    queryFn: async () => await fetchProducts(search),
+    queryFn: async () =>
+      await fetchProducts({
+        categorySlug: search.category === "all" ? undefined : search.category,
+        //sortBy: search.sortBy === "no-filter" ? undefined : search.sortBy,
+        search: search.query || undefined,
+        minPrice: Number(search.price.split("-")[0]) || undefined,
+        maxPrice: Number(search.price.split("-")[1]) || undefined,
+        inStock:
+          search.stock === "in-stock"
+            ? true
+            : search.stock === "out-of-stock"
+            ? false
+            : undefined,
+      }),
   });
-
-  console.log(data);
 
   return (
     <>

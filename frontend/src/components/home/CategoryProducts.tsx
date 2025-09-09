@@ -21,7 +21,10 @@ const CategoryProducts = ({ title }: CategoryProductsProps) => {
     Response<ProductPageResponse>
   >({
     queryKey: ["categoryProducts", category],
-    queryFn: async () => await fetchProducts({ category }),
+    queryFn: async () =>
+      await fetchProducts({
+        categorySlug: category === "all" ? undefined : category,
+      }),
   });
 
   return (

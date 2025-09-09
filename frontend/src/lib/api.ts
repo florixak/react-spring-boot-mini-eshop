@@ -7,11 +7,11 @@ import type {
 } from "@/types/responses";
 
 type ProductFilter = {
-  category?: string;
-  sortBy?: string;
-  query?: string;
-  price?: string;
-  stock?: string;
+  categorySlug?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  search?: string;
+  inStock?: boolean;
 };
 
 export const fetchCategories = async (): Promise<Response<Category[]>> => {
@@ -31,13 +31,24 @@ export const fetchCategories = async (): Promise<Response<Category[]>> => {
 export const fetchProducts = async (
   filter: ProductFilter
 ): Promise<Response<ProductPageResponse>> => {
+  const page = 0;
+  const size = 10;
+  const params = new URLSearchParams();
+  params.append("page", (page ?? 0).toString());
+  params.append("size", (size ?? 10).toString());
+  if (filter.categorySlug) params.append("categorySlug", filter.categorySlug);
+  if (filter.minPrice !== undefined)
+    params.append("minPrice", filter.minPrice.toString());
+  if (filter.maxPrice !== undefined)
+    params.append("maxPrice", filter.maxPrice.toString());
+  if (filter.search) params.append("search", filter.search);
+  if (filter.inStock) params.append("inStock", "true");
+
   const url =
     `${import.meta.env.VITE_API_URL}/products` +
-    (Object.keys(filter).length
-      ? `?${new URLSearchParams(filter as Record<string, string>)}`
-      : "");
+    (params.toString() ? `?${params.toString()}` : "");
 
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/products`, {
+  const response = await fetch(url, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -49,6 +60,20 @@ export const fetchProducts = async (
 
   const data = (await response.json()) as Response<ProductPageResponse>;
   console.log("fetchProducts", { data });
+  return data;
+};
+
+export const fetchOrders = async (): Promise<Response<Order[]>> => {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/orders`, {
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    throw new Error("Failed to fetch orders");
+  }
+  const data = (await response.json()) as Response<Order[]>;
   return data;
 };
 
