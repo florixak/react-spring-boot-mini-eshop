@@ -6,6 +6,7 @@ import "./index.css";
 import { routeTree } from "./routeTree.gen";
 import { ThemeProvider } from "./components/NextThemeProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AuthProvider } from "./components/AuthProvider";
 
 const router = createRouter({ routeTree, scrollRestoration: true });
 
@@ -24,14 +25,16 @@ if (!rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme={savedTheme}
-          enableSystem
-          disableTransitionOnChange
-        >
-          <RouterProvider router={router} />
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme={savedTheme}
+            enableSystem
+            disableTransitionOnChange
+          >
+            <RouterProvider router={router} />
+          </ThemeProvider>
+        </AuthProvider>
       </QueryClientProvider>
     </StrictMode>
   );

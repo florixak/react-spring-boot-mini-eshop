@@ -213,7 +213,7 @@ export const useUserStore = create<UserState>()(
 
           const user = await response.json();
           set((state) => {
-            state.user = user;
+            state.user = user.data;
             state.isAuthenticated = true;
             state.isLoading = false;
           });
