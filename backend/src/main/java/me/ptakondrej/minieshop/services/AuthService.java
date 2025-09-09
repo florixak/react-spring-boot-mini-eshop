@@ -41,8 +41,9 @@ public class AuthService {
 				.username(registerUserDTO.getUsername())
 				.password(passwordEncoder.encode(registerUserDTO.getPassword()))
 				.email(registerUserDTO.getEmail())
-				.firstName(null)
-				.lastName(null)
+				.firstName(registerUserDTO.getFirstName())
+				.lastName(registerUserDTO.getLastName())
+				.deleted(false)
 				.role(Role.USER)
 				.enabled(true)
 				.build();
