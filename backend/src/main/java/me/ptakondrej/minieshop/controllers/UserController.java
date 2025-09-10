@@ -22,19 +22,6 @@ public class UserController {
 		this.userService = userService;
 	}
 
-	@GetMapping("/me")
-	public ResponseEntity<Response<UserDTO>> getCurrentUser(@RequestAttribute("userId") long userId) {
-		try {
-			User user = userService.findById(userId);
-			UserDTO userDTO = UserMapper.convertToDto(user);
-			return ResponseEntity.ok(new Response<UserDTO>(true, userDTO, "User fetched successfully"));
-		} catch (IllegalArgumentException e) {
-			return ResponseEntity.badRequest().body(new Response<UserDTO>(false, null, e.getMessage()));
-		} catch (Exception e) {
-			return ResponseEntity.status(500).body(new Response<UserDTO>(false, null, "Internal server error"));
-		}
-	}
-
 	@PatchMapping("/me/password")
 	public ResponseEntity<Response<Void>> updatePassword(@RequestAttribute("userId") long userId, @RequestBody PasswordRequest request) {
 		try {
