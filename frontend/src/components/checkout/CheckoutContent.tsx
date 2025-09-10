@@ -1,6 +1,4 @@
-import type { CartItem } from "@/types";
 import CheckoutSteps from "./CheckoutSteps";
-import { dummyProducts } from "@/dummyData";
 import { checkoutSchema, type CheckoutFormData } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -10,24 +8,16 @@ import { Route } from "@/routes/cart/checkout";
 import ShippingInfoStep from "./ShippingInfoStep";
 import OrderSummary from "./OrderSummary";
 import { useUserStore } from "@/stores/useUserStore";
+import { createOrder } from "@/lib/api";
+import { useCartStore } from "@/stores/useCartStore";
 
 type CheckoutContentProps = {
   step: number;
 };
 
-const orderItems: CartItem[] = [
-  {
-    product: dummyProducts[2],
-    quantity: 2,
-  },
-  {
-    product: dummyProducts[3],
-    quantity: 1,
-  },
-];
-
 const CheckoutContent = ({ step }: CheckoutContentProps) => {
-  const { user } = useUserStore();
+  const { user, isAuthenticated } = useUserStore();
+  const { cartItems } = useCartStore();
   const navigate = Route.useNavigate();
 
   const form = useForm<CheckoutFormData>({
@@ -72,8 +62,24 @@ const CheckoutContent = ({ step }: CheckoutContentProps) => {
 
   const handlePaymentSubmit = async () => {
     try {
-      //const shippingData = form.getValues();
-      //window.location.href = checkoutUrl;
+      const shippingData = form.getValues();
+
+      const {
+        data: { checkoutUrl },
+      } = await createOrder(
+        {
+          orderItems: cartItems.map((item) => ({
+            productId: item.product.id,
+            quantity: item.quantity,
+          })),
+          customerEmail: shippingData.email,
+          customerPhone: shippingData.phone,
+          paymentMethod: "PAYPAL",
+          shippingAddress: `${shippingData.firstName} ${shippingData.lastName}, ${shippingData.address}, ${shippingData.city}, ${shippingData.state}, ${shippingData.postalCode}, ${shippingData.country}`,
+        },
+        isAuthenticated
+      );
+      window.location.href = checkoutUrl;
     } catch (error) {
       console.error("Checkout failed:", error);
     }
@@ -99,7 +105,7 @@ const CheckoutContent = ({ step }: CheckoutContentProps) => {
           <PaymentStep
             shippingData={form.getValues()}
             isSubmitting={form.formState.isSubmitting}
-            cartItems={orderItems}
+            cartItems={cartItems}
             onSubmit={handlePaymentSubmit}
           />
         );

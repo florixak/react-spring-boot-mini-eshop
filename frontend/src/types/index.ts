@@ -47,13 +47,16 @@ type OrderStatus =
 
 type Order = {
   id: number;
-  user: User;
-  order_items: OrderItem[];
-  total_price: number;
+  user?: User;
+  orderItems: OrderItem[];
+  totalPrice: number;
   created_at: string;
   updated_at: string;
   status: OrderStatus;
-  payment_method: (typeof PAYMENT_METHODS)[number];
+  paymentMethod: (typeof PAYMENT_METHODS)[number];
+  shippingAddress: string;
+  customerEmail: string;
+  customerPhone: string;
 };
 
 type OrderItem = {

@@ -19,15 +19,15 @@ const OrderCard = ({ order }: OrderCardProps) => {
         <div>
           <h3 className="font-semibold text-primary">{order.id}</h3>
           <p className="text-sm text-secondary-200">
-            {order.created_at} • {order.order_items.length} item
-            {order.order_items.length > 1 ? "s" : ""}
+            {order.created_at} • {order.orderItems.length} item
+            {order.orderItems.length > 1 ? "s" : ""}
           </p>
           <div className="mt-2 flex items-center space-x-2 md:hidden">
             <Badge className={getStatusColor(order.status)}>
               {order.status}
             </Badge>
             <span className="font-semibold text-primary">
-              {order.total_price}
+              {order.totalPrice}
             </span>
           </div>
         </div>
@@ -38,7 +38,7 @@ const OrderCard = ({ order }: OrderCardProps) => {
           {order.status}
         </Badge>
         <span className="hidden md:block font-semibold text-primary">
-          {order.total_price}
+          {order.totalPrice}
         </span>
         <Button variant="outline" size="sm">
           <Eye className="h-4 w-4 mr-2" />
