@@ -1,4 +1,3 @@
-import { useParams } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { fetchOrder } from "@/lib/api";
 import { Card, CardContent, CardHeader } from "../ui/card";
@@ -6,9 +5,10 @@ import { Button } from "../ui/button";
 import { ArrowLeft, Package, Truck, CheckCircle, XCircle } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { formatDate, formatPrice } from "@/lib/utils";
+import { Route } from "@/routes/account/orders/$orderId";
 
 const OrderDetailsPage = () => {
-  const { orderId } = useParams({ from: "/account/orders/$orderId" });
+  const { orderId } = Route.useParams();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["order", orderId],
