@@ -10,9 +10,17 @@ type ProductCardProps = {
   product: Product;
   viewMode: View;
   onAddToCart: CartState["addToCart"];
+  isInWishlist: boolean;
+  toggleWishlist: (productId: number) => void;
 };
 
-const ProductCard = ({ product, viewMode, onAddToCart }: ProductCardProps) => {
+const ProductCard = ({
+  product,
+  viewMode,
+  onAddToCart,
+  isInWishlist,
+  toggleWishlist,
+}: ProductCardProps) => {
   const isList = viewMode === "list";
   const cardClass = isList
     ? "flex flex-col md:flex-row items-stretch min-h-[180px]"
@@ -22,12 +30,23 @@ const ProductCard = ({ product, viewMode, onAddToCart }: ProductCardProps) => {
     onAddToCart({ product, quantity: 1 });
   };
 
+  const handleToggleWishlist = () => {
+    toggleWishlist(product.id);
+  };
+
   return (
     <Card
       className={`group relative p-0 border-secondary-100 rounded-md font-playfair gap-0 ${cardClass}`}
     >
-      <div className="absolute top-2 right-2 z-10 p-1 rounded-full bg-white border border-secondary-200 text-secondary-200 hover:bg-primary hover:text-primary-foreground cursor-pointer transition">
-        <Heart />
+      <div
+        className={` absolute top-2 right-2 z-10 p-1 rounded-full border border-secondary-200 cursor-pointer transition ${
+          isInWishlist
+            ? "bg-primary text-primary-foreground md:block"
+            : "bg-white text-secondary-200 hover:bg-primary hover:text-primary-foreground md:hidden md:group-hover:block"
+        }`}
+        title={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
+      >
+        <Heart onClick={handleToggleWishlist} />
       </div>
       <CardHeader
         className={

@@ -5,6 +5,7 @@ import { Skeleton } from "./ui/skeleton";
 import { Card } from "./ui/card";
 import { useCartStore } from "@/stores/useCartStore";
 import { Button } from "./ui/button";
+import { useWishlist } from "@/hooks/useWishlist";
 
 type ProductsProps = {
   products?: Product[] | undefined;
@@ -24,6 +25,7 @@ const Products = ({
   className,
 }: ProductsProps) => {
   const { addToCart } = useCartStore();
+  const { isInWishlist, toggleWishlist } = useWishlist();
 
   if (isError) {
     return (
@@ -62,6 +64,8 @@ const Products = ({
                 product={product}
                 viewMode={viewMode}
                 onAddToCart={addToCart}
+                isInWishlist={isInWishlist(product.id)}
+                toggleWishlist={toggleWishlist}
               />
             ))
           : Array.from({ length: 8 }).map((_, index) => (

@@ -1,4 +1,5 @@
-import type { Category, Order, User } from "@/types";
+import type { PAYMENT_METHODS } from "@/constants";
+import type { Category, Order, Product, User } from "@/types";
 import type {
   Response,
   CreateOrderResponse,
@@ -6,7 +7,7 @@ import type {
   ProductPageResponse,
 } from "@/types/responses";
 
-type ProductFilter = {
+export type ProductFilter = {
   categorySlug?: string;
   minPrice?: number;
   maxPrice?: number;
@@ -94,7 +95,13 @@ export const fetchOrder = async (orderId: string): Promise<Response<Order>> => {
 };
 
 export const createOrder = async (
-  orderData: Partial<Order>, // shipping address, customer email, customer phone, payment method, order items
+  orderData: {
+    shippingAddress: string;
+    customerEmail: string;
+    customerPhone: string;
+    paymentMethod: (typeof PAYMENT_METHODS)[number];
+    orderItems: { productId: number; quantity: number }[];
+  },
   isLoggedIn: boolean
 ): Promise<Response<CreateOrderResponse>> => {
   const response = await fetch(
@@ -250,4 +257,56 @@ export const fetchCurrentUser = async (): Promise<globalThis.Response> => {
     },
   });
   return response;
+};
+
+export const fetchWishlist = async (): Promise<Response<Product[]>> => {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/wishlist`, {
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    throw new Error("Failed to fetch wishlist");
+  }
+  const data = (await response.json()) as Response<Product[]>;
+  return data;
+};
+
+export const addToWishlist = async (
+  productId: number
+): Promise<Response<null>> => {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/wishlist/add`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ productId }),
+  });
+  if (!response.ok) {
+    throw new Error("Failed to add to wishlist");
+  }
+  const data = (await response.json()) as Response<null>;
+  return data;
+};
+
+export const removeFromWishlist = async (
+  productId: number
+): Promise<Response<null>> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/wishlist/${productId}`,
+    {
+      method: "DELETE",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to remove from wishlist");
+  }
+  const data = (await response.json()) as Response<null>;
+  return data;
 };

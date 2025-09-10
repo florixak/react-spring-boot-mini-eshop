@@ -1,20 +1,13 @@
 import { Card, CardHeader, CardContent } from "../ui/card";
 import ProductCard from "../ProductCard";
-import { getProducts } from "@/dummyData";
-import { useEffect, useState } from "react";
-import type { Product } from "@/types";
+import { useWishlist } from "@/hooks/useWishlist";
+import { useCartStore } from "@/stores/useCartStore";
+import { HeartCrack } from "lucide-react";
 
 const WishlistSection = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const wishlistItems = [...products].slice(0, 3);
-
-  useEffect(() => {
-    const fetchWishlistItems = async () => {
-      const items = await getProducts({ inStockOnly: true });
-      setProducts(items);
-    };
-    fetchWishlistItems();
-  }, []);
+  const { addToCart } = useCartStore();
+  const { wishlist, toggleWishlist, isInWishlist, isLoading, isError } =
+    useWishlist();
 
   return (
     <div className="space-y-6">
@@ -27,9 +20,35 @@ const WishlistSection = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {wishlistItems.map((item) => (
-              <ProductCard key={item.id} product={item} viewMode="list" />
-            ))}
+            {!isLoading && wishlist && wishlist.length > 0 ? (
+              <div className="space-y-4">
+                {wishlist.map((item) => (
+                  <ProductCard
+                    key={item.id}
+                    product={item}
+                    viewMode="list"
+                    onAddToCart={addToCart}
+                    isInWishlist={isInWishlist(item.id)}
+                    toggleWishlist={toggleWishlist}
+                  />
+                ))}
+              </div>
+            ) : !isLoading && wishlist && wishlist.length === 0 ? (
+              <div className="text-center text-secondary-200 py-10">
+                <HeartCrack className="mx-auto mb-4 h-12 w-12 text-secondary-300" />
+                You have no items in your wishlist.
+              </div>
+            ) : isLoading ? (
+              <div className="flex flex-col items-center justify-center py-10">
+                <p className="text-gray-500">Loading your wishlist...</p>
+              </div>
+            ) : isError ? (
+              <div className="flex flex-col items-center justify-center py-10">
+                <p className="text-red-500">
+                  Error loading wishlist. Please try again.
+                </p>
+              </div>
+            ) : null}
           </div>
         </CardContent>
       </Card>
