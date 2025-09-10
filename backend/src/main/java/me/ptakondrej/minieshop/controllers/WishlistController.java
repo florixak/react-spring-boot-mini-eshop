@@ -47,11 +47,11 @@ public class WishlistController {
 		}
 	}
 
-	@PostMapping("/add")
-	public ResponseEntity<Response<String>> addProductToWishlist(@RequestAttribute("userId") Long userId, @RequestBody WishlistManipulateRequest request) {
+	@PostMapping("/add/{productId}")
+	public ResponseEntity<Response<String>> addProductToWishlist(@RequestAttribute("userId") Long userId, @PathVariable Long productId) {
 		try {
-			wishlistService.addProductToWishlist(userId, productService.getProductById(request.getProductId()));
-			return ResponseEntity.ok(new Response<>(true, null, "Product added to wishlist successfully"));
+			wishlistService.addProductToWishlist(userId, productService.getProductById(productId));
+			return ResponseEntity.status(201).body(new Response<>(true, null, "Product added to wishlist successfully"));
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().body(new Response<>(false, null, e.getMessage()));
 		} catch (Exception e) {
@@ -59,7 +59,7 @@ public class WishlistController {
 		}
 	}
 
-	@DeleteMapping("/{productId}")
+	@DeleteMapping("/remove/{productId}")
 	public ResponseEntity<Response<String>> removeProductFromWishlist(@RequestAttribute("userId") Long userId, @PathVariable Long productId) {
 		try {
 			wishlistService.removeProductFromWishlist(userId, productService.getProductById(productId));
