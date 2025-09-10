@@ -23,7 +23,6 @@ const CategoryFilter = () => {
     data: { data: categories } = { data: [] },
     isLoading,
     isError,
-    refetch,
   } = useQuery<Response<Category[]>>({
     queryKey: ["categories"],
     queryFn: fetchCategories,
