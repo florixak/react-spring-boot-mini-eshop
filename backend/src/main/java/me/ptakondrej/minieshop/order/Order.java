@@ -45,8 +45,8 @@ public class Order {
 	private String shippingAddress;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "payment_method", nullable = false)
-	private PaymentMethod paymentMethod;
+	@Column(name = "shipping_method", nullable = false)
+	private ShippingMethod shippingMethod;
 
 	@Column(name = "total_price", nullable = false, precision = 10, scale = 2)
 	private BigDecimal totalPrice;

@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import me.ptakondrej.minieshop.models.OrderItemDataDTO;
-import me.ptakondrej.minieshop.order.PaymentMethod;
+import me.ptakondrej.minieshop.order.ShippingMethod;
 
 import java.util.List;
 
@@ -18,6 +18,6 @@ public class OrderCreationRequest {
 	private String shippingAddress;
 	private String customerEmail;
 	private String customerPhone;
-	private PaymentMethod paymentMethod;
+	private ShippingMethod shippingMethod;
 	private List<OrderItemDataDTO> orderItems;
 }

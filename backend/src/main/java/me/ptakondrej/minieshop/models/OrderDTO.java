@@ -2,7 +2,7 @@ package me.ptakondrej.minieshop.models;
 
 import lombok.*;
 import me.ptakondrej.minieshop.order.OrderStatus;
-import me.ptakondrej.minieshop.order.PaymentMethod;
+import me.ptakondrej.minieshop.order.ShippingMethod;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -23,7 +23,8 @@ public class OrderDTO {
 	private BigDecimal totalPrice;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
-	private PaymentMethod paymentMethod;
 	private OrderStatus status;
-
+	private String shippingAddress;
+	private String stripeSessionId;
+	private ShippingMethod shippingMethod;
 }

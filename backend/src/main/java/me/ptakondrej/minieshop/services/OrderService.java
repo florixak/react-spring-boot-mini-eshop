@@ -65,8 +65,8 @@ public class OrderService {
 			throw new IllegalArgumentException("Order must contain at least one item");
 		}
 
-		if (request.getPaymentMethod() == null) {
-			throw new IllegalArgumentException("Payment method is required");
+		if (request.getShippingMethod() == null) {
+			throw new IllegalArgumentException("Shipping method is required");
 		}
 
 		BigDecimal totalPrice = BigDecimal.valueOf(request.getOrderItems().stream().mapToDouble(item -> {
@@ -75,13 +75,14 @@ public class OrderService {
 				throw new IllegalArgumentException("Product not found with ID: " + item.getProductId());
 			}
 			return product.getPrice().doubleValue() * item.getQuantity();
-		}).sum());
+		}).sum()).add(request.getShippingMethod().getPrice());
+
 
 		Order order = Order.builder()
 				.shippingAddress(request.getShippingAddress())
 				.customerEmail(request.getCustomerEmail())
 				.customerPhone(request.getCustomerPhone())
-				.paymentMethod(request.getPaymentMethod())
+				.shippingMethod(request.getShippingMethod())
 				.status(OrderStatus.PENDING)
 				.totalPrice(totalPrice)
 				.expiresAt(LocalDateTime.now().plusMinutes(30))
