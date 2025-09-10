@@ -74,7 +74,10 @@ function CheckoutSuccess() {
         <div className="space-y-4">
           {order_id && (
             <Button asChild className="w-full">
-              <Link to="/order/$orderId" params={{ orderId: order_id }}>
+              <Link
+                to="/account/orders/$orderId"
+                params={{ orderId: order_id }}
+              >
                 View Order Details
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Link>
