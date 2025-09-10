@@ -5,9 +5,7 @@ import type { PRODUCT_FILTERS } from "@/constants";
 import type { categories } from "@/dummyData";
 import type { View } from "@/types";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import type { ProductPageResponse, Response } from "@/types/responses";
-import { fetchProducts } from "@/lib/api";
+import { useProducts } from "@/hooks/useProducts";
 
 type ShopSearch = {
   category: (typeof categories)[number]["slug"];
@@ -36,25 +34,7 @@ function Shop() {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
 
-  const { data, isLoading, isError, refetch } = useQuery<
-    Response<ProductPageResponse>
-  >({
-    queryKey: ["shopProducts", search],
-    queryFn: async () =>
-      await fetchProducts({
-        categorySlug: search.category === "all" ? undefined : search.category,
-        //sortBy: search.sortBy === "no-filter" ? undefined : search.sortBy,
-        search: search.query || undefined,
-        minPrice: Number(search.price.split("-")[0]) || undefined,
-        maxPrice: Number(search.price.split("-")[1]) || undefined,
-        inStock:
-          search.stock === "in-stock"
-            ? true
-            : search.stock === "out-of-stock"
-            ? false
-            : undefined,
-      }),
-  });
+  const { products, isLoading, isError, refetch } = useProducts(search, "shop");
 
   return (
     <>
@@ -66,7 +46,7 @@ function Shop() {
         <FilterSidebar search={search} navigate={navigate} />
         <div className="flex-1">
           <Products
-            products={data?.data.products}
+            products={products}
             isLoading={isLoading}
             isError={isError}
             retry={refetch}
