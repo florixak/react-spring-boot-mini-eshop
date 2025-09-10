@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -37,11 +38,24 @@ public class StripeService {
 				.setQuantity(item.getQuantity().longValue())
 				.build()).toList();
 
+		List<LineItem> allLineItems = new ArrayList<>(lineItems);
+		allLineItems.add(LineItem.builder()
+				.setPriceData(LineItem.PriceData.builder()
+						.setCurrency("usd")
+						.setProductData(LineItem.PriceData.ProductData.builder()
+								.setName(request.getShippingMethod().name() + " Shipping")
+								.setDescription(request.getShippingMethod().getDescription())
+								.build())
+						.setUnitAmount(convertToStripeAmount(request.getShippingMethod().getPrice()))
+						.build())
+				.setQuantity(1L)
+				.build());
+
 		SessionCreateParams.Builder paramsBuilder = SessionCreateParams.builder()
 				.setMode(SessionCreateParams.Mode.PAYMENT)
-				.setSuccessUrl(frontendUrl + "/cart/checkout?orderId=" + request.getId())
+				.setSuccessUrl(frontendUrl + "/cart/checkout/success?orderId=" + request.getId() + "&session_id={CHECKOUT_SESSION_ID}")
 				.setCancelUrl(frontendUrl + "/cart/checkout/cancel?orderId=" + request.getId())
-				.addAllLineItem(lineItems)
+				.addAllLineItem(allLineItems)
 				.putMetadata("orderId", request.getId().toString());
 
 		paramsBuilder.setCustomerEmail(request.getCustomerEmail());
@@ -59,6 +73,8 @@ public class StripeService {
 	}
 
 	private Long convertToStripeAmount(BigDecimal price) {
-		return price.multiply(BigDecimal.valueOf(100)).longValue();
+		BigDecimal taxRate = BigDecimal.valueOf(0.10);
+		BigDecimal priceWithTax = price.add(price.multiply(taxRate));
+		return priceWithTax.multiply(BigDecimal.valueOf(100)).longValue();
 	}
 }
