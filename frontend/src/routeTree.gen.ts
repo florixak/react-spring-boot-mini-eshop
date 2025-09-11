@@ -19,7 +19,7 @@ import { Route as AboutIndexRouteImport } from './routes/about/index'
 import { Route as CartCheckoutIndexRouteImport } from './routes/cart/checkout/index'
 import { Route as AccountOrdersOrderIdRouteImport } from './routes/account/orders/$orderId'
 import { Route as CartCheckoutSuccessIndexRouteImport } from './routes/cart/checkout/success/index'
-import { Route as CartCheckoutCanceledIndexRouteImport } from './routes/cart/checkout/canceled/index'
+import { Route as CartCheckoutCancelIndexRouteImport } from './routes/cart/checkout/cancel/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -72,12 +72,11 @@ const CartCheckoutSuccessIndexRoute =
     path: '/cart/checkout/success/',
     getParentRoute: () => rootRouteImport,
   } as any)
-const CartCheckoutCanceledIndexRoute =
-  CartCheckoutCanceledIndexRouteImport.update({
-    id: '/cart/checkout/canceled/',
-    path: '/cart/checkout/canceled/',
-    getParentRoute: () => rootRouteImport,
-  } as any)
+const CartCheckoutCancelIndexRoute = CartCheckoutCancelIndexRouteImport.update({
+  id: '/cart/checkout/cancel/',
+  path: '/cart/checkout/cancel/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -89,7 +88,7 @@ export interface FileRoutesByFullPath {
   '/shop': typeof ShopIndexRoute
   '/account/orders/$orderId': typeof AccountOrdersOrderIdRoute
   '/cart/checkout': typeof CartCheckoutIndexRoute
-  '/cart/checkout/canceled': typeof CartCheckoutCanceledIndexRoute
+  '/cart/checkout/cancel': typeof CartCheckoutCancelIndexRoute
   '/cart/checkout/success': typeof CartCheckoutSuccessIndexRoute
 }
 export interface FileRoutesByTo {
@@ -102,7 +101,7 @@ export interface FileRoutesByTo {
   '/shop': typeof ShopIndexRoute
   '/account/orders/$orderId': typeof AccountOrdersOrderIdRoute
   '/cart/checkout': typeof CartCheckoutIndexRoute
-  '/cart/checkout/canceled': typeof CartCheckoutCanceledIndexRoute
+  '/cart/checkout/cancel': typeof CartCheckoutCancelIndexRoute
   '/cart/checkout/success': typeof CartCheckoutSuccessIndexRoute
 }
 export interface FileRoutesById {
@@ -116,7 +115,7 @@ export interface FileRoutesById {
   '/shop/': typeof ShopIndexRoute
   '/account/orders/$orderId': typeof AccountOrdersOrderIdRoute
   '/cart/checkout/': typeof CartCheckoutIndexRoute
-  '/cart/checkout/canceled/': typeof CartCheckoutCanceledIndexRoute
+  '/cart/checkout/cancel/': typeof CartCheckoutCancelIndexRoute
   '/cart/checkout/success/': typeof CartCheckoutSuccessIndexRoute
 }
 export interface FileRouteTypes {
@@ -131,7 +130,7 @@ export interface FileRouteTypes {
     | '/shop'
     | '/account/orders/$orderId'
     | '/cart/checkout'
-    | '/cart/checkout/canceled'
+    | '/cart/checkout/cancel'
     | '/cart/checkout/success'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -144,7 +143,7 @@ export interface FileRouteTypes {
     | '/shop'
     | '/account/orders/$orderId'
     | '/cart/checkout'
-    | '/cart/checkout/canceled'
+    | '/cart/checkout/cancel'
     | '/cart/checkout/success'
   id:
     | '__root__'
@@ -157,7 +156,7 @@ export interface FileRouteTypes {
     | '/shop/'
     | '/account/orders/$orderId'
     | '/cart/checkout/'
-    | '/cart/checkout/canceled/'
+    | '/cart/checkout/cancel/'
     | '/cart/checkout/success/'
   fileRoutesById: FileRoutesById
 }
@@ -171,7 +170,7 @@ export interface RootRouteChildren {
   ShopIndexRoute: typeof ShopIndexRoute
   AccountOrdersOrderIdRoute: typeof AccountOrdersOrderIdRoute
   CartCheckoutIndexRoute: typeof CartCheckoutIndexRoute
-  CartCheckoutCanceledIndexRoute: typeof CartCheckoutCanceledIndexRoute
+  CartCheckoutCancelIndexRoute: typeof CartCheckoutCancelIndexRoute
   CartCheckoutSuccessIndexRoute: typeof CartCheckoutSuccessIndexRoute
 }
 
@@ -247,11 +246,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CartCheckoutSuccessIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/cart/checkout/canceled/': {
-      id: '/cart/checkout/canceled/'
-      path: '/cart/checkout/canceled'
-      fullPath: '/cart/checkout/canceled'
-      preLoaderRoute: typeof CartCheckoutCanceledIndexRouteImport
+    '/cart/checkout/cancel/': {
+      id: '/cart/checkout/cancel/'
+      path: '/cart/checkout/cancel'
+      fullPath: '/cart/checkout/cancel'
+      preLoaderRoute: typeof CartCheckoutCancelIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -267,7 +266,7 @@ const rootRouteChildren: RootRouteChildren = {
   ShopIndexRoute: ShopIndexRoute,
   AccountOrdersOrderIdRoute: AccountOrdersOrderIdRoute,
   CartCheckoutIndexRoute: CartCheckoutIndexRoute,
-  CartCheckoutCanceledIndexRoute: CartCheckoutCanceledIndexRoute,
+  CartCheckoutCancelIndexRoute: CartCheckoutCancelIndexRoute,
   CartCheckoutSuccessIndexRoute: CartCheckoutSuccessIndexRoute,
 }
 export const routeTree = rootRouteImport

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { XCircle, ArrowLeft, CreditCard, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +10,7 @@ type CheckoutCanceledSearch = {
   orderId?: string;
 };
 
-export const Route = createFileRoute("/cart/checkout/canceled/")({
+export const Route = createFileRoute("/cart/checkout/cancel/")({
   component: CheckoutCanceled,
   validateSearch: (search): CheckoutCanceledSearch => ({
     orderId: search.orderId as string,
@@ -20,11 +20,7 @@ export const Route = createFileRoute("/cart/checkout/canceled/")({
 function CheckoutCanceled() {
   const { orderId } = Route.useSearch();
 
-  const {
-    data: order,
-    isLoading,
-    isError,
-  } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["order", orderId],
     queryFn: async () => await fetchOrder(orderId!),
     enabled: !!orderId,
@@ -38,8 +34,12 @@ function CheckoutCanceled() {
     return <div>Error loading order details.</div>;
   }
 
+  if (!data || !data.success) {
+    redirect({ to: "/cart" });
+  }
+
   return (
-    <div className="flex items-center justify-center min-h-screen container mx-auto py-8 px-4">
+    <div className="flex items-center justify-center min-h-screen container mx-auto pt-28 px-4">
       <div className="max-w-2xl mx-auto text-center">
         <div className="mb-6">
           <XCircle className="h-16 w-16 text-red-500 mx-auto mb-4" />
@@ -125,7 +125,7 @@ function CheckoutCanceled() {
 
           {orderId && (
             <Button variant="outline" asChild className="w-full">
-              <Link to="/order/$orderId" params={{ orderId: orderId }}>
+              <Link to="/account/orders/$orderId" params={{ orderId: orderId }}>
                 View Order Details
               </Link>
             </Button>
