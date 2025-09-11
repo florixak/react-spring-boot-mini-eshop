@@ -3,6 +3,7 @@ package me.ptakondrej.minieshop.controllers;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import me.ptakondrej.minieshop.models.CheckoutDTO;
+import me.ptakondrej.minieshop.models.OrderPriceModel;
 import me.ptakondrej.minieshop.models.RedirectUrlDTO;
 import me.ptakondrej.minieshop.order.Order;
 import me.ptakondrej.minieshop.order.OrderStatus;
@@ -32,9 +33,9 @@ public class CheckoutController {
 	@PostMapping("/create-checkout-session")
 	public ResponseEntity<Response<CheckoutDTO>> createCheckoutSession(@RequestAttribute(value = "userId", required = false) Long userId, @RequestBody OrderCreationRequest checkoutRequest) {
 		try {
-			Order order = orderService.createOrder(userId, checkoutRequest);
+			OrderPriceModel order = orderService.createOrder(userId, checkoutRequest);
 			String checkoutUrl = stripeService.createCheckoutSession(order);
-			return ResponseEntity.ok().body(new Response<>(true, new CheckoutDTO(order.getId(), checkoutUrl), "Checkout session created successfully"));
+			return ResponseEntity.ok().body(new Response<>(true, new CheckoutDTO(order.getOrder().getId(), checkoutUrl), "Checkout session created successfully"));
 		} catch (StripeException e) {
 			return ResponseEntity.status(502).body(new Response<>(false, null, "Stripe API error: " + e.getMessage()));
 		} catch (IllegalArgumentException e) {
@@ -44,7 +45,7 @@ public class CheckoutController {
 		}
 	}
 
-	@PostMapping("/pay/{orderId}")
+	/*@PostMapping("/pay/{orderId}")
 	public ResponseEntity<Response<CheckoutDTO>> payExistingOrder(@RequestAttribute("userId") Long userId, @PathVariable Long orderId) {
 		try {
 			Order order = orderService.getOrderByUserIdAndOrderId(userId, orderId);
@@ -67,7 +68,7 @@ public class CheckoutController {
 			return ResponseEntity.status(500).body(new Response<>(false, null, "Failed to create checkout session: " + e.getMessage()));
 		}
 	}
-
+*/
 	@PostMapping("/success")
 	public ResponseEntity<Response<RedirectUrlDTO>> handleSuccess(@RequestParam("sessionId") String sessionId) {
 		try {

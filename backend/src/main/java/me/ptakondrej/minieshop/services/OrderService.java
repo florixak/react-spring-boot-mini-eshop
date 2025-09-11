@@ -2,6 +2,7 @@ package me.ptakondrej.minieshop.services;
 
 import com.stripe.model.Event;
 import com.stripe.model.checkout.Session;
+import me.ptakondrej.minieshop.models.OrderPriceModel;
 import me.ptakondrej.minieshop.order.Order;
 import me.ptakondrej.minieshop.order.OrderRepository;
 import me.ptakondrej.minieshop.order.OrderStatus;
@@ -47,7 +48,7 @@ public class OrderService {
 	}
 
 	@Transactional
-	public Order createOrder(Long userId, OrderCreationRequest request) {
+	public OrderPriceModel createOrder(Long userId, OrderCreationRequest request) {
 
 		if (request == null) {
 			throw new IllegalArgumentException("Order creation request cannot be null");
@@ -69,14 +70,23 @@ public class OrderService {
 			throw new IllegalArgumentException("Shipping method is required");
 		}
 
-		BigDecimal totalPrice = BigDecimal.valueOf(request.getOrderItems().stream().mapToDouble(item -> {
-			Product product = productService.getProductById(item.getProductId());
+		BigDecimal subtotal = request.getOrderItems().stream().map(itemDTO -> {
+			Product product = productService.getProductById(itemDTO.getProductId());
 			if (product == null) {
-				throw new IllegalArgumentException("Product not found with ID: " + item.getProductId());
+				throw new IllegalArgumentException("Product not found with ID: " + itemDTO.getProductId());
 			}
-			return product.getPrice().doubleValue() * item.getQuantity();
-		}).sum()).add(request.getShippingMethod().getPrice());
+			if (itemDTO.getQuantity() <= 0) {
+				throw new IllegalArgumentException("Quantity must be greater than zero for product ID: " + itemDTO.getProductId());
+			}
+			if (product.getStockQuantity() < itemDTO.getQuantity()) {
+				throw new IllegalArgumentException("Insufficient stock for product ID: " + itemDTO.getProductId());
+			}
+			return product.getPrice().multiply(BigDecimal.valueOf(itemDTO.getQuantity()));
+		}).reduce(BigDecimal.ZERO, BigDecimal::add);
 
+		BigDecimal tax = subtotal.multiply(BigDecimal.valueOf(0.10));
+		BigDecimal shippingCost =subtotal.compareTo(BigDecimal.valueOf(50)) > 0 ? BigDecimal.ZERO : request.getShippingMethod().getPrice();
+		BigDecimal totalPrice = subtotal.add(tax).add(shippingCost);
 
 		Order order = Order.builder()
 				.shippingAddress(request.getShippingAddress())
@@ -105,7 +115,8 @@ public class OrderService {
 		}).map(orderItemService::createOrderItem).toList();
 
 		savedOrder.setOrderItems(new ArrayList<>(orderItems));
-		return orderRepository.save(savedOrder);
+
+		return new OrderPriceModel(orderRepository.save(savedOrder), subtotal, tax, shippingCost, totalPrice);
 	}
 
 	@Transactional

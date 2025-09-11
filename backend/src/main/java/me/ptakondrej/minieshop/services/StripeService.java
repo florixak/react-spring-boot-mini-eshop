@@ -4,11 +4,12 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 import com.stripe.param.checkout.SessionCreateParams.LineItem;
-import me.ptakondrej.minieshop.order.Order;
+import me.ptakondrej.minieshop.models.OrderPriceModel;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,14 +19,15 @@ public class StripeService {
 	@Value("${app.frontend.url}")
 	private String frontendUrl;
 
-	public String createCheckoutSession(Order request) throws StripeException {
-		if (request == null || request.getOrderItems() == null || request.getOrderItems().isEmpty()) {
+	public String createCheckoutSession(OrderPriceModel request) throws StripeException {
+		if (request == null || request.getOrder().getOrderItems() == null || request.getOrder().getOrderItems().isEmpty()) {
 			throw new IllegalArgumentException("Order and order items cannot be null or empty");
 		}
 		if (frontendUrl == null || frontendUrl.isEmpty()) {
 			throw new IllegalStateException("Frontend URL is not configured");
 		}
-		List<LineItem> lineItems = request.getOrderItems().stream().map(item -> LineItem.builder()
+
+		List<LineItem> lineItems = request.getOrder().getOrderItems().stream().map(item -> LineItem.builder()
 				.setPriceData(LineItem.PriceData.builder()
 						.setCurrency("usd")
 						.setProductData(LineItem.PriceData.ProductData.builder()
@@ -43,25 +45,37 @@ public class StripeService {
 				.setPriceData(LineItem.PriceData.builder()
 						.setCurrency("usd")
 						.setProductData(LineItem.PriceData.ProductData.builder()
-								.setName(request.getShippingMethod().name() + " Shipping")
-								.setDescription(request.getShippingMethod().getDescription())
+								.setName(request.getOrder().getShippingMethod().name() + " Shipping")
+								.setDescription(request.getOrder().getShippingMethod().getDescription())
 								.build())
-						.setUnitAmount(convertToStripeAmount(request.getShippingMethod().getPrice()))
+						.setUnitAmount(convertToStripeAmount(request.getShippingCost()))
+						.build())
+				.setQuantity(1L)
+				.build());
+
+		allLineItems.add(LineItem.builder()
+				.setPriceData(LineItem.PriceData.builder()
+						.setCurrency("usd")
+						.setProductData(LineItem.PriceData.ProductData.builder()
+								.setName("Tax (10%)")
+								.setDescription("Applicable tax")
+								.build())
+						.setUnitAmount(convertToStripeAmount(request.getTax()))
 						.build())
 				.setQuantity(1L)
 				.build());
 
 		SessionCreateParams.Builder paramsBuilder = SessionCreateParams.builder()
 				.setMode(SessionCreateParams.Mode.PAYMENT)
-				.setSuccessUrl(frontendUrl + "/cart/checkout/success?orderId=" + request.getId() + "&session_id={CHECKOUT_SESSION_ID}")
-				.setCancelUrl(frontendUrl + "/cart/checkout/cancel?orderId=" + request.getId())
+				.setSuccessUrl(frontendUrl + "/cart/checkout/success?orderId=" + request.getOrder().getId() + "&sessionId={CHECKOUT_SESSION_ID}")
+				.setCancelUrl(frontendUrl + "/cart/checkout/cancel?orderId=" + request.getOrder().getId())
 				.addAllLineItem(allLineItems)
-				.putMetadata("orderId", request.getId().toString());
+				.putMetadata("orderId", request.getOrder().getId().toString());
 
-		paramsBuilder.setCustomerEmail(request.getCustomerEmail());
+		paramsBuilder.setCustomerEmail(request.getOrder().getCustomerEmail());
 
-		if (request.getUser() != null) {
-			paramsBuilder.putMetadata("userId", request.getUser().getId().toString());
+		if (request.getOrder().getUser() != null) {
+			paramsBuilder.putMetadata("userId", request.getOrder().getUser().getId().toString());
 		}
 
 		Session session = Session.create(paramsBuilder.build());
@@ -73,8 +87,6 @@ public class StripeService {
 	}
 
 	private Long convertToStripeAmount(BigDecimal price) {
-		BigDecimal taxRate = BigDecimal.valueOf(0.10);
-		BigDecimal priceWithTax = price.add(price.multiply(taxRate));
-		return priceWithTax.multiply(BigDecimal.valueOf(100)).longValue();
+		return price.multiply(BigDecimal.valueOf(100)).setScale(0, RoundingMode.HALF_UP).longValue();
 	}
 }
