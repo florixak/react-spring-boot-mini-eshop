@@ -1,39 +1,50 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { CheckCircle, Package, ArrowRight } from "lucide-react";
+import { CheckCircle, Package, ArrowRight, Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "@tanstack/react-router";
 import { useCartStore } from "@/stores/useCartStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 type CheckoutSuccessSearch = {
-  session_id?: string;
-  order_id?: string;
+  sessionId?: string;
+  orderId?: string;
 };
 
 export const Route = createFileRoute("/cart/checkout/success/")({
   component: CheckoutSuccess,
   validateSearch: (search): CheckoutSuccessSearch => ({
-    session_id: search.session_id as string,
-    order_id: search.order_id as string,
+    sessionId: search.sessionId as string,
+    orderId: search.orderId as string,
   }),
   beforeLoad: ({ search }) => {
-    if (!search.session_id && !search.order_id) {
+    if (!search.sessionId && !search.orderId) {
       throw redirect({ to: "/cart" });
     }
   },
 });
 
 function CheckoutSuccess() {
-  const { session_id, order_id } = Route.useSearch();
+  const { sessionId, orderId } = Route.useSearch();
   const { clearCart } = useCartStore();
+  const [copiedField, setCopiedField] = useState<string | null>(null);
 
   useEffect(() => {
     clearCart();
   }, [clearCart]);
 
+  const copyToClipboard = async (text: string, field: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedField(field);
+      setTimeout(() => setCopiedField(null), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
+
   return (
-    <div className="flex items-center justify-center py-8 px-4 min-h-screen container mx-auto">
+    <div className="flex items-center justify-center pt-28 px-4 min-h-screen container mx-auto">
       <div className="max-w-2xl mx-auto text-center">
         <div className="mb-6">
           <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
@@ -53,31 +64,69 @@ function CheckoutSuccess() {
               Order Details
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            {order_id && (
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span>Order ID:</span>
-                  <span className="font-mono">{order_id}</span>
-                </div>
-                {session_id && (
-                  <div className="flex justify-between">
-                    <span>Payment ID:</span>
-                    <span className="font-mono">{session_id}</span>
+          <CardContent className="space-y-4">
+            {orderId && (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <div className="flex items-center justify-between">
+                  <div className="text-left">
+                    <p className="text-sm font-medium text-green-800 mb-1">
+                      Order Number
+                    </p>
+                    <p className="text-lg font-mono font-bold text-green-900">
+                      #{orderId}
+                    </p>
                   </div>
-                )}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => copyToClipboard(orderId, "order")}
+                    className="border-green-300 text-green-700 hover:bg-green-100 h-8 w-8 p-0"
+                  >
+                    {copiedField === "order" ? (
+                      <Check className="h-4 w-4" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+                <p className="text-xs text-green-600 mt-2">
+                  Save this number for your records
+                </p>
+              </div>
+            )}
+            {sessionId && (
+              <div className="bg-secondary-50 border border-secondary-200 rounded-lg p-4">
+                <div className="flex items-center justify-between">
+                  <div className="text-left">
+                    <p className="text-sm font-medium text-secondary-600 mb-1">
+                      Payment Reference
+                    </p>
+                    <p className="text-sm font-mono text-secondary-800 break-all">
+                      {sessionId}
+                    </p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => copyToClipboard(sessionId, "payment")}
+                    className="border-secondary-300 text-secondary-600 hover:bg-secondary-100 h-8 w-8 p-0 flex-shrink-0 ml-3"
+                  >
+                    {copiedField === "payment" ? (
+                      <Check className="h-4 w-4" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
               </div>
             )}
           </CardContent>
         </Card>
 
         <div className="space-y-4">
-          {order_id && (
+          {orderId && (
             <Button asChild className="w-full">
-              <Link
-                to="/account/orders/$orderId"
-                params={{ orderId: order_id }}
-              >
+              <Link to="/account/orders/$orderId" params={{ orderId: orderId }}>
                 View Order Details
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Link>
