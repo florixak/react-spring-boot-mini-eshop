@@ -1,5 +1,10 @@
-import type { PAYMENT_METHODS } from "@/constants";
-import type { Category, Order, Product, User } from "@/types";
+import type {
+  Category,
+  Order,
+  Product,
+  ShippingMethodKey,
+  User,
+} from "@/types";
 import type {
   Response,
   CreateOrderResponse,
@@ -99,7 +104,7 @@ export const createOrder = async (
     shippingAddress: string;
     customerEmail: string;
     customerPhone: string;
-    paymentMethod: (typeof PAYMENT_METHODS)[number];
+    shippingMethod: ShippingMethodKey;
     orderItems: { productId: number; quantity: number }[];
   },
   isLoggedIn: boolean
@@ -212,10 +217,6 @@ export const register = async (
 };
 
 export const refreshToken = async (): Promise<Response<LoginResponse>> => {
-  const refreshToken = localStorage.getItem("refreshToken");
-  if (!refreshToken) {
-    throw new Error("No refresh token found");
-  }
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/auth/refresh-token`,
     {
@@ -224,7 +225,6 @@ export const refreshToken = async (): Promise<Response<LoginResponse>> => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ token: refreshToken }),
     }
   );
   if (!response.ok) {

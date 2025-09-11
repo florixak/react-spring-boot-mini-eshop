@@ -74,7 +74,7 @@ const CheckoutContent = ({ step }: CheckoutContentProps) => {
           })),
           customerEmail: shippingData.email,
           customerPhone: shippingData.phone,
-          paymentMethod: "PAYPAL",
+          shippingMethod: shippingData.shippingMethod,
           shippingAddress: `${shippingData.firstName} ${shippingData.lastName}, ${shippingData.address}, ${shippingData.city}, ${shippingData.state}, ${shippingData.postalCode}, ${shippingData.country}`,
         },
         isAuthenticated
