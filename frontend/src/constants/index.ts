@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import PlaceholderImage from "@/assets/placeholder.svg";
 import { formatPrice } from "@/lib/utils";
+import type { ShippingMethodKey } from "@/types";
 
 type ProductFilter = {
   value:
@@ -206,8 +207,6 @@ const CHECKOUT_STEPS = [
   { number: 1, title: "Shipping", icon: Truck },
   { number: 2, title: "Payment", icon: CreditCard },
 ];
-
-type ShippingMethodKey = "STANDARD" | "EXPRESS" | "OVERNIGHT";
 
 type ShippingMethod = {
   label: string;

@@ -72,4 +72,15 @@ type CartItem = {
 
 type View = "grid" | "list";
 
-export type { Product, Category, User, Order, OrderItem, CartItem, View };
+type ShippingMethodKey = "STANDARD" | "EXPRESS" | "OVERNIGHT";
+
+export type {
+  Product,
+  Category,
+  User,
+  Order,
+  OrderItem,
+  CartItem,
+  View,
+  ShippingMethodKey,
+};
