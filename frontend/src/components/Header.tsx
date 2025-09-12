@@ -1,6 +1,14 @@
 import { Link } from "@tanstack/react-router";
-import { Heart, Menu, ShoppingCart, User } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import { Heart, Menu, ShoppingCart, User, X } from "lucide-react";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "./ui/sheet";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { useCartStore } from "@/stores/useCartStore";
@@ -57,7 +65,7 @@ const Header = () => {
           asChild
         >
           <Link to="/account" search={{ section: "profile" }}>
-            <User className="h-5 w-5" />
+            <User className="size-5" />
           </Link>
         </Button>
         <Button
@@ -67,17 +75,17 @@ const Header = () => {
           asChild
         >
           <Link to="/account" search={{ section: "wishlist" }}>
-            <Heart className="h-5 w-5" />
+            <Heart className="size-5" />
           </Link>
         </Button>
         <Button
           variant="ghost"
           size="icon"
-          className="relative text-primary hover:text-secondary-200"
+          className="text-primary hover:text-secondary-200"
           asChild
         >
-          <Link to="/cart">
-            <ShoppingCart className="h-5 w-5" />
+          <Link to="/cart" className="relative">
+            <ShoppingCart className="size-5" />
             {getTotalItems() > 0 && (
               <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-inter">
                 {getTotalItems()}
@@ -93,17 +101,45 @@ const Header = () => {
               size="icon"
               className="block lg:hidden text-primary"
             >
-              <Menu className="size-6" />
+              <Menu className="size-6 ml-2" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-80">
-            <nav className="flex flex-col space-y-4 mt-8">
+          <SheetContent side="right" className="w-80 bg-white">
+            <SheetHeader className="text-left pb-4">
+              <div className="flex items-center justify-between">
+                <SheetTitle className="text-2xl font-bold text-primary font-playfair">
+                  Minimal
+                </SheetTitle>
+                <SheetClose>
+                  <Button variant="ghost" size="icon" className="text-primary">
+                    <X className="h-5 w-5" />
+                  </Button>
+                </SheetClose>
+              </div>
+            </SheetHeader>
+            <nav className="flex flex-col gap-6 pl-5">
               {navLinks.map((link) => (
-                <Link key={link.title} to={link.href} className="text-primary">
-                  {link.title}
-                </Link>
+                <SheetClose asChild key={link.title}>
+                  <Link
+                    to={link.href}
+                    className="text-lg text-primary hover:text-secondary-200"
+                    activeProps={{
+                      className: "font-bold text-primary cursor-default",
+                    }}
+                    inactiveProps={{
+                      className: "text-primary hover:text-secondary-200",
+                    }}
+                  >
+                    {link.title}
+                  </Link>
+                </SheetClose>
               ))}
             </nav>
+            <SheetFooter>
+              <p className="text-center text-sm text-secondary-200">
+                © {new Date().getFullYear()} Minimal. All rights reserved.
+              </p>
+            </SheetFooter>
           </SheetContent>
         </Sheet>
       </div>
