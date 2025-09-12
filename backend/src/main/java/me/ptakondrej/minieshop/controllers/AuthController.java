@@ -75,7 +75,8 @@ public class AuthController {
 	}
 
 	@PostMapping("/refresh-token")
-	public ResponseEntity<LoginResponse> refreshToken(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
+	public ResponseEntity<LoginResponse> refreshToken(@CookieValue(value = "refreshToken") String refreshToken, HttpServletResponse response) {
+		System.out.println("Received refresh token: " + refreshToken);
 		try {
 			RefreshToken oldRefreshToken = refreshTokenService
 					.findByToken(refreshToken)
@@ -99,6 +100,8 @@ public class AuthController {
 			));
 		} catch (RuntimeException e) {
 			return ResponseEntity.badRequest().body(new LoginResponse(false, new LoginDataDTO(null), e.getMessage()));
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(new LoginResponse(false, new LoginDataDTO(null), "An error occurred while refreshing the token."));
 		}
 	}
 
@@ -147,6 +150,8 @@ public class AuthController {
 			User user = userService.findById(userId);
 			UserDTO userDTO = UserMapper.convertToDto(user);
 			return ResponseEntity.ok(new Response<UserDTO>(true, userDTO, "User retrieved successfully"));
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.status(404).body(new Response<UserDTO>(false, null, e.getMessage()));
 		} catch (Exception e) {
 			return ResponseEntity.status(500).body(new Response<UserDTO>(false, null, "An error occurred while retrieving the user: " + e.getMessage()));
 		}

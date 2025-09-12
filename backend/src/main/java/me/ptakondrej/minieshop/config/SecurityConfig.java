@@ -1,5 +1,6 @@
 package me.ptakondrej.minieshop.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -23,6 +24,13 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationProvider authenticationProvider, JwtAuthFilter jwtAuthFilter) throws Exception {
 		http.cors(Customizer.withDefaults())
 				.csrf(csrf -> csrf.disable())
+				.exceptionHandling(exception -> exception
+						.authenticationEntryPoint((request, response, authException) -> {
+							response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+							response.setContentType("application/json");
+							response.getWriter().write("{\"success\":false,\"data\":null,\"message\":\"Unauthorized\"}");
+						})
+				)
 				.authorizeHttpRequests(authorize -> authorize
 						.requestMatchers("/api/products/admin", "/api/products/admin/**").hasRole("ADMIN")
 						.requestMatchers("/api/categories/admin", "/api/categories/admin/**").hasRole("ADMIN")
