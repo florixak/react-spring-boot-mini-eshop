@@ -117,21 +117,21 @@ public class AuthController {
 			jwtCookie.setHttpOnly(true);
 			jwtCookie.setPath("/");
 			jwtCookie.setMaxAge(0);
-			jwtCookie.setSecure(false);
+			jwtCookie.setSecure(true);
 			response.addCookie(jwtCookie);
 
 			Cookie refreshTokenCookie = new Cookie("refreshToken", null);
 			refreshTokenCookie.setHttpOnly(true);
 			refreshTokenCookie.setPath("/");
 			refreshTokenCookie.setMaxAge(0);
-			refreshTokenCookie.setSecure(false);
+			refreshTokenCookie.setSecure(true);
 			response.addCookie(refreshTokenCookie);
 
-			/*response.setHeader("Set-Cookie",
-					"accessToken=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax");
+			response.setHeader("Set-Cookie",
+					"accessToken=; HttpOnly; Path=/; Max-Age=0; SameSite=None");
 
 			response.setHeader("Set-Cookie",
-					"refreshToken=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax");*/
+					"refreshToken=; HttpOnly; Path=/; Max-Age=0; SameSite=None");
 
 			return ResponseEntity.ok(new Response<String>(true, null, "Logged out successfully."));
 		} catch (RuntimeException e) {
