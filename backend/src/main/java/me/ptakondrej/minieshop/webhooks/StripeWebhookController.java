@@ -31,7 +31,7 @@ public class StripeWebhookController {
 					orderService.handleOrderPaymentSuccess(event);
 					break;
 				case "checkout.session.expired":
-					orderService.handleOrderPaymentFailure(event);
+					//orderService.handleOrderPaymentFailure(event);
 					break;
 				default:
 					break;
