@@ -1,7 +1,7 @@
 import { FREE_SHIPPING_THRESHOLD } from "@/constants";
 import type { CartItem } from "@/types";
 
-export const useOrderCalculations = (
+const useOrderCalculations = (
   orderItems: CartItem[],
   shippingFee: number = 0
 ) => {
@@ -24,3 +24,5 @@ export const useOrderCalculations = (
     isFreeShipping,
   };
 };
+
+export default useOrderCalculations;

@@ -3,7 +3,7 @@ import { Lock, RotateCcw, ShoppingBag, Truck } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { formatPrice } from "@/lib/utils";
-import { useOrderCalculations } from "@/hooks/useOrderCalculations";
+import useOrderCalculations from "@/hooks/useOrderCalculations";
 import { FREE_SHIPPING_THRESHOLD } from "@/constants";
 import OrderSummary from "../checkout/OrderSummary";
 import { useCartStore } from "@/stores/useCartStore";

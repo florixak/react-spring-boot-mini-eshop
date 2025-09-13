@@ -1,7 +1,7 @@
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { Separator } from "../ui/separator";
 import { formatPrice } from "@/lib/utils";
-import { useOrderCalculations } from "@/hooks/useOrderCalculations";
+import useOrderCalculations from "@/hooks/useOrderCalculations";
 import { Link } from "@tanstack/react-router";
 import { Button } from "../ui/button";
 import { FREE_SHIPPING_THRESHOLD } from "@/constants";
