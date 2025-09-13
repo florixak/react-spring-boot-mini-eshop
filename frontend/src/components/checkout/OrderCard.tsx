@@ -3,6 +3,7 @@ import { Eye, Package } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import type { Order } from "@/types";
+import { Link } from "@tanstack/react-router";
 
 type OrderCardProps = {
   order: Order;
@@ -40,9 +41,14 @@ const OrderCard = ({ order }: OrderCardProps) => {
         <span className="hidden md:block font-semibold text-primary">
           {order.totalPrice}
         </span>
-        <Button variant="outline" size="sm">
-          <Eye className="h-4 w-4 mr-2" />
-          View
+        <Button variant="outline" size="sm" asChild>
+          <Link
+            to={`/account/orders/$orderId`}
+            params={{ orderId: order.id.toString() }}
+          >
+            <Eye className="h-4 w-4 mr-2" />
+            View
+          </Link>
         </Button>
       </div>
     </div>
