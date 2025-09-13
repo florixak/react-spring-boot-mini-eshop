@@ -4,12 +4,55 @@ import { Input } from "../ui/input";
 import { useUserStore } from "@/stores/useUserStore";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { profileSchema } from "@/lib/schema";
 
 const ProfileSection = () => {
   const { user } = useUserStore();
+  const {
+    register,
+    formState: { errors },
+    trigger,
+  } = useForm({
+    mode: "onChange",
+    defaultValues: {
+      firstName: user?.firstName || "",
+      lastName: user?.lastName || "",
+      email: user?.email || "",
+      phone: user?.phone || "",
+      address: user?.address || "",
+      city: user?.city || "",
+      state: user?.state || "",
+      postalCode: user?.postalCode || "",
+      country: user?.country || "",
+    },
+    resolver: zodResolver(profileSchema),
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const isValid = await trigger([
+      "firstName",
+      "lastName",
+      "email",
+      "phone",
+      "address",
+      "city",
+      "state",
+      "postalCode",
+      "country",
+    ]);
+    if (!isValid) {
+      console.log("Form is invalid");
+      return;
+    }
+    console.log("Form is valid, submitting...");
+  };
 
   return (
-    <div className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <Card>
         <CardHeader>
           <h2 className="text-2xl font-bold text-primary font-playfair">
@@ -25,13 +68,23 @@ const ProfileSection = () => {
               <Label className="text-sm font-semibold text-primary">
                 First Name
               </Label>
-              <Input defaultValue={user?.firstName} className="mt-1" />
+              <Input {...register("firstName")} className="mt-1" />
+              {errors.firstName && (
+                <p className="text-sm text-red-600 mt-1">
+                  {errors.firstName.message}
+                </p>
+              )}
             </div>
             <div>
               <Label className="text-sm font-semibold text-primary">
                 Last Name
               </Label>
-              <Input defaultValue={user?.lastName} className="mt-1" />
+              <Input {...register("lastName")} className="mt-1" />
+              {errors.lastName && (
+                <p className="text-sm text-red-600 mt-1">
+                  {errors.lastName.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -39,14 +92,24 @@ const ProfileSection = () => {
             <Label className="text-sm font-semibold text-primary">
               Email Address
             </Label>
-            <Input type="email" defaultValue={user?.email} className="mt-1" />
+            <Input {...register("email")} type="email" className="mt-1" />
+            {errors.email && (
+              <p className="text-sm text-red-600 mt-1">
+                {errors.email.message}
+              </p>
+            )}
           </div>
 
           <div>
             <Label className="text-sm font-semibold text-primary">
               Phone Number
             </Label>
-            <Input type="tel" defaultValue={user?.phone} className="mt-1" />
+            <Input {...register("phone")} className="mt-1" />
+            {errors.phone && (
+              <p className="text-sm text-red-600 mt-1">
+                {errors.phone.message}
+              </p>
+            )}
           </div>
 
           <Separator className="my-6 bg-secondary-100" />
@@ -59,29 +122,54 @@ const ProfileSection = () => {
               <Label className="text-sm font-semibold text-primary">
                 Street Address
               </Label>
-              <Input defaultValue={user?.address} className="mt-1" />
+              <Input {...register("address")} className="mt-1" />
+              {errors.address && (
+                <p className="text-sm text-red-600 mt-1">
+                  {errors.address.message}
+                </p>
+              )}
             </div>
             <div>
               <Label className="text-sm font-semibold text-primary">City</Label>
-              <Input defaultValue={user?.city} className="mt-1" />
+              <Input {...register("city")} className="mt-1" />
+              {errors.city && (
+                <p className="text-sm text-red-600 mt-1">
+                  {errors.city.message}
+                </p>
+              )}
             </div>
             <div>
               <Label className="text-sm font-semibold text-primary">
                 State
               </Label>
-              <Input defaultValue={user?.state} className="mt-1" />
+              <Input {...register("state")} className="mt-1" />
+              {errors.state && (
+                <p className="text-sm text-red-600 mt-1">
+                  {errors.state.message}
+                </p>
+              )}
             </div>
             <div>
               <Label className="text-sm font-semibold text-primary">
                 ZIP Code
               </Label>
-              <Input defaultValue={user?.postalCode} className="mt-1" />
+              <Input {...register("postalCode")} className="mt-1" />
+              {errors.postalCode && (
+                <p className="text-sm text-red-600 mt-1">
+                  {errors.postalCode.message}
+                </p>
+              )}
             </div>
             <div>
               <Label className="text-sm font-semibold text-primary">
                 Country
               </Label>
-              <Input defaultValue={user?.country} className="mt-1" />
+              <Input {...register("country")} className="mt-1" />
+              {errors.country && (
+                <p className="text-sm text-red-600 mt-1">
+                  {errors.country.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -92,7 +180,7 @@ const ProfileSection = () => {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </form>
   );
 };
 
