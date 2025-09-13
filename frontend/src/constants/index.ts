@@ -38,13 +38,6 @@ const PRODUCT_FILTERS: ProductFilter[] = [
   },
 ];
 
-const PAYMENT_METHODS = [
-  "CREDIT_CARD",
-  "PAYPAL",
-  "BANK_TRANSFER",
-  "CASH_ON_DELIVERY",
-];
-
 const STATISTICS = [
   {
     title: "Happy Customers",
@@ -236,7 +229,6 @@ const FREE_SHIPPING_THRESHOLD = 50;
 
 export {
   PRODUCT_FILTERS,
-  PAYMENT_METHODS,
   SHIPPING_METHODS,
   FREE_SHIPPING_THRESHOLD,
   STATISTICS,
