@@ -127,11 +127,11 @@ public class AuthController {
 			refreshTokenCookie.setSecure(false);
 			response.addCookie(refreshTokenCookie);
 
-			response.setHeader("Set-Cookie",
+			/*response.setHeader("Set-Cookie",
 					"accessToken=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax");
 
-			response.addHeader("Set-Cookie",
-					"refreshToken=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax");
+			response.setHeader("Set-Cookie",
+					"refreshToken=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax");*/
 
 			return ResponseEntity.ok(new Response<String>(true, null, "Logged out successfully."));
 		} catch (RuntimeException e) {

@@ -92,11 +92,11 @@ public class AuthService {
 		refreshTokenCookie.setMaxAge((int) (refreshTokenService.getRefreshTokenDurationMs() / 1000));
 		response.addCookie(refreshTokenCookie);
 
-		response.setHeader("Set-Cookie",
+		/*response.setHeader("Set-Cookie",
 				"accessToken=" + token + "; HttpOnly; Path=/; Max-Age=" + (jwtService.getExpirationTime() / 1000) + "; SameSite=Lax");
 
 		response.addHeader("Set-Cookie",
-				"refreshToken=" + refreshToken + "; HttpOnly; Path=/; Max-Age=" + (refreshTokenService.getRefreshTokenDurationMs() / 1000) + "; SameSite=Lax");
+				"refreshToken=" + refreshToken + "; HttpOnly; Path=/; Max-Age=" + (refreshTokenService.getRefreshTokenDurationMs() / 1000) + "; SameSite=Lax");*/
 	}
 
 
