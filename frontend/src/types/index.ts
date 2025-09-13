@@ -1,5 +1,3 @@
-import type { PAYMENT_METHODS } from "@/constants";
-
 type Category = {
   id: number;
   title: string;
@@ -53,7 +51,7 @@ type Order = {
   created_at: string;
   updated_at: string;
   status: OrderStatus;
-  paymentMethod: (typeof PAYMENT_METHODS)[number];
+  shippingMethod: ShippingMethodKey;
   shippingAddress: string;
   customerEmail: string;
   customerPhone: string;
