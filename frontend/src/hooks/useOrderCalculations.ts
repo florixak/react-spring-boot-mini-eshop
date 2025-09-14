@@ -3,8 +3,19 @@ import type { CartItem } from "@/types";
 
 const useOrderCalculations = (
   orderItems: CartItem[],
-  shippingFee: number = 0
+  shippingFee: number = 0,
+  enabled: boolean = true
 ) => {
+  if (!enabled) {
+    return {
+      quantity: 0,
+      subtotal: 0,
+      shipping: 0,
+      tax: 0,
+      total: 0,
+      isFreeShipping: false,
+    };
+  }
   const quantity = orderItems.reduce((total, item) => total + item.quantity, 0);
   const subtotal = orderItems.reduce(
     (total, item) => total + item.product.price * item.quantity,
