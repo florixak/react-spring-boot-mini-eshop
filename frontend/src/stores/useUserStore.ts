@@ -113,8 +113,8 @@ export const useUserStore = create<UserState>()(
         });
         try {
           await logout();
-        } catch (error) {
-          console.error("Logout error:", error);
+        } catch {
+          //console.error("Logout error:", error);
         } finally {
           set((state) => {
             state.user = null;
