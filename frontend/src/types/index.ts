@@ -33,7 +33,7 @@ type User = {
   postalCode?: string;
   country?: string;
   state?: string;
-  created_at: string;
+  createdAt: string;
 };
 
 type OrderStatus =
@@ -48,8 +48,8 @@ type Order = {
   user?: User;
   orderItems: OrderItem[];
   totalPrice: number;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
   status: OrderStatus;
   shippingMethod: ShippingMethodKey;
   shippingAddress: string;
