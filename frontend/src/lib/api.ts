@@ -18,6 +18,8 @@ export type ProductFilter = {
   maxPrice?: number;
   search?: string;
   inStock?: boolean;
+  page?: number;
+  size?: number;
 };
 
 export const fetchCategories = async (): Promise<Response<Category[]>> => {
@@ -37,11 +39,9 @@ export const fetchCategories = async (): Promise<Response<Category[]>> => {
 export const fetchProducts = async (
   filter: ProductFilter
 ): Promise<Response<ProductPageResponse>> => {
-  const page = 0;
-  const size = 10;
   const params = new URLSearchParams();
-  params.append("page", (page ?? 0).toString());
-  params.append("size", (size ?? 10).toString());
+  if (filter.page !== undefined) params.append("page", filter.page.toString());
+  if (filter.size !== undefined) params.append("size", filter.size.toString());
   if (filter.categorySlug) params.append("categorySlug", filter.categorySlug);
   if (filter.minPrice !== undefined)
     params.append("minPrice", filter.minPrice.toString());
@@ -276,14 +276,16 @@ export const fetchWishlist = async (): Promise<Response<Product[]>> => {
 export const addToWishlist = async (
   productId: number
 ): Promise<Response<null>> => {
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/wishlist/add`, {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ productId }),
-  });
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/wishlist/add/${productId}`,
+    {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
   if (!response.ok) {
     throw new Error("Failed to add to wishlist");
   }
@@ -295,7 +297,7 @@ export const removeFromWishlist = async (
   productId: number
 ): Promise<Response<null>> => {
   const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/wishlist/${productId}`,
+    `${import.meta.env.VITE_API_URL}/wishlist/remove/${productId}`,
     {
       method: "DELETE",
       credentials: "include",
