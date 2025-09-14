@@ -1,11 +1,25 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchOrder } from "@/lib/api";
-import { Card, CardContent, CardHeader } from "../ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
-import { ArrowLeft, Package, Truck, CheckCircle, XCircle } from "lucide-react";
+import { Badge } from "../ui/badge";
+import { Separator } from "../ui/separator";
+import {
+  ArrowLeft,
+  Package,
+  Truck,
+  CheckCircle,
+  XCircle,
+  MapPin,
+  CreditCard,
+  MessageSquare,
+} from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import { formatDate, formatPrice } from "@/lib/utils";
+import { formatPrice, cn } from "@/lib/utils";
 import { Route } from "@/routes/account/orders/$orderId";
+import { SHIPPING_METHODS } from "@/constants";
+import OrderDetailsHeader from "./OrderDetailsHeader";
+import OrderDetailsItems from "./OrderDetailsItems";
 
 const OrderDetailsPage = () => {
   const { orderId } = Route.useParams();
@@ -19,107 +33,168 @@ const OrderDetailsPage = () => {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-6 py-8">
-        <div className="animate-pulse">Loading order details...</div>
+      <div className="min-h-screen bg-secondary-50 px-6 md:px-16 lg:px-28 py-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="animate-pulse space-y-6">
+            <div className="h-8 bg-secondary-100 rounded w-1/4"></div>
+            <div className="h-64 bg-secondary-100 rounded"></div>
+            <div className="h-48 bg-secondary-100 rounded"></div>
+          </div>
+        </div>
       </div>
     );
   }
 
   if (isError || !order) {
     return (
-      <div className="container mx-auto px-6 py-8">
-        <div className="text-center">
-          <p className="text-red-500 mb-4">Order not found</p>
-          <Link to="/account" search={{ section: "orders" }}>
-            <Button variant="outline">Back to Orders</Button>
-          </Link>
+      <div className="min-h-screen bg-secondary-50 px-6 md:px-16 lg:px-28 py-8 pt-28">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="bg-white rounded-lg p-8 shadow-sm">
+            <XCircle className="h-16 w-16 text-red-500 mx-auto mb-4" />
+            <h1 className="text-2xl font-bold text-primary mb-2">
+              Order Not Found
+            </h1>
+            <p className="text-secondary-200 mb-6">
+              We couldn't find the order you're looking for.
+            </p>
+            <Button variant="outline" asChild>
+              <Link to="/account" search={{ section: "orders" }}>
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Orders
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-6 py-8">
-      <div className="mb-6">
-        <Link to="/account" search={{ section: "orders" }}>
-          <Button variant="outline" className="flex items-center gap-2">
-            <ArrowLeft className="h-4 w-4" />
+    <div className="min-h-screen bg-secondary-50 px-6 md:px-16 lg:px-28 py-8 pt-28">
+      <div className="max-w-4xl mx-auto space-y-6">
+        <Button variant="outline" asChild>
+          <Link to="/account" search={{ section: "orders" }}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Orders
-          </Button>
-        </Link>
-      </div>
+          </Link>
+        </Button>
 
-      <div className="space-y-6">
-        {/* Order Header */}
-        <Card>
+        <OrderDetailsHeader order={order} />
+
+        {["pending", "processing", "shipped", "delivered"].includes(
+          order.status.toLowerCase()
+        ) && (
+          <Card className="shadow-sm border-secondary-100">
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold">
+                Order Progress
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                {[
+                  { status: "pending", label: "Order Placed", icon: Package },
+                  { status: "processing", label: "Processing", icon: Package },
+                  { status: "shipped", label: "Shipped", icon: Truck },
+                  {
+                    status: "delivered",
+                    label: "Delivered",
+                    icon: CheckCircle,
+                  },
+                ].map((step, index) => {
+                  const isActive = order.status.toLowerCase() === step.status;
+                  const isPast =
+                    ["pending", "processing", "shipped", "delivered"].indexOf(
+                      order.status.toLowerCase()
+                    ) > index;
+                  const Icon = step.icon;
+
+                  return (
+                    <div
+                      key={step.status}
+                      className="flex flex-col items-center"
+                    >
+                      <div
+                        className={cn(
+                          "w-10 h-10 rounded-full flex items-center justify-center mb-2",
+                          isActive || isPast
+                            ? "bg-primary text-white"
+                            : "bg-secondary-100 text-secondary-300"
+                        )}
+                      >
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <span
+                        className={cn(
+                          "text-sm font-medium",
+                          isActive ? "text-primary" : "text-secondary-200"
+                        )}
+                      >
+                        {step.label}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        <OrderDetailsItems orderItems={order.orderItems} />
+
+        <Card className="shadow-sm border-secondary-100">
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-bold text-primary font-playfair">
-                  Order #{order.id}
-                </h1>
-                <p className="text-secondary-200">
-                  Placed on {formatDate(order.created_at)}
-                </p>
-              </div>
-              <div className="text-right">
-                <p className="text-2xl font-bold text-primary">
-                  {formatPrice(order.totalPrice)}
-                </p>
-                <div className="flex items-center gap-2 mt-2">
-                  {/* Status badge */}
-                </div>
-              </div>
+            <CardTitle>Order Summary</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex justify-between text-sm">
+              <span className="text-secondary-200">
+                Subtotal (
+                {order.orderItems.reduce((sum, item) => sum + item.quantity, 0)}{" "}
+                items)
+              </span>
+              <span className="font-medium">
+                {formatPrice(
+                  order.orderItems.reduce(
+                    (sum, item) => sum + item.product.price * item.quantity,
+                    0
+                  )
+                )}
+              </span>
             </div>
-          </CardHeader>
-        </Card>
-
-        {/* Order Items */}
-        <Card>
-          <CardHeader>
-            <h2 className="text-xl font-semibold">Order Items</h2>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {order.orderItems.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex items-center gap-4 p-4 border rounded-lg"
-                >
-                  <img
-                    src={item.product.imageUrl || "/placeholder.jpg"}
-                    alt={item.product.title}
-                    className="w-16 h-16 object-cover rounded"
-                  />
-                  <div className="flex-1">
-                    <h3 className="font-medium">{item.product.title}</h3>
-                    <p className="text-secondary-200">
-                      Quantity: {item.quantity}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-semibold">
-                      {formatPrice(item.product.price * item.quantity)}
-                    </p>
-                    <p className="text-sm text-secondary-200">
-                      {formatPrice(item.product.price)} each
-                    </p>
-                  </div>
-                </div>
-              ))}
+            <div className="flex justify-between text-sm">
+              <span className="text-secondary-200">Shipping</span>
+              <span className="font-medium">
+                {formatPrice(SHIPPING_METHODS[order.shippingMethod].cost)}
+              </span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-secondary-200">Tax</span>
+              <span className="font-medium">
+                {formatPrice(order.totalPrice * 0.1)}
+              </span>
+            </div>
+            <Separator />
+            <div className="flex justify-between text-lg font-bold">
+              <span>Total</span>
+              <span className="text-primary">
+                {formatPrice(order.totalPrice)}
+              </span>
             </div>
           </CardContent>
         </Card>
 
-        {/* Shipping & Billing */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card>
+          <Card className="shadow-sm border-secondary-100">
             <CardHeader>
-              <h2 className="text-xl font-semibold">Shipping Address</h2>
+              <CardTitle className="flex items-center gap-2">
+                <MapPin className="h-5 w-5" />
+                Shipping Address
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-1">
-                <p>Pepa Novák</p>
+              <div className="space-y-1 text-sm">
+                <p className="font-medium">Pepa Novák</p>
                 <p>Adresa ulice 123</p>
                 <p>Město, Kraj 12345</p>
                 <p>Česká republika</p>
@@ -127,15 +202,58 @@ const OrderDetailsPage = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="shadow-sm border-secondary-100">
             <CardHeader>
-              <h2 className="text-xl font-semibold">Payment Method</h2>
+              <CardTitle className="flex items-center gap-2">
+                <CreditCard className="h-5 w-5" />
+                Payment Information
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <p>{order.paymentMethod}</p>
-              <p className="text-secondary-200">Status: {order.status}</p>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-secondary-200">Payment Method:</span>
+                  <span className="font-medium">
+                    {SHIPPING_METHODS[order?.shippingMethod]?.label ||
+                      "Standard"}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-secondary-200">Payment Status:</span>
+                  <Badge variant="outline" className="text-xs">
+                    {order.status}
+                  </Badge>
+                </div>
+              </div>
             </CardContent>
           </Card>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-3 pt-4">
+          <Button className="flex-1" asChild>
+            <Link
+              to="/shop"
+              search={{
+                category: "all",
+                sortBy: "no-filter",
+                view: "grid",
+                query: "",
+                price: "0-1000",
+                stock: "in-stock",
+              }}
+            >
+              Continue Shopping
+            </Link>
+          </Button>
+          <Button variant="outline" className="flex-1">
+            <MessageSquare className="h-4 w-4 mr-2" />
+            Contact Support
+          </Button>
+          {order.status.toLowerCase() === "pending" && (
+            <Button variant="outline" className="flex-1">
+              Cancel Order
+            </Button>
+          )}
         </div>
       </div>
     </div>
