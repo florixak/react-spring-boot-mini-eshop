@@ -1,15 +1,17 @@
-import { cn, getStatusColor } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 import { Eye, Package } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import type { Order } from "@/types";
 import { Link } from "@tanstack/react-router";
+import { useOrder } from "@/hooks/useOrder";
 
 type OrderCardProps = {
   order: Order;
 };
 
 const OrderCard = ({ order }: OrderCardProps) => {
+  const { getStatusColor } = useOrder(order);
   return (
     <div
       key={order.id}
@@ -20,26 +22,24 @@ const OrderCard = ({ order }: OrderCardProps) => {
         <div>
           <h3 className="font-semibold text-primary">{order.id}</h3>
           <p className="text-sm text-secondary-200">
-            {order.created_at} • {order.orderItems.length} item
+            {order.createdAt} • {order.orderItems.length} item
             {order.orderItems.length > 1 ? "s" : ""}
           </p>
           <div className="mt-2 flex items-center space-x-2 md:hidden">
-            <Badge className={getStatusColor(order.status)}>
-              {order.status}
-            </Badge>
+            <Badge className={getStatusColor()}>{order.status}</Badge>
             <span className="font-semibold text-primary">
-              {order.totalPrice}
+              {formatPrice(order.totalPrice)}
             </span>
           </div>
         </div>
       </div>
 
       <div className="flex items-center space-x-4 flex-col md:flex-row">
-        <Badge className={cn("hidden md:block", getStatusColor(order.status))}>
+        <Badge className={cn("hidden md:block", getStatusColor())}>
           {order.status}
         </Badge>
         <span className="hidden md:block font-semibold text-primary">
-          {order.totalPrice}
+          {formatPrice(order.totalPrice)}
         </span>
         <Button variant="outline" size="sm" asChild>
           <Link
