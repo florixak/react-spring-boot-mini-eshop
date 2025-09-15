@@ -7,6 +7,7 @@ import me.ptakondrej.minieshop.requests.PasswordRequest;
 import me.ptakondrej.minieshop.requests.UserEditRequest;
 import me.ptakondrej.minieshop.responses.Response;
 import me.ptakondrej.minieshop.services.AuthService;
+import me.ptakondrej.minieshop.services.RefreshTokenService;
 import me.ptakondrej.minieshop.services.UserService;
 import me.ptakondrej.minieshop.user.User;
 import me.ptakondrej.minieshop.user.UserMapper;
@@ -20,16 +21,19 @@ public class UserController {
 
 	private final UserService userService;
 	private final AuthService authService;
+	private final RefreshTokenService refreshTokenService;
 
-	public UserController(UserService userService, AuthService authService) {
+	public UserController(UserService userService, AuthService authService, RefreshTokenService refreshTokenService) {
 		this.userService = userService;
 		this.authService = authService;
+		this.refreshTokenService = refreshTokenService;
 	}
 
 	@PatchMapping("/me/password")
-	public ResponseEntity<Response<Void>> updatePassword(@RequestAttribute("userId") long userId, @RequestBody PasswordRequest request, HttpServletResponse response) {
+	public ResponseEntity<Response<Void>> updatePassword(@CookieValue(value = "refreshToken") String refreshToken, @RequestAttribute("userId") long userId, @RequestBody PasswordRequest request, HttpServletResponse response) {
 		try {
 			userService.updatePassword(userId, request);
+			refreshTokenService.deleteByOldRefreshToken(refreshToken);
 			authService.clearCookies(response);
 			return ResponseEntity.ok(new Response<Void>(true, null, "Password updated successfully"));
 		} catch (IllegalArgumentException e) {
@@ -53,9 +57,10 @@ public class UserController {
 	}
 
 	@DeleteMapping("/me")
-	public ResponseEntity<Response<Void>> deleteAccount(@RequestAttribute("userId") long userId) {
+	public ResponseEntity<Response<Void>> deleteAccount(@RequestAttribute("userId") long userId, HttpServletResponse response) {
 		try {
 			userService.deleteUser(userId);
+			authService.clearCookies(response);
 			return ResponseEntity.ok(new Response<Void>(true, null, "Account deleted successfully"));
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().body(new Response<Void>(false, null, e.getMessage()));
