@@ -1,10 +1,12 @@
 package me.ptakondrej.minieshop.controllers;
 
+import jakarta.servlet.http.HttpServletResponse;
 import me.ptakondrej.minieshop.models.UserDTO;
 import me.ptakondrej.minieshop.requests.EmailRequest;
 import me.ptakondrej.minieshop.requests.PasswordRequest;
 import me.ptakondrej.minieshop.requests.UserEditRequest;
 import me.ptakondrej.minieshop.responses.Response;
+import me.ptakondrej.minieshop.services.AuthService;
 import me.ptakondrej.minieshop.services.UserService;
 import me.ptakondrej.minieshop.user.User;
 import me.ptakondrej.minieshop.user.UserMapper;
@@ -17,15 +19,18 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
 	private final UserService userService;
+	private final AuthService authService;
 
-	public UserController(UserService userService) {
+	public UserController(UserService userService, AuthService authService) {
 		this.userService = userService;
+		this.authService = authService;
 	}
 
 	@PatchMapping("/me/password")
-	public ResponseEntity<Response<Void>> updatePassword(@RequestAttribute("userId") long userId, @RequestBody PasswordRequest request) {
+	public ResponseEntity<Response<Void>> updatePassword(@RequestAttribute("userId") long userId, @RequestBody PasswordRequest request, HttpServletResponse response) {
 		try {
 			userService.updatePassword(userId, request);
+			authService.clearCookies(response);
 			return ResponseEntity.ok(new Response<Void>(true, null, "Password updated successfully"));
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().body(new Response<Void>(false, null, e.getMessage()));
