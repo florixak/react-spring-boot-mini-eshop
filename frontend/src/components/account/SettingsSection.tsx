@@ -5,11 +5,13 @@ import { Separator } from "../ui/separator";
 import { useForm } from "react-hook-form";
 import { updateUserPassword } from "@/lib/api";
 import FormField from "../FormField";
+import { useNavigate } from "@tanstack/react-router";
 
 const SettingsSection = () => {
+  const navigate = useNavigate();
   const {
     register,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
     trigger,
     getValues,
   } = useForm({
@@ -39,6 +41,16 @@ const SettingsSection = () => {
       getValues("currentPassword"),
       getValues("newPassword")
     );
+
+    if (response.success) {
+      navigate({
+        to: "/auth",
+        replace: true,
+        search: { mode: "login", redirectTo: "" },
+      });
+    } else {
+      console.error("Failed to update password:", response.message);
+    }
 
     if (response.success) {
       console.log("Password updated successfully");
@@ -97,6 +109,7 @@ const SettingsSection = () => {
               <FormField
                 label="Current Password"
                 id="currentPassword"
+                type="password"
                 register={register}
                 isSubmitting={isSubmitting}
                 error={errors.currentPassword?.message}
@@ -105,6 +118,7 @@ const SettingsSection = () => {
               <FormField
                 label="New Password"
                 id="newPassword"
+                type="password"
                 register={register}
                 isSubmitting={isSubmitting}
                 error={errors.newPassword?.message}
@@ -113,12 +127,15 @@ const SettingsSection = () => {
               <FormField
                 label="Confirm New Password"
                 id="confirmNewPassword"
+                type="password"
                 register={register}
                 isSubmitting={isSubmitting}
                 error={errors.confirmNewPassword?.message}
               />
 
-              <Button variant="outline">Update Password</Button>
+              <Button variant="outline" disabled={isSubmitting || !isDirty}>
+                Update Password
+              </Button>
             </div>
           </form>
 
