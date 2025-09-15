@@ -109,7 +109,6 @@ public class AuthController {
 	public ResponseEntity<Response<String>> logout(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
 		try {
 			if (refreshToken != null) {
-				System.out.println("Deleting refresh token: " + refreshToken);
 				refreshTokenService.deleteByOldRefreshToken(refreshToken);
 			}
 
