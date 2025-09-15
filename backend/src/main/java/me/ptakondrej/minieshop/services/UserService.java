@@ -93,11 +93,13 @@ public class UserService {
 			if (!request.getEmail().contains("@") || !request.getEmail().contains(".")) {
 				throw new IllegalArgumentException("Invalid email format");
 			}
-			if (userRepository.findByEmail(request.getEmail().trim()).isPresent() && !user.getEmail().equalsIgnoreCase(request.getEmail().trim())) {
+			String trimmedEmail = request.getEmail().trim();
+			if (userRepository.findByEmail(trimmedEmail).isPresent() && !user.getEmail().equalsIgnoreCase(trimmedEmail)) {
 				throw new IllegalArgumentException("Email is already in use");
 			}
-			user.setEmail(request.getEmail().trim());
+			user.setEmail(trimmedEmail);
 		}
+		// Some values are not trimmed to allow multi part values like "New York"
 		if (request.getAddress() != null && !request.getAddress().isBlank()) {
 			user.setAddress(request.getAddress());
 		}
@@ -105,7 +107,7 @@ public class UserService {
 			user.setCity(request.getCity());
 		}
 		if (request.getPostalCode() != null && !request.getPostalCode().isBlank()) {
-			user.setPostalCode(request.getPostalCode());
+			user.setPostalCode(request.getPostalCode().trim());
 		}
 		if (request.getCountry() != null && !request.getCountry().isBlank()) {
 			user.setCountry(request.getCountry());
@@ -114,7 +116,10 @@ public class UserService {
 			user.setState(request.getState());
 		}
 		if (request.getPhone() != null && !request.getPhone().isBlank()) {
-			user.setPhone(request.getPhone());
+			if (!request.getPhone().matches("^[+]?\\d{7,15}$")) {
+				throw new IllegalArgumentException("Invalid phone number format");
+			}
+			user.setPhone(request.getPhone().trim());
 		}
 		return userRepository.save(user);
 	}
