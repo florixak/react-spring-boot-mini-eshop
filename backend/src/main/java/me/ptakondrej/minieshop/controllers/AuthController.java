@@ -109,29 +109,10 @@ public class AuthController {
 	public ResponseEntity<Response<String>> logout(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
 		try {
 			if (refreshToken != null) {
-				System.out.println("Deleting refresh token: " + refreshToken);
 				refreshTokenService.deleteByOldRefreshToken(refreshToken);
 			}
 
-			Cookie jwtCookie = new Cookie("accessToken", null);
-			jwtCookie.setHttpOnly(true);
-			jwtCookie.setPath("/");
-			jwtCookie.setMaxAge(0);
-			jwtCookie.setSecure(true);
-			response.addCookie(jwtCookie);
-
-			Cookie refreshTokenCookie = new Cookie("refreshToken", null);
-			refreshTokenCookie.setHttpOnly(true);
-			refreshTokenCookie.setPath("/");
-			refreshTokenCookie.setMaxAge(0);
-			refreshTokenCookie.setSecure(true);
-			response.addCookie(refreshTokenCookie);
-
-			response.setHeader("Set-Cookie",
-					"accessToken=; HttpOnly; Path=/; Max-Age=0; SameSite=None");
-
-			response.setHeader("Set-Cookie",
-					"refreshToken=; HttpOnly; Path=/; Max-Age=0; SameSite=None");
+			authService.clearCookies(response);
 
 			return ResponseEntity.ok(new Response<String>(true, null, "Logged out successfully."));
 		} catch (RuntimeException e) {
