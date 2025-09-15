@@ -51,12 +51,6 @@ const SettingsSection = () => {
     } else {
       console.error("Failed to update password:", response.message);
     }
-
-    if (response.success) {
-      console.log("Password updated successfully");
-    } else {
-      console.error("Failed to update password:", response.message);
-    }
   };
 
   return (
