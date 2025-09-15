@@ -81,22 +81,22 @@ public class AuthService {
 		Cookie jwtCookie = new Cookie("accessToken", token);
 		jwtCookie.setHttpOnly(true);
 		jwtCookie.setPath("/");
-		jwtCookie.setSecure(true);
+		jwtCookie.setSecure(false);
 		jwtCookie.setMaxAge((int) (jwtService.getExpirationTime() / 1000));
 		response.addCookie(jwtCookie);
 
 		Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
 		refreshTokenCookie.setHttpOnly(true);
 		refreshTokenCookie.setPath("/");
-		refreshTokenCookie.setSecure(true);
+		refreshTokenCookie.setSecure(false);
 		refreshTokenCookie.setMaxAge((int) (refreshTokenService.getRefreshTokenDurationMs() / 1000));
 		response.addCookie(refreshTokenCookie);
 
 		response.setHeader("Set-Cookie",
-				"accessToken=" + token + "; HttpOnly; Path=/; Max-Age=" + (jwtService.getExpirationTime() / 1000) + "; SameSite=None");
+				"accessToken=" + token + "; HttpOnly; Path=/; Max-Age=" + (jwtService.getExpirationTime() / 1000) + "; SameSite=Lax");
 
 		response.addHeader("Set-Cookie",
-				"refreshToken=" + refreshToken + "; HttpOnly; Path=/; Max-Age=" + (refreshTokenService.getRefreshTokenDurationMs() / 1000) + "; SameSite=None");
+				"refreshToken=" + refreshToken + "; HttpOnly; Path=/; Max-Age=" + (refreshTokenService.getRefreshTokenDurationMs() / 1000) + "; SameSite=Lax");
 	}
 
 
