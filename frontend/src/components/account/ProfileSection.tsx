@@ -1,19 +1,18 @@
 import { Button } from "../ui/button";
 import { Card, CardHeader, CardContent } from "../ui/card";
-import { Input } from "../ui/input";
 import { useUserStore } from "@/stores/useUserStore";
-import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { profileSchema } from "@/lib/schema";
 import { updateUserProfile } from "@/lib/api";
+import FormField from "../FormField";
 
 const ProfileSection = () => {
   const { user } = useUserStore();
   const {
     register,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     trigger,
     getValues,
   } = useForm({
@@ -73,53 +72,37 @@ const ProfileSection = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label className="text-sm font-semibold text-primary">
-                First Name
-              </Label>
-              <Input {...register("firstName")} className="mt-1" />
-              {errors.firstName && (
-                <p className="text-sm text-red-600 mt-1">
-                  {errors.firstName.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <Label className="text-sm font-semibold text-primary">
-                Last Name
-              </Label>
-              <Input {...register("lastName")} className="mt-1" />
-              {errors.lastName && (
-                <p className="text-sm text-red-600 mt-1">
-                  {errors.lastName.message}
-                </p>
-              )}
-            </div>
+            <FormField
+              label="First Name"
+              id="firstName"
+              register={register}
+              isSubmitting={isSubmitting}
+              error={errors.firstName?.message}
+            />
+            <FormField
+              label="Last Name"
+              id="lastName"
+              register={register}
+              isSubmitting={isSubmitting}
+              error={errors.lastName?.message}
+            />
           </div>
 
-          <div>
-            <Label className="text-sm font-semibold text-primary">
-              Email Address
-            </Label>
-            <Input {...register("email")} type="email" className="mt-1" />
-            {errors.email && (
-              <p className="text-sm text-red-600 mt-1">
-                {errors.email.message}
-              </p>
-            )}
-          </div>
+          <FormField
+            label="Email Address"
+            id="email"
+            register={register}
+            isSubmitting={isSubmitting}
+            error={errors.email?.message}
+          />
 
-          <div>
-            <Label className="text-sm font-semibold text-primary">
-              Phone Number
-            </Label>
-            <Input {...register("phone")} className="mt-1" />
-            {errors.phone && (
-              <p className="text-sm text-red-600 mt-1">
-                {errors.phone.message}
-              </p>
-            )}
-          </div>
+          <FormField
+            label="Phone Number"
+            id="phone"
+            register={register}
+            isSubmitting={isSubmitting}
+            error={errors.phone?.message}
+          />
 
           <Separator className="my-6 bg-secondary-100" />
 
@@ -127,59 +110,42 @@ const ProfileSection = () => {
             Shipping Address
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="md:col-span-2">
-              <Label className="text-sm font-semibold text-primary">
-                Street Address
-              </Label>
-              <Input {...register("address")} className="mt-1" />
-              {errors.address && (
-                <p className="text-sm text-red-600 mt-1">
-                  {errors.address.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <Label className="text-sm font-semibold text-primary">City</Label>
-              <Input {...register("city")} className="mt-1" />
-              {errors.city && (
-                <p className="text-sm text-red-600 mt-1">
-                  {errors.city.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <Label className="text-sm font-semibold text-primary">
-                State
-              </Label>
-              <Input {...register("state")} className="mt-1" />
-              {errors.state && (
-                <p className="text-sm text-red-600 mt-1">
-                  {errors.state.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <Label className="text-sm font-semibold text-primary">
-                ZIP Code
-              </Label>
-              <Input {...register("postalCode")} className="mt-1" />
-              {errors.postalCode && (
-                <p className="text-sm text-red-600 mt-1">
-                  {errors.postalCode.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <Label className="text-sm font-semibold text-primary">
-                Country
-              </Label>
-              <Input {...register("country")} className="mt-1" />
-              {errors.country && (
-                <p className="text-sm text-red-600 mt-1">
-                  {errors.country.message}
-                </p>
-              )}
-            </div>
+            <FormField
+              label="Street Address"
+              id="address"
+              register={register}
+              isSubmitting={isSubmitting}
+              error={errors.address?.message}
+              className="md:col-span-2"
+            />
+            <FormField
+              label="City"
+              id="city"
+              register={register}
+              isSubmitting={isSubmitting}
+              error={errors.city?.message}
+            />
+            <FormField
+              label="State/Province"
+              id="state"
+              register={register}
+              isSubmitting={isSubmitting}
+              error={errors.state?.message}
+            />
+            <FormField
+              label="Postal Code"
+              id="postalCode"
+              register={register}
+              isSubmitting={isSubmitting}
+              error={errors.postalCode?.message}
+            />
+            <FormField
+              label="Country"
+              id="country"
+              register={register}
+              isSubmitting={isSubmitting}
+              error={errors.country?.message}
+            />
           </div>
 
           <div className="flex justify-end pt-4">
