@@ -46,3 +46,7 @@ export const calculateTotal = (
 export const formatOrderNumber = (orderId: number) => {
   return `#${orderId.toString().padStart(6, "0")}`;
 };
+
+export const firstLetterUppercase = (str: string) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
