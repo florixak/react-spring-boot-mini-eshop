@@ -34,22 +34,10 @@ public class UserController {
 		}
 	}
 
-	@PatchMapping("/me/email")
-	public ResponseEntity<Response<Void>> updateEmail(@RequestAttribute("userId") long userId, @RequestBody EmailRequest request) {
+	@PutMapping("/me")
+	public ResponseEntity<Response<UserDTO>> updateUser(@RequestAttribute("userId") long userId, @RequestBody UserEditRequest request) {
 		try {
-			userService.updateEmail(userId, request);
-			return ResponseEntity.ok(new Response<Void>(true, null, "Email updated successfully"));
-		} catch (IllegalArgumentException e) {
-			return ResponseEntity.badRequest().body(new Response<Void>(false, null, e.getMessage()));
-		} catch (Exception e) {
-			return ResponseEntity.status(500).body(new Response<Void>(false, null, "Internal server error"));
-		}
-	}
-
-	@PatchMapping("/me")
-	public ResponseEntity<Response<UserDTO>> updateName(@RequestAttribute("userId") long userId, @RequestBody UserEditRequest request) {
-		try {
-			User updatedUser = userService.updateName(userId, request);
+			User updatedUser = userService.updateUser(userId, request);
 			UserDTO updatedUserDTO = UserMapper.convertToDto(updatedUser);
 			return ResponseEntity.ok(new Response<UserDTO>(true, updatedUserDTO, "User details updated successfully"));
 		} catch (IllegalArgumentException e) {
