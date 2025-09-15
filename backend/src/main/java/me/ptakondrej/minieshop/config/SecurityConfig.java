@@ -60,7 +60,7 @@ public class SecurityConfig {
 				"http://localhost:5173"
 		));
 		config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Stripe-Signature", "X-SCHEDULER-TOKEN"));
-		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
 		config.setAllowCredentials(true);
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
