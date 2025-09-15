@@ -7,6 +7,7 @@ import { Separator } from "../ui/separator";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { profileSchema } from "@/lib/schema";
+import { updateUserProfile } from "@/lib/api";
 
 const ProfileSection = () => {
   const { user } = useUserStore();
@@ -14,6 +15,7 @@ const ProfileSection = () => {
     register,
     formState: { errors },
     trigger,
+    getValues,
   } = useForm({
     mode: "onChange",
     defaultValues: {
@@ -48,7 +50,14 @@ const ProfileSection = () => {
       console.log("Form is invalid");
       return;
     }
-    console.log("Form is valid, submitting...");
+
+    const response = await updateUserProfile(getValues());
+
+    if (response.success) {
+      console.log("Profile updated successfully");
+    } else {
+      console.error("Failed to update profile:", response.message);
+    }
   };
 
   return (
