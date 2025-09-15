@@ -10,14 +10,16 @@ const FormField = <T extends FieldValues>({
   register,
   error,
   isSubmitting,
+  className,
 }: {
   label: string;
   id: Path<T>;
   register: ReturnType<typeof useForm<T>>["register"];
   error?: string;
   isSubmitting: boolean;
+  className?: string;
 }) => (
-  <div>
+  <div className={className}>
     <Label
       htmlFor={String(id)}
       className="block text-sm font-medium text-secondary-200"
