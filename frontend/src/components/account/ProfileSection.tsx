@@ -12,7 +12,7 @@ const ProfileSection = () => {
   const { user } = useUserStore();
   const {
     register,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
     trigger,
     getValues,
   } = useForm({
@@ -47,6 +47,10 @@ const ProfileSection = () => {
     ]);
     if (!isValid) {
       console.log("Form is invalid");
+      return;
+    }
+    if (!isDirty) {
+      console.log("No changes detected");
       return;
     }
 
@@ -91,6 +95,7 @@ const ProfileSection = () => {
           <FormField
             label="Email Address"
             id="email"
+            type="email"
             register={register}
             isSubmitting={isSubmitting}
             error={errors.email?.message}
@@ -99,6 +104,7 @@ const ProfileSection = () => {
           <FormField
             label="Phone Number"
             id="phone"
+            type="tel"
             register={register}
             isSubmitting={isSubmitting}
             error={errors.phone?.message}
@@ -149,7 +155,10 @@ const ProfileSection = () => {
           </div>
 
           <div className="flex justify-end pt-4">
-            <Button className="bg-primary hover:bg-primary/90">
+            <Button
+              className="bg-primary hover:bg-primary/90"
+              disabled={isSubmitting || !isDirty}
+            >
               Save Changes
             </Button>
           </div>
