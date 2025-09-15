@@ -3,6 +3,7 @@ package me.ptakondrej.minieshop.controllers;
 import me.ptakondrej.minieshop.models.OrderDTO;
 import me.ptakondrej.minieshop.order.Order;
 import me.ptakondrej.minieshop.order.OrderMapper;
+import me.ptakondrej.minieshop.order.OrderStatus;
 import me.ptakondrej.minieshop.responses.Response;
 import me.ptakondrej.minieshop.services.OrderService;
 import org.springframework.http.ResponseEntity;
@@ -68,6 +69,43 @@ public class OrderController {
 		} catch (Exception e) {
 			return ResponseEntity.status(500).body(
 					new Response<OrderDTO>(false, null, "An error occurred while retrieving the order: " + e.getMessage())
+			);
+		}
+	}
+
+	@DeleteMapping("/{orderId}")
+	public ResponseEntity<Response<Void>> cancelOrder(@RequestAttribute Long userId, @PathVariable Long orderId) {
+		try {
+			if (orderId == null || orderId <= 0) {
+				return ResponseEntity.badRequest().body(
+						new Response<Void>(false, null, "Invalid order ID")
+				);
+			}
+
+			Order order = orderService.getOrderByUserIdAndOrderId(userId, orderId);
+			if (order == null) {
+				return ResponseEntity.status(404).body(
+						new Response<Void>(false, null, "Order not found")
+				);
+			}
+
+			if (order.getStatus() != OrderStatus.PENDING) {
+				return ResponseEntity.badRequest().body(
+						new Response<Void>(false, null, "Only orders with PENDING status can be cancelled")
+				);
+			}
+
+			orderService.updateOrderStatus(userId, orderId, OrderStatus.CANCELLED);
+			return ResponseEntity.ok(
+					new Response<Void>(true, null, "Order cancelled successfully")
+			);
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(
+					new Response<Void>(false, null, "Invalid request: " + e.getMessage())
+			);
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(
+					new Response<Void>(false, null, "An error occurred while cancelling the order: " + e.getMessage())
 			);
 		}
 	}
