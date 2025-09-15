@@ -73,39 +73,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public void updateEmail(Long userId, EmailRequest request) {
-		if (userId == null || userId <= 0) {
-			throw new IllegalArgumentException("Invalid user ID: " + userId);
-		}
-		if (request == null) {
-			throw new IllegalArgumentException("Request cannot be null");
-		}
-		String newEmail = request.getNewEmail();
-		if (newEmail == null || newEmail.isBlank() || newEmail.trim().isEmpty()) {
-			throw new IllegalArgumentException("New email cannot be empty");
-		}
-		if (!newEmail.contains("@") || !newEmail.contains(".")) {
-			throw new IllegalArgumentException("Invalid email format");
-		}
-
-		User user = userRepository.findById(userId)
-				.orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
-
-		if (user.getEmail().equalsIgnoreCase(newEmail)) {
-			throw new IllegalArgumentException("New email must be different from the old email");
-		}
-
-		if (userRepository.findByEmail(newEmail).isPresent()) {
-			throw new IllegalArgumentException("Email is already in use");
-		}
-
-		user.setEmail(newEmail);
-		//user.setTokenVersion(user.getTokenVersion() + 1);
-		userRepository.save(user);
-	}
-
-	@Transactional
-	public User updateName(Long userId, UserEditRequest request) {
+	public User updateUser(Long userId, UserEditRequest request) {
 		if (userId == null || userId <= 0) {
 			throw new IllegalArgumentException("Invalid user ID: " + userId);
 		}
@@ -120,6 +88,33 @@ public class UserService {
 		}
 		if (request.getLastName() != null && !request.getLastName().isBlank()) {
 			user.setLastName(request.getLastName().trim());
+		}
+		if (request.getEmail() != null && !request.getEmail().isBlank()) {
+			if (!request.getEmail().contains("@") || !request.getEmail().contains(".")) {
+				throw new IllegalArgumentException("Invalid email format");
+			}
+			if (userRepository.findByEmail(request.getEmail().trim()).isPresent() && !user.getEmail().equalsIgnoreCase(request.getEmail().trim())) {
+				throw new IllegalArgumentException("Email is already in use");
+			}
+			user.setEmail(request.getEmail().trim());
+		}
+		if (request.getAddress() != null && !request.getAddress().isBlank()) {
+			user.setAddress(request.getAddress());
+		}
+		if (request.getCity() != null && !request.getCity().isBlank()) {
+			user.setCity(request.getCity());
+		}
+		if (request.getPostalCode() != null && !request.getPostalCode().isBlank()) {
+			user.setPostalCode(request.getPostalCode());
+		}
+		if (request.getCountry() != null && !request.getCountry().isBlank()) {
+			user.setCountry(request.getCountry());
+		}
+		if (request.getState() != null && !request.getState().isBlank()) {
+			user.setState(request.getState());
+		}
+		if (request.getPhone() != null && !request.getPhone().isBlank()) {
+			user.setPhone(request.getPhone());
 		}
 		return userRepository.save(user);
 	}
