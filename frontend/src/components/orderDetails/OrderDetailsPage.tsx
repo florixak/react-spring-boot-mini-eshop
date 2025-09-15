@@ -3,7 +3,6 @@ import { fetchOrder } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
-import { Separator } from "../ui/separator";
 import {
   ArrowLeft,
   Package,
@@ -15,11 +14,12 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import { formatPrice, cn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Route } from "@/routes/account/orders/$orderId";
 import { SHIPPING_METHODS } from "@/constants";
 import OrderDetailsHeader from "./OrderDetailsHeader";
 import OrderDetailsItems from "./OrderDetailsItems";
+import OrderDetailsSummary from "./OrderDetailsSummary";
 
 const OrderDetailsPage = () => {
   const { orderId } = Route.useParams();
@@ -142,47 +142,7 @@ const OrderDetailsPage = () => {
 
         <OrderDetailsItems orderItems={order.orderItems} />
 
-        <Card className="shadow-sm border-secondary-100">
-          <CardHeader>
-            <CardTitle>Order Summary</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex justify-between text-sm">
-              <span className="text-secondary-200">
-                Subtotal (
-                {order.orderItems.reduce((sum, item) => sum + item.quantity, 0)}{" "}
-                items)
-              </span>
-              <span className="font-medium">
-                {formatPrice(
-                  order.orderItems.reduce(
-                    (sum, item) => sum + item.product.price * item.quantity,
-                    0
-                  )
-                )}
-              </span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-secondary-200">Shipping</span>
-              <span className="font-medium">
-                {formatPrice(SHIPPING_METHODS[order.shippingMethod].cost)}
-              </span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-secondary-200">Tax</span>
-              <span className="font-medium">
-                {formatPrice(order.totalPrice * 0.1)}
-              </span>
-            </div>
-            <Separator />
-            <div className="flex justify-between text-lg font-bold">
-              <span>Total</span>
-              <span className="text-primary">
-                {formatPrice(order.totalPrice)}
-              </span>
-            </div>
-          </CardContent>
-        </Card>
+        <OrderDetailsSummary order={order} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card className="shadow-sm border-secondary-100">

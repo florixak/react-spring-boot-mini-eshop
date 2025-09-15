@@ -1,4 +1,4 @@
-import { formatDate, cn, formatPrice } from "@/lib/utils";
+import { formatDate, cn, formatPrice, firstLetterUppercase } from "@/lib/utils";
 import { Check, Copy, Badge, Download, MessageSquare } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card, CardHeader } from "../ui/card";
@@ -10,8 +10,13 @@ type OrderDetailsHeaderProps = {
 };
 
 const OrderDetailsHeader = ({ order }: OrderDetailsHeaderProps) => {
-  const { getStatusIcon, copyOrderId, isOrderIdCopied, getStatusColor } =
-    useOrder(order);
+  const {
+    getStatusIcon,
+    copyOrderId,
+    isOrderIdCopied,
+    getStatusColor,
+    calculations,
+  } = useOrder(order);
   const StatusIcon = getStatusIcon();
 
   return (
@@ -46,7 +51,7 @@ const OrderDetailsHeader = ({ order }: OrderDetailsHeaderProps) => {
               )}
             >
               {<StatusIcon />}
-              {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+              {firstLetterUppercase(order.status)}
             </Badge>
           </div>
 
