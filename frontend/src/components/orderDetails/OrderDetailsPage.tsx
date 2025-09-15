@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchOrder } from "@/lib/api";
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { cancelOrder, fetchOrder } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
@@ -20,8 +20,10 @@ import { SHIPPING_METHODS } from "@/constants";
 import OrderDetailsHeader from "./OrderDetailsHeader";
 import OrderDetailsItems from "./OrderDetailsItems";
 import OrderDetailsSummary from "./OrderDetailsSummary";
+import { useUserStore } from "@/stores/useUserStore";
 
 const OrderDetailsPage = () => {
+  const { isAuthenticated } = useUserStore();
   const { orderId } = Route.useParams();
 
   const { data, isLoading, isError } = useQuery({
@@ -30,6 +32,18 @@ const OrderDetailsPage = () => {
   });
 
   const order = data?.data;
+
+  const queryClient = new QueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: async () => await cancelOrder(Number(orderId), isAuthenticated),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["order", orderId] });
+    },
+    onError: () => {
+      alert("Failed to cancel the order. Please try again.");
+    },
+  });
 
   if (isLoading) {
     return (
@@ -68,6 +82,16 @@ const OrderDetailsPage = () => {
       </div>
     );
   }
+
+  const handleCancelOrder = () => {
+    if (
+      window.confirm(
+        "Are you sure you want to cancel this order? This action cannot be undone."
+      )
+    ) {
+      mutate();
+    }
+  };
 
   return (
     <div className="min-h-screen bg-secondary-50 px-6 md:px-16 lg:px-28 py-8 pt-28">
@@ -210,7 +234,11 @@ const OrderDetailsPage = () => {
             Contact Support
           </Button>
           {order.status.toLowerCase() === "pending" && (
-            <Button variant="outline" className="flex-1">
+            <Button
+              variant="outline"
+              className="flex-1"
+              onClick={handleCancelOrder}
+            >
               Cancel Order
             </Button>
           )}

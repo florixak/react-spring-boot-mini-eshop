@@ -152,9 +152,9 @@ export const cancelOrder = async (
   isLoggedIn: boolean
 ): Promise<Response<null>> => {
   const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/orders/cancel/${orderId}`,
+    `${import.meta.env.VITE_API_URL}/orders/${orderId}`,
     {
-      method: "POST",
+      method: "DELETE",
       credentials: isLoggedIn ? "include" : "omit",
       headers: {
         "Content-Type": "application/json",
