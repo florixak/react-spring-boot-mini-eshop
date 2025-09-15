@@ -216,6 +216,54 @@ export const register = async (
   return data;
 };
 
+export const updateUserProfile = async (userData: {
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  postalCode?: string;
+  country?: string;
+}): Promise<Response<User>> => {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/users/me`, {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userData),
+  });
+  if (!response.ok) {
+    throw new Error("Failed to update user profile");
+  }
+  const data = (await response.json()) as Response<User>;
+  return data;
+};
+
+export const updateUserPassword = async (
+  currentPassword: string,
+  newPassword: string
+): Promise<Response<null>> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/users/me/password`,
+    {
+      method: "PATCH",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ oldPassword: currentPassword, newPassword }),
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to update user password");
+  }
+  const data = (await response.json()) as Response<null>;
+  return data;
+};
+
 export const refreshToken = async (): Promise<Response<LoginResponse>> => {
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/auth/refresh-token`,

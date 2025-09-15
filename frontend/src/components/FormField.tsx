@@ -9,15 +9,19 @@ const FormField = <T extends FieldValues>({
   id,
   register,
   error,
+  type = "text",
   isSubmitting,
+  className,
 }: {
   label: string;
   id: Path<T>;
   register: ReturnType<typeof useForm<T>>["register"];
   error?: string;
+  type?: React.HTMLInputTypeAttribute | undefined;
   isSubmitting: boolean;
+  className?: string;
 }) => (
-  <div>
+  <div className={className}>
     <Label
       htmlFor={String(id)}
       className="block text-sm font-medium text-secondary-200"
@@ -27,6 +31,7 @@ const FormField = <T extends FieldValues>({
     <Input
       {...register(id)}
       className={error ? "border-red-500" : ""}
+      type={type}
       disabled={isSubmitting}
     />
     {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
