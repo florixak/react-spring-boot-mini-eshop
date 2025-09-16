@@ -7,13 +7,14 @@ import type { View } from "@/types";
 import { createFileRoute } from "@tanstack/react-router";
 import { useProducts } from "@/hooks/useProducts";
 
-type ShopSearch = {
+export type ShopSearch = {
   category: (typeof categories)[number]["slug"];
   sortBy: (typeof PRODUCT_FILTERS)[number]["value"];
   view: View;
   query: string;
   price: string;
   stock: string;
+  page: string;
 };
 
 export const Route = createFileRoute("/shop/")({
@@ -27,6 +28,7 @@ export const Route = createFileRoute("/shop/")({
     query: (search.query as string) ?? "",
     price: (search.price as string) ?? "0-1000",
     stock: (search.stock as string) ?? "in-stock",
+    page: (search.page as string) ?? "1",
   }),
 });
 
@@ -34,7 +36,10 @@ function Shop() {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
 
-  const { products, isLoading, isError, refetch } = useProducts(search, "shop");
+  const { products, isLoading, isError, refetch, totalPages } = useProducts(
+    search,
+    "shop"
+  );
 
   return (
     <>
@@ -52,6 +57,9 @@ function Shop() {
             retry={refetch}
             viewMode={search.view}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            currentPage={parseInt((search.page as string) ?? "1", 10)}
+            totalPages={totalPages}
+            search={search}
           />
         </div>
       </section>

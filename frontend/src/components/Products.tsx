@@ -6,23 +6,32 @@ import { Card } from "./ui/card";
 import { useCartStore } from "@/stores/useCartStore";
 import { Button } from "./ui/button";
 import { useWishlist } from "@/hooks/useWishlist";
+import Pagination from "./Pagination";
+
+import type { ShopSearch } from "@/routes/shop";
 
 type ProductsProps = {
   products?: Product[] | undefined;
+  currentPage?: number;
+  totalPages?: number;
   isLoading?: boolean;
   isError?: boolean;
   retry?: () => void;
   viewMode: View;
   className?: string;
+  search: ShopSearch;
 };
 
 const Products = ({
   products,
+  currentPage = 1,
+  totalPages = 1,
   isLoading,
   isError,
   retry,
   viewMode,
   className,
+  search,
 }: ProductsProps) => {
   const { addToCart } = useCartStore();
   const { isInWishlist, toggleWishlist } = useWishlist();
@@ -77,6 +86,11 @@ const Products = ({
               </Card>
             ))}
       </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        getPageSearch={() => ({ ...search, page: currentPage.toString() })}
+      />
     </div>
   );
 };

@@ -2,12 +2,13 @@ import { fetchProducts, type ProductFilter } from "@/lib/api";
 import type { ProductPageResponse, Response } from "@/types/responses";
 import { useQuery } from "@tanstack/react-query";
 
-type ProductSearchParams = {
+export type ProductSearchParams = {
   category?: string;
   query?: string;
   price?: string;
   stock?: string;
   sortBy?: string;
+  page?: string;
 };
 
 export const useProducts = (
@@ -56,8 +57,12 @@ export const useProducts = (
     queryKey: [context, "products", search],
     queryFn: async () => await fetchProducts(productFilter),
   });
+
   return {
     products: data?.data.products || [],
+    total: data?.data.totalItems || 0,
+    totalPages: data?.data.totalPages || 1,
+    currentPage: data?.data.page || 1,
     isLoading,
     isError,
     refetch,
