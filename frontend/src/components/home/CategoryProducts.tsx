@@ -50,7 +50,7 @@ const CategoryProducts = ({ title }: CategoryProductsProps) => {
           category: search.category,
           sortBy: search.sortBy,
           view: search.view,
-          page: currentPage.toString(),
+          page: currentPage,
         }}
       />
     </section>

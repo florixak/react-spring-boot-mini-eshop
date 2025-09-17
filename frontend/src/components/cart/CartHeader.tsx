@@ -18,7 +18,7 @@ const CartHeader = () => {
                   query: "",
                   price: "0-1000",
                   stock: "in-stock",
-                  page: "1",
+                  page: 1,
                 }}
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />

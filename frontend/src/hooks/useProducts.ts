@@ -8,7 +8,7 @@ export type ProductSearchParams = {
   price?: string;
   stock?: string;
   sortBy?: string;
-  page?: string;
+  page?: number;
 };
 
 export const useProducts = (

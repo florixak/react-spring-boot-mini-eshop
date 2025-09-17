@@ -14,7 +14,7 @@ export type ShopSearch = {
   query: string;
   price: string;
   stock: string;
-  page: string;
+  page: number;
 };
 
 export const Route = createFileRoute("/shop/")({
@@ -28,7 +28,7 @@ export const Route = createFileRoute("/shop/")({
     query: (search.query as string) ?? "",
     price: (search.price as string) ?? "0-1000",
     stock: (search.stock as string) ?? "in-stock",
-    page: (search.page as string) ?? "1",
+    page: (search.page as number) ?? 1,
   }),
 });
 
@@ -57,7 +57,7 @@ function Shop() {
             retry={refetch}
             viewMode={search.view}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-            currentPage={parseInt((search.page as string) ?? "1", 10)}
+            currentPage={search.page ?? 1}
             totalPages={totalPages}
             search={search}
           />

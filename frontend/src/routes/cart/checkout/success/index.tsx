@@ -143,7 +143,7 @@ function CheckoutSuccess() {
                 query: "",
                 price: "0-1000",
                 stock: "in-stock",
-                page: "1",
+                page: 1,
               }}
             >
               Continue Shopping
