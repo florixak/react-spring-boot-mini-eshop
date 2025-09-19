@@ -1,10 +1,10 @@
 package me.ptakondrej.minieshop.controllers;
 
 import me.ptakondrej.minieshop.models.ProductDTO;
-import me.ptakondrej.minieshop.models.ProductListDataDTO;
 import me.ptakondrej.minieshop.product.Product;
 import me.ptakondrej.minieshop.product.ProductMapper;
 import me.ptakondrej.minieshop.requests.ProductRequest;
+import me.ptakondrej.minieshop.responses.PageableResponse;
 import me.ptakondrej.minieshop.responses.Response;
 import me.ptakondrej.minieshop.services.CategoryService;
 import me.ptakondrej.minieshop.services.ProductService;
@@ -22,15 +22,13 @@ import java.util.List;
 public class ProductController {
 
 	private final ProductService productService;
-	private final CategoryService categoryService;
 
-	public ProductController(ProductService productService, CategoryService categoryService) {
+	public ProductController(ProductService productService) {
 		this.productService = productService;
-		this.categoryService = categoryService;
 	}
 
 	@GetMapping
-	public ResponseEntity<Response<ProductListDataDTO>> getAllProducts(
+	public ResponseEntity<Response<PageableResponse<ProductDTO>>> getAllProducts(
 			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size,
 			@RequestParam(required = false) String categorySlug,
@@ -42,7 +40,7 @@ public class ProductController {
 		try {
 			System.out.println("Received parameters - page: " + page + ", size: " + size + ", categorySlug: " + categorySlug + ", minPrice: " + minPrice + ", maxPrice: " + maxPrice + ", search: " + search + ", inStock: " + inStock + ", sort: " + String.join(",", sort));
 			if (page < 0 || size <= 0) {
-				return ResponseEntity.badRequest().body(new Response<ProductListDataDTO>(false, null, "Invalid request parameters"));
+				return ResponseEntity.badRequest().body(new Response<>(false, null, "Invalid request parameters"));
 			}
 
 			Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
@@ -50,11 +48,10 @@ public class ProductController {
 			List<ProductDTO> productDTOs = products.stream()
 					.map(ProductMapper::convertToDto)
 					.toList();
-			System.out.println(productDTOs);
 			return ResponseEntity.ok(
-					new Response<ProductListDataDTO>(
+					new Response<>(
 							true,
-							new ProductListDataDTO(
+							new PageableResponse<ProductDTO>(
 									productDTOs,
 									products.getNumber(),
 									products.getSize(),
@@ -65,9 +62,9 @@ public class ProductController {
 					)
 			);
 		} catch (IllegalArgumentException e) {
-			return ResponseEntity.badRequest().body(new Response<ProductListDataDTO>(false, null, e.getMessage()));
+			return ResponseEntity.badRequest().body(new Response<>(false, null, e.getMessage()));
 		} catch (Exception e) {
-			return ResponseEntity.status(500).body(new Response<ProductListDataDTO>(false, null, "An error occurred while retrieving products: " + e.getMessage()));
+			return ResponseEntity.status(500).body(new Response<>(false, null, "An error occurred while retrieving products: " + e.getMessage()));
 		}
 	}
 
