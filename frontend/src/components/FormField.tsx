@@ -30,6 +30,7 @@ const FormField = <T extends FieldValues>({
     </Label>
     <Input
       {...register(id)}
+      name={String(id)}
       className={error ? "border-red-500" : ""}
       type={type}
       disabled={isSubmitting}

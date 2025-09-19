@@ -71,7 +71,10 @@ const RegisterForm = ({ redirectTo }: RegisterFormProps) => {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 font-inter">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <Label className="text-sm font-semibold text-primary">
+          <Label
+            htmlFor="firstName"
+            className="text-sm font-semibold text-primary"
+          >
             First Name
           </Label>
           <Input
@@ -87,7 +90,10 @@ const RegisterForm = ({ redirectTo }: RegisterFormProps) => {
         </div>
 
         <div>
-          <Label className="text-sm font-semibold text-primary">
+          <Label
+            htmlFor="lastName"
+            className="text-sm font-semibold text-primary"
+          >
             Last Name
           </Label>
           <Input
@@ -104,7 +110,7 @@ const RegisterForm = ({ redirectTo }: RegisterFormProps) => {
       </div>
 
       <div>
-        <Label className="text-sm font-semibold text-primary">
+        <Label htmlFor="email" className="text-sm font-semibold text-primary">
           Email Address
         </Label>
         <Input
@@ -119,7 +125,12 @@ const RegisterForm = ({ redirectTo }: RegisterFormProps) => {
       </div>
 
       <div>
-        <Label className="text-sm font-semibold text-primary">Username</Label>
+        <Label
+          htmlFor="username"
+          className="text-sm font-semibold text-primary"
+        >
+          Username
+        </Label>
         <Input
           {...register("username")}
           className="mt-1"
@@ -131,7 +142,12 @@ const RegisterForm = ({ redirectTo }: RegisterFormProps) => {
       </div>
 
       <div>
-        <Label className="text-sm font-semibold text-primary">Password</Label>
+        <Label
+          htmlFor="password"
+          className="text-sm font-semibold text-primary"
+        >
+          Password
+        </Label>
         <div className="relative mt-1">
           <Input
             {...register("password")}
@@ -158,7 +174,10 @@ const RegisterForm = ({ redirectTo }: RegisterFormProps) => {
       </div>
 
       <div>
-        <Label className="text-sm font-semibold text-primary">
+        <Label
+          htmlFor="confirmPassword"
+          className="text-sm font-semibold text-primary"
+        >
           Confirm Password
         </Label>
         <div className="relative mt-1">
