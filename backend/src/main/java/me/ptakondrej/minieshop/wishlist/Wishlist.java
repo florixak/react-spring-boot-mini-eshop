@@ -22,10 +22,10 @@ public class Wishlist {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
-	@ManyToMany
+	@OneToMany
 	@JoinTable(
 			name = "wishlist_products",
 			joinColumns = @JoinColumn(name = "wishlist_id"),
