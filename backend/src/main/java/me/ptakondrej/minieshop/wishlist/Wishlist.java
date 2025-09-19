@@ -25,7 +25,7 @@ public class Wishlist {
 	@OneToOne
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
-	@OneToMany
+	@ManyToMany
 	@JoinTable(
 			name = "wishlist_products",
 			joinColumns = @JoinColumn(name = "wishlist_id"),
