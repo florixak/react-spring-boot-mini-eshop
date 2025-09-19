@@ -10,6 +10,8 @@ import me.ptakondrej.minieshop.orderItem.OrderItem;
 import me.ptakondrej.minieshop.product.Product;
 import me.ptakondrej.minieshop.requests.OrderCreationRequest;
 import me.ptakondrej.minieshop.user.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,6 +47,16 @@ public class OrderService {
 
 	public List<Order> getAllUserOrders(Long userId) {
 		return orderRepository.findAllByUserId(userId);
+	}
+
+	public Page<Order> getAllOrders(Long userId, Pageable pageable) {
+		if (userId == null || userId <= 0) {
+			throw new IllegalArgumentException("Invalid user ID");
+		}
+		if (pageable == null) {
+			throw new IllegalArgumentException("Pageable cannot be null");
+		}
+		return orderRepository.findAllByUserId(userId, pageable);
 	}
 
 	@Transactional
