@@ -77,7 +77,7 @@ export const fetchOrders = async ({
   size = 10,
 }): Promise<Response<PagingObjectResponse<Order>>> => {
   const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/orders?page=${page - 1}&size=${size - 1}`,
+    `${import.meta.env.VITE_API_URL}/orders?page=${page - 1}&size=${size}`,
     {
       credentials: "include",
       headers: {
