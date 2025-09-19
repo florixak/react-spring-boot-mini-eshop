@@ -9,6 +9,7 @@ import { useWishlist } from "@/hooks/useWishlist";
 import Pagination from "./Pagination";
 
 import type { ShopSearch } from "@/routes/shop";
+import { cn } from "@/lib/utils";
 
 type ProductsProps = {
   products?: Product[] | undefined;
@@ -60,11 +61,14 @@ const Products = ({
   return (
     <div className="w-full">
       <div
-        className={`grid gap-6 ${
-          viewMode === "grid"
-            ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"
-            : "grid-cols-1 max-w-4xl mx-auto"
-        }`}
+        className={cn(
+          `grid gap-6 ${
+            viewMode === "grid"
+              ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"
+              : "grid-cols-1 max-w-4xl mx-auto"
+          }`,
+          className
+        )}
       >
         {!isLoading && products
           ? products.map((product) => (
@@ -86,10 +90,11 @@ const Products = ({
               </Card>
             ))}
       </div>
-      <Pagination
+      <Pagination<ShopSearch>
         currentPage={currentPage}
         totalPages={totalPages}
-        getPageSearch={() => ({ ...search, page: currentPage.toString() })}
+        getPageSearch={(page) => ({ ...search, page })}
+        to="/shop"
       />
     </div>
   );
