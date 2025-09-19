@@ -1,11 +1,17 @@
 package me.ptakondrej.minieshop.controllers;
 
 import me.ptakondrej.minieshop.models.OrderDTO;
+import me.ptakondrej.minieshop.models.ProductDTO;
 import me.ptakondrej.minieshop.order.Order;
 import me.ptakondrej.minieshop.order.OrderMapper;
 import me.ptakondrej.minieshop.order.OrderStatus;
+import me.ptakondrej.minieshop.responses.PageableResponse;
 import me.ptakondrej.minieshop.responses.Response;
 import me.ptakondrej.minieshop.services.OrderService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,22 +28,30 @@ public class OrderController {
 	}
 
 	@GetMapping
-	public ResponseEntity<Response<List<OrderDTO>>> getAllUserOrders(@RequestAttribute Long userId) {
+	public ResponseEntity<Response<PageableResponse<OrderDTO>>> getAllUserOrders(@RequestAttribute Long userId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
 		try {
-			List<Order> orders = orderService.getAllUserOrders(userId);
-			List<OrderDTO> orderDTOs = orders.stream()
+			Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+			Page<Order> wishlistProducts = orderService.getAllOrders(userId, pageable);
+			List<OrderDTO> orderDTOs = wishlistProducts.stream()
 					.map(OrderMapper::convertToDto)
 					.toList();
 			return ResponseEntity.ok(
-					new Response<List<OrderDTO>>(true, orderDTOs, "Orders retrieved successfully")
+					new Response<>(true,
+							new PageableResponse<>(
+									orderDTOs,
+									wishlistProducts.getNumber(),
+									wishlistProducts.getSize(),
+									wishlistProducts.getTotalElements(),
+									wishlistProducts.getTotalPages()
+							), "Orders retrieved successfully")
 			);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().body(
-					new Response<List<OrderDTO>>(false, null, "Invalid request: " + e.getMessage())
+					new Response<>(false,null, "Invalid request: " + e.getMessage())
 			);
 		} catch (Exception e) {
 			return ResponseEntity.status(500).body(
-					new Response<List<OrderDTO>>(false, null, "An error occurred while retrieving orders: " + e.getMessage())
+					new Response<>(false, null, "An error occurred while retrieving orders: " + e.getMessage())
 			);
 		}
 	}

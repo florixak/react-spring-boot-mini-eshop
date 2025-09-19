@@ -30,6 +30,7 @@ public class ProductService {
 		return productRepository.findAll(pageable);
 	}
 
+	@Transactional(readOnly = true)
 	public Page<Product> filterProducts(
 			String categorySlug,
 			Double minPrice,
