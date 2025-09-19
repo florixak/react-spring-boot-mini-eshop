@@ -3,18 +3,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   addToWishlist,
   fetchWholeWishlist,
-  fetchWishlist,
   removeFromWishlist,
 } from "@/lib/api";
 import type { Response } from "@/types/responses";
 import type { Product } from "@/types";
-import useObjectPaging from "./useObjectPaging";
 
-export const useWishlist = ({
-  page,
-  full = false,
-}: { page?: number; full?: boolean } = {}) => {
-  const { user } = useUserStore();
+export const useWishlist = () => {
   const { isAuthenticated } = useUserStore();
   const {
     data: wishlist,
@@ -22,15 +16,9 @@ export const useWishlist = ({
     isError,
     refetch,
   } = useQuery({
-    queryKey: ["wishlist", user?.id, page],
-    queryFn: () => fetchWishlist({ page }),
-    enabled: isAuthenticated,
-  });
-
-  const { data: wishlistProducts } = useQuery({
-    queryKey: ["wishlist", "all", user?.id],
+    queryKey: ["wishlist"],
     queryFn: () => fetchWholeWishlist(),
-    enabled: isAuthenticated && full,
+    enabled: isAuthenticated,
   });
 
   const queryClient = useQueryClient();
@@ -54,7 +42,7 @@ export const useWishlist = ({
           }
         );
       } else {
-        const product = wishlistProducts?.data.find((p) => p.id === productId);
+        const product = wishlist?.data.find((p) => p.id === productId);
         if (product) {
           queryClient.setQueryData(
             ["wishlist"],
@@ -77,25 +65,16 @@ export const useWishlist = ({
     },
   });
 
-  const { items, currentPage, totalPages, totalItems } =
-    useObjectPaging<Product>(wishlist?.data);
-
   const isInWishlist = (productId: number) => {
-    return (
-      wishlistProducts?.data.some((item) => item.id === productId) || false
-    );
+    return wishlist?.data.some((item) => item.id === productId) || false;
   };
 
   return {
-    wishlist: items,
-    wholeWishlist: wishlistProducts?.data || [],
+    wishlist: wishlist?.data || [],
     isInWishlist,
     toggleWishlist,
     isLoading,
     isError,
     refetch,
-    currentPage,
-    totalPages,
-    totalItems,
   };
 };
