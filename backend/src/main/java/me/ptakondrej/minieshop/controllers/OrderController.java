@@ -43,8 +43,7 @@ public class OrderController {
 									wishlistProducts.getSize(),
 									wishlistProducts.getTotalElements(),
 									wishlistProducts.getTotalPages()
-							)
-							, "Orders retrieved successfully")
+							), "Orders retrieved successfully")
 			);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().body(
