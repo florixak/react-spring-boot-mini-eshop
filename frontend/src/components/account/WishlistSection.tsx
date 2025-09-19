@@ -3,11 +3,13 @@ import ProductCard from "../ProductCard";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useCartStore } from "@/stores/useCartStore";
 import { HeartCrack } from "lucide-react";
+import { Route } from "@/routes/account";
 
 const WishlistSection = () => {
+  const search = Route.useSearch();
   const { addToCart } = useCartStore();
   const { wishlist, toggleWishlist, isInWishlist, isLoading, isError } =
-    useWishlist();
+    useWishlist({ page: search.page });
 
   return (
     <div className="space-y-6">

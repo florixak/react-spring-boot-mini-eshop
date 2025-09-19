@@ -1,19 +1,19 @@
 import { Link } from "@tanstack/react-router";
 import { Button } from "./ui/button";
 
-import type { ShopSearch } from "@/routes/shop";
-
-type PaginationProps = {
+type PaginationProps<TSearch extends Record<string, unknown>> = {
   currentPage: number;
   totalPages: number;
-  getPageSearch: (page: number) => ShopSearch;
+  getPageSearch: (page: number) => TSearch;
+  to?: string;
 };
 
-const Pagination = ({
+const Pagination = <TSearch extends Record<string, unknown>>({
   currentPage,
   totalPages,
   getPageSearch,
-}: PaginationProps) => {
+  to = ".",
+}: PaginationProps<TSearch>) => {
   if (totalPages <= 1) return null;
   if (currentPage > totalPages) currentPage = totalPages;
   if (currentPage < 1) currentPage = 1;
@@ -34,7 +34,7 @@ const Pagination = ({
             }`}
           >
             <Link
-              to="/shop"
+              to={to}
               search={getPageSearch(page)}
               aria-current={currentPage === page ? "page" : undefined}
               tabIndex={currentPage === page ? -1 : 0}

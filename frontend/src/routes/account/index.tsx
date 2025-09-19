@@ -4,13 +4,15 @@ import useAuthCheck from "@/hooks/useAuthCheck";
 import { createFileRoute } from "@tanstack/react-router";
 
 type AccountSearch = {
-  section: "profile" | "orders" | "wishlist" | "settings";
+  section: "profile" | "orders" | "settings";
+  page?: number;
 };
 
 export const Route = createFileRoute("/account/")({
   component: Account,
   validateSearch: (search): AccountSearch => ({
     section: (search.section as AccountSearch["section"]) ?? "profile",
+    page: search.page ? Number(search.page) : undefined,
   }),
 });
 
