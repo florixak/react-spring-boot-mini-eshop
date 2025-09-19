@@ -93,7 +93,7 @@ public class WishlistService {
 		if (wishlist == null) {
 			return Page.empty(pageable);
 		}
-		return wishlistRepository.findProductsByUserId(userId, Pageable.unpaged());
+		return wishlistRepository.findProductsByUserId(userId, pageable);
 	}
 
 	public boolean wishlistExistsForUser(Long userId) {
