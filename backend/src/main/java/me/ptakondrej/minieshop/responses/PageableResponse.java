@@ -1,4 +1,4 @@
-package me.ptakondrej.minieshop.models;
+package me.ptakondrej.minieshop.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,10 +9,13 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ProductListDataDTO {
-	private List<ProductDTO> products;
+public class PageableResponse<T> {
+
+	private List<T> items;
 	private Integer page;
 	private Integer size;
 	private Long totalItems;
 	private Integer totalPages;
+
+
 }
