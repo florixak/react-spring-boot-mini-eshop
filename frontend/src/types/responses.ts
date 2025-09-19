@@ -1,4 +1,4 @@
-import type { Product, User } from ".";
+import type { User } from ".";
 
 type Response<T> = {
   success: boolean;
@@ -15,8 +15,8 @@ type LoginResponse = {
   user: User;
 };
 
-type ProductPageResponse = {
-  products: Product[];
+type PagingObjectResponse<T> = {
+  items: T[];
   page: number;
   totalPages: number;
   totalItems: number;
@@ -27,5 +27,5 @@ export type {
   Response,
   CreateOrderResponse,
   LoginResponse,
-  ProductPageResponse,
+  PagingObjectResponse,
 };

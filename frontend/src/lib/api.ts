@@ -9,7 +9,7 @@ import type {
   Response,
   CreateOrderResponse,
   LoginResponse,
-  ProductPageResponse,
+  PagingObjectResponse,
 } from "@/types/responses";
 
 export type ProductFilter = {
@@ -38,10 +38,12 @@ export const fetchCategories = async (): Promise<Response<Category[]>> => {
 
 export const fetchProducts = async (
   filter: ProductFilter
-): Promise<Response<ProductPageResponse>> => {
+): Promise<Response<PagingObjectResponse<Product>>> => {
   const params = new URLSearchParams();
-  if (filter.page !== undefined) params.append("page", filter.page.toString());
+  if (filter.page !== undefined)
+    params.append("page", (filter.page - 1).toString());
   if (filter.size !== undefined) params.append("size", filter.size.toString());
+  else params.append("size", "6");
   if (filter.categorySlug) params.append("categorySlug", filter.categorySlug);
   if (filter.minPrice !== undefined)
     params.append("minPrice", filter.minPrice.toString());
@@ -64,21 +66,29 @@ export const fetchProducts = async (
     throw new Error("Failed to fetch products");
   }
 
-  const data = (await response.json()) as Response<ProductPageResponse>;
+  const data = (await response.json()) as Response<
+    PagingObjectResponse<Product>
+  >;
   return data;
 };
 
-export const fetchOrders = async (): Promise<Response<Order[]>> => {
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/orders`, {
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+export const fetchOrders = async ({
+  page = 1,
+  size = 10,
+}): Promise<Response<PagingObjectResponse<Order>>> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/orders?page=${page}&size=${size - 1}`,
+    {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
   if (!response.ok) {
     throw new Error("Failed to fetch orders");
   }
-  const data = (await response.json()) as Response<Order[]>;
+  const data = (await response.json()) as Response<PagingObjectResponse<Order>>;
   return data;
 };
 
@@ -307,17 +317,26 @@ export const fetchCurrentUser = async (): Promise<globalThis.Response> => {
   return response;
 };
 
-export const fetchWishlist = async (): Promise<Response<Product[]>> => {
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/wishlist`, {
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+export const fetchWishlist = async ({
+  page = 1,
+}: {
+  page?: number;
+}): Promise<Response<PagingObjectResponse<Product>>> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/wishlist?page=${page - 1}`,
+    {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
   if (!response.ok) {
     throw new Error("Failed to fetch wishlist");
   }
-  const data = (await response.json()) as Response<Product[]>;
+  const data = (await response.json()) as Response<
+    PagingObjectResponse<Product>
+  >;
   return data;
 };
 

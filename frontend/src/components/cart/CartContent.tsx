@@ -61,6 +61,7 @@ const CartContent = () => {
                           query: "",
                           price: "0-1000",
                           stock: "in-stock",
+                          page: 1,
                         }}
                       >
                         Start Shopping

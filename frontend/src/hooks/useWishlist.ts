@@ -3,25 +3,22 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { addToWishlist, fetchWishlist, removeFromWishlist } from "@/lib/api";
 import type { Response } from "@/types/responses";
 import type { Product } from "@/types";
+import useObjectPaging from "./useObjectPaging";
 
-export const useWishlist = () => {
+export const useWishlist = ({ page }: { page?: number } = {}) => {
+  const { user } = useUserStore();
   const { isAuthenticated } = useUserStore();
   const {
-    data: { data: wishlist } = { data: [] },
+    data: wishlist,
     isLoading,
     isError,
     refetch,
   } = useQuery({
-    queryKey: ["wishlist"],
-    queryFn: fetchWishlist,
+    queryKey: ["wishlist", user?.id, page],
+    queryFn: () => fetchWishlist({ page }),
     enabled: isAuthenticated,
   });
   const queryClient = useQueryClient();
-
-  const isInWishlist = (productId: number) => {
-    return wishlist.some((item) => item.id === productId);
-  };
-
   const { mutate: toggleWishlist } = useMutation({
     mutationFn: async (productId: number) => {
       if (isInWishlist(productId)) {
@@ -42,7 +39,7 @@ export const useWishlist = () => {
           }
         );
       } else {
-        const product = wishlist?.find((p) => p.id === productId);
+        const product = wishlistProducts.find((p) => p.id === productId);
         if (product) {
           queryClient.setQueryData(
             ["wishlist"],
@@ -65,8 +62,15 @@ export const useWishlist = () => {
     },
   });
 
+  const { items, currentPage, totalPages, totalItems } =
+    useObjectPaging<Product>(wishlist?.data);
+
+  const isInWishlist = (productId: number) => {
+    return items.some((item) => item.id === productId);
+  };
+
   return {
-    wishlist,
+    wishlist: items,
     isInWishlist,
     toggleWishlist,
     isLoading,

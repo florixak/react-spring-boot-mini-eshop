@@ -1,13 +1,16 @@
 import { fetchProducts, type ProductFilter } from "@/lib/api";
-import type { ProductPageResponse, Response } from "@/types/responses";
+import type { Product } from "@/types";
+import type { PagingObjectResponse, Response } from "@/types/responses";
 import { useQuery } from "@tanstack/react-query";
+import useObjectPaging from "./useObjectPaging";
 
-type ProductSearchParams = {
+export type ProductSearchParams = {
   category?: string;
   query?: string;
   price?: string;
   stock?: string;
   sortBy?: string;
+  page?: number;
 };
 
 export const useProducts = (
@@ -45,19 +48,33 @@ export const useProducts = (
         filter.inStock = false;
       }
     }
+
+    if (search.page && search.page > 0) {
+      filter.page = search.page;
+    } else {
+      filter.page = 1;
+    }
+
     return filter;
   };
 
   const productFilter = formatSearchToFilter(search);
 
   const { data, isLoading, isError, refetch } = useQuery<
-    Response<ProductPageResponse>
+    Response<PagingObjectResponse<Product>>
   >({
     queryKey: [context, "products", search],
     queryFn: async () => await fetchProducts(productFilter),
   });
+
+  const { items, totalItems, totalPages, currentPage } =
+    useObjectPaging<Product>(data?.data);
+
   return {
-    products: data?.data.products || [],
+    products: items,
+    total: totalItems,
+    totalPages,
+    currentPage,
     isLoading,
     isError,
     refetch,

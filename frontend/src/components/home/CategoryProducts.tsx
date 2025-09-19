@@ -14,7 +14,8 @@ const CategoryProducts = ({ title }: CategoryProductsProps) => {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
 
-  const { products, isLoading, isError, refetch } = useProducts(search, "home");
+  const { products, isLoading, isError, refetch, totalPages, currentPage } =
+    useProducts(search, "home");
 
   return (
     <section className="min-h-screen flex items-start flex-col px-4 md:px-20 lg:px-28 gap-8 py-24">
@@ -39,6 +40,18 @@ const CategoryProducts = ({ title }: CategoryProductsProps) => {
         isError={isError}
         retry={refetch}
         viewMode={search.view}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        className="w-full"
+        search={{
+          query: "",
+          price: "0-1000",
+          stock: "in-stock",
+          category: search.category,
+          sortBy: search.sortBy,
+          view: search.view,
+          page: currentPage,
+        }}
       />
     </section>
   );
