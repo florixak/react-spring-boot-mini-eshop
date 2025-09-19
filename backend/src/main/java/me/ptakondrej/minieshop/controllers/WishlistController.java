@@ -1,14 +1,21 @@
 package me.ptakondrej.minieshop.controllers;
 
+import me.ptakondrej.minieshop.models.ProductDTO;
 import me.ptakondrej.minieshop.product.Product;
-import me.ptakondrej.minieshop.requests.WishlistManipulateRequest;
+import me.ptakondrej.minieshop.product.ProductMapper;
+import me.ptakondrej.minieshop.responses.PageableResponse;
 import me.ptakondrej.minieshop.responses.Response;
 import me.ptakondrej.minieshop.services.ProductService;
 import me.ptakondrej.minieshop.services.WishlistService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -23,11 +30,46 @@ public class WishlistController {
 		this.productService = productService;
 	}
 
-	@GetMapping
-	public ResponseEntity<Response<Set<Product>>> getWishlist(@RequestAttribute("userId") Long userId) {
+	@GetMapping("/all")
+	public ResponseEntity<Response<List<ProductDTO>>> getAllWishlistProducts(@RequestAttribute("userId") Long userId) {
 		try {
+			if (userId == null || userId <= 0) {
+				return ResponseEntity.badRequest().body(new Response<>(false, null, "Invalid user ID"));
+			}
 			Set<Product> wishlistProducts = wishlistService.getWishlistByUserId(userId);
-			return ResponseEntity.ok(new Response<>(true, wishlistProducts, "Wishlist retrieved successfully"));
+			List<ProductDTO> productDTOs = wishlistProducts.stream()
+					.map(ProductMapper::convertToDto)
+					.toList();
+			return ResponseEntity.ok(new Response<>(true, productDTOs, "Wishlist products retrieved successfully"));
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(new Response<>(false, null, e.getMessage()));
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(new Response<>(false, null, "Failed to retrieve wishlist products: " + e.getMessage()));
+		}
+	}
+
+	@GetMapping
+	public ResponseEntity<Response<PageableResponse<ProductDTO>>> getWishlist(@RequestAttribute("userId") Long userId, @RequestParam(required = false, defaultValue = "0") Integer page, @RequestParam(required = false, defaultValue = "10") Integer size) {
+		try {
+			if (page < 0 || size <= 0) {
+				return ResponseEntity.badRequest().body(new Response<>(false, null, "Invalid pagination parameters"));
+			}
+			if (userId == null || userId <= 0) {
+				return ResponseEntity.badRequest().body(new Response<>(false, null, "Invalid user ID"));
+			}
+			Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+			Page<Product> wishlistProducts = wishlistService.getWishlistProducts(userId, pageable);
+			List<ProductDTO> productDTOs = wishlistProducts.stream()
+					.map(ProductMapper::convertToDto)
+					.toList();
+
+			return ResponseEntity.ok(new Response<>(true, new PageableResponse<>(
+					productDTOs,
+					wishlistProducts.getNumber(),
+					wishlistProducts.getSize(),
+					wishlistProducts.getTotalElements(),
+					wishlistProducts.getTotalPages()
+			), "Wishlist retrieved successfully"));
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().body(new Response<>(false, null, e.getMessage()));
 		} catch (Exception e) {

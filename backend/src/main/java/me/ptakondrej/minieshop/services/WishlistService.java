@@ -5,9 +5,14 @@ import me.ptakondrej.minieshop.user.User;
 import me.ptakondrej.minieshop.user.UserRepository;
 import me.ptakondrej.minieshop.wishlist.Wishlist;
 import me.ptakondrej.minieshop.wishlist.WishlistRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -80,6 +85,19 @@ public class WishlistService {
 			return wishlist.getProducts();
 		}
 		return Set.of();
+	}
+
+	@Transactional(readOnly = true)
+	public Page<Product> getWishlistProducts(Long userId, Pageable pageable) {
+		Wishlist wishlist = wishlistRepository.findByUserId(userId).orElse(null);
+		if (wishlist == null) {
+			return Page.empty(pageable);
+		}
+		return wishlistRepository.findProductsByUserId(userId, Pageable.unpaged());
+	}
+
+	public boolean wishlistExistsForUser(Long userId) {
+		return wishlistRepository.findByUserId(userId).isPresent();
 	}
 
 	@Transactional
