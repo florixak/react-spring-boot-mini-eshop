@@ -77,7 +77,7 @@ export const fetchOrders = async ({
   size = 10,
 }): Promise<Response<PagingObjectResponse<Order>>> => {
   const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/orders?page=${page}&size=${size - 1}`,
+    `${import.meta.env.VITE_API_URL}/orders?page=${page - 1}&size=${size - 1}`,
     {
       credentials: "include",
       headers: {
@@ -337,6 +337,20 @@ export const fetchWishlist = async ({
   const data = (await response.json()) as Response<
     PagingObjectResponse<Product>
   >;
+  return data;
+};
+
+export const fetchWholeWishlist = async (): Promise<Response<Product[]>> => {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/wishlist/all`, {
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    throw new Error("Failed to fetch wishlist");
+  }
+  const data = (await response.json()) as Response<Product[]>;
   return data;
 };
 

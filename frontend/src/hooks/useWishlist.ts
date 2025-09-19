@@ -1,11 +1,19 @@
 import { useUserStore } from "@/stores/useUserStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addToWishlist, fetchWishlist, removeFromWishlist } from "@/lib/api";
+import {
+  addToWishlist,
+  fetchWholeWishlist,
+  fetchWishlist,
+  removeFromWishlist,
+} from "@/lib/api";
 import type { Response } from "@/types/responses";
 import type { Product } from "@/types";
 import useObjectPaging from "./useObjectPaging";
 
-export const useWishlist = ({ page }: { page?: number } = {}) => {
+export const useWishlist = ({
+  page,
+  full = false,
+}: { page?: number; full?: boolean } = {}) => {
   const { user } = useUserStore();
   const { isAuthenticated } = useUserStore();
   const {
@@ -18,6 +26,13 @@ export const useWishlist = ({ page }: { page?: number } = {}) => {
     queryFn: () => fetchWishlist({ page }),
     enabled: isAuthenticated,
   });
+
+  const { data: wishlistProducts } = useQuery({
+    queryKey: ["wishlist", "all", user?.id],
+    queryFn: () => fetchWholeWishlist(),
+    enabled: isAuthenticated && full,
+  });
+
   const queryClient = useQueryClient();
   const { mutate: toggleWishlist } = useMutation({
     mutationFn: async (productId: number) => {
@@ -39,7 +54,7 @@ export const useWishlist = ({ page }: { page?: number } = {}) => {
           }
         );
       } else {
-        const product = wishlistProducts.find((p) => p.id === productId);
+        const product = wishlistProducts?.data.find((p) => p.id === productId);
         if (product) {
           queryClient.setQueryData(
             ["wishlist"],
@@ -66,15 +81,21 @@ export const useWishlist = ({ page }: { page?: number } = {}) => {
     useObjectPaging<Product>(wishlist?.data);
 
   const isInWishlist = (productId: number) => {
-    return items.some((item) => item.id === productId);
+    return (
+      wishlistProducts?.data.some((item) => item.id === productId) || false
+    );
   };
 
   return {
     wishlist: items,
+    wholeWishlist: wishlistProducts?.data || [],
     isInWishlist,
     toggleWishlist,
     isLoading,
     isError,
     refetch,
+    currentPage,
+    totalPages,
+    totalItems,
   };
 };

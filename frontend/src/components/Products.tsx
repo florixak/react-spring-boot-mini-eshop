@@ -35,7 +35,7 @@ const Products = ({
   search,
 }: ProductsProps) => {
   const { addToCart } = useCartStore();
-  const { isInWishlist, toggleWishlist } = useWishlist();
+  const { isInWishlist, toggleWishlist } = useWishlist({ full: true });
 
   if (isError) {
     return (
