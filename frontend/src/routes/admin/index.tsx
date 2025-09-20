@@ -1,6 +1,7 @@
 import { useUserStore } from "@/stores/useUserStore";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import AdminDashboardContent from "@/components/admin/AdminDashboardContent";
+import AdminLayout from "@/components/admin/AdminLayout";
 
 export const Route = createFileRoute("/admin/")({
   component: AdminDashboard,
@@ -24,8 +25,8 @@ export const Route = createFileRoute("/admin/")({
 
 function AdminDashboard() {
   return (
-    <>
+    <AdminLayout>
       <AdminDashboardContent />
-    </>
+    </AdminLayout>
   );
 }
