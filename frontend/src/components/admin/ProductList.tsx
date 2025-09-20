@@ -2,31 +2,18 @@ import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/utils";
 import { Pencil, Trash2, Search } from "lucide-react";
-import { createColumnHelper, flexRender } from "@tanstack/react-table";
+import { createColumnHelper } from "@tanstack/react-table";
 
-const categories = [
-  { id: 1, name: "Clothing" },
-  { id: 2, name: "Footwear" },
-  { id: 3, name: "Accessories" },
-];
-
-const products = [
-  { id: 1, name: "T-shirt", stock: 12, price: 25, categoryId: 1 },
-  { id: 2, name: "Sneakers", stock: 5, price: 80, categoryId: 2 },
-  { id: 3, name: "Backpack", stock: 0, price: 45, categoryId: 3 },
-  { id: 4, name: "Jacket", stock: 3, price: 120, categoryId: 1 },
-];
-
-const columnHelper = createColumnHelper<(typeof products)[0]>();
+const columnHelper = createColumnHelper<Product>();
 
 const columns = [
-  columnHelper.accessor("name", {
+  columnHelper.accessor("title", {
     header: "Product",
     cell: (info) => (
       <span className="font-semibold text-primary">{info.getValue()}</span>
     ),
   }),
-  columnHelper.accessor("stock", {
+  columnHelper.accessor("stockQuantity", {
     header: "Stock",
     cell: (info) =>
       info.getValue() > 0 ? (
@@ -42,7 +29,7 @@ const columns = [
   columnHelper.display({
     id: "actions",
     header: "Actions",
-    cell: (info) => (
+    cell: () => (
       <div className="flex gap-2">
         <Button size="icon" variant="outline">
           <Pencil className="size-4" />
@@ -55,20 +42,23 @@ const columns = [
   }),
 ];
 
+export type Column = (typeof columns)[number];
+
 const ProductList = () => {
   const [search, setSearch] = useState("");
+
+  const { products } = useProducts({});
 
   const filteredProducts = useMemo(() => {
     if (!search.trim()) return products;
     return products.filter((product) =>
-      product.name.toLowerCase().includes(search.trim().toLowerCase())
+      product.title.toLowerCase().includes(search.trim().toLowerCase())
     );
-  }, [search]);
+  }, [search, products]);
 
-  // Group products by category
   const productsByCategory = categories.map((category) => ({
     ...category,
-    products: filteredProducts.filter((p) => p.categoryId === category.id),
+    products: filteredProducts.filter((p) => p.id === category.id),
   }));
 
   return (
@@ -105,7 +95,7 @@ const ProductList = () => {
                     colSpan={columns.length}
                     className="bg-secondary-50 font-bold text-primary px-4 py-3 border-b border-secondary-100"
                   >
-                    {category.name}
+                    {category.title}
                   </td>
                 </tr>
                 {category.products.length === 0
@@ -116,11 +106,11 @@ const ProductList = () => {
                         className="border-b border-secondary-100"
                       >
                         <td className="py-2 px-4 font-semibold text-primary">
-                          {product.name}
+                          {product.title}
                         </td>
                         <td className="py-2 px-4">
-                          {product.stock > 0 ? (
-                            <span>{product.stock}</span>
+                          {product.stockQuantity > 0 ? (
+                            <span>{product.stockQuantity}</span>
                           ) : (
                             <span className="text-red-500">Out of stock</span>
                           )}
@@ -148,4 +138,7 @@ const ProductList = () => {
 };
 
 import { Fragment } from "react";
+import type { Product } from "@/types";
+import { useProducts } from "@/hooks/useProducts";
+import { categories } from "@/dummyData";
 export default ProductList;

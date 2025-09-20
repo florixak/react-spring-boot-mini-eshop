@@ -4,11 +4,11 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import type { ColumnType } from "./ProductList";
+import type { ColumnDef } from "@tanstack/react-table";
 
 type ProductProps = {
   productsInCategory: ProductType[];
-  columns: ColumnType;
+  columns: ColumnDef<ProductType>[];
 };
 
 const Product = ({ productsInCategory, columns }: ProductProps) => {
