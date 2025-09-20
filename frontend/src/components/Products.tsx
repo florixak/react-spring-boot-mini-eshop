@@ -94,7 +94,7 @@ const Products = ({
         currentPage={currentPage}
         totalPages={totalPages}
         getPageSearch={(page) => ({ ...search, page })}
-        to="/shop"
+        to="."
       />
     </div>
   );
