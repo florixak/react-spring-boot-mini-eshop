@@ -4,7 +4,7 @@ import useAuthCheck from "@/hooks/useAuthCheck";
 import { createFileRoute } from "@tanstack/react-router";
 
 type AccountSearch = {
-  section: "profile" | "orders" | "settings";
+  section: "profile" | "orders" | "settings" | "wishlist";
   page?: number;
 };
 
