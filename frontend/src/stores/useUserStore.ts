@@ -16,7 +16,7 @@ interface UserState {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
-
+  isAdmin: () => boolean;
   setUser: (user: User | null) => void;
   clearUser: () => void;
   login: (credentials: LoginCredentials) => Promise<void>;
@@ -35,7 +35,10 @@ export const useUserStore = create<UserState>()(
       isAuthenticated: false,
       isLoading: false,
       error: null,
-
+      isAdmin: () => {
+        const user = get().user;
+        return user?.role === "ADMIN";
+      },
       setUser: (user) =>
         set((state) => {
           state.user = user;
