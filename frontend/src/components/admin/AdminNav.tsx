@@ -18,7 +18,7 @@ const AdminNav = () => {
           <Link
             key={link.name}
             to={link.to}
-            className={`group relative px-6 py-2 rounded-lg border transition-all duration-300 cursor-pointer ${
+            className={`group relative px-4 py-2 rounded-lg border transition-all duration-300 cursor-pointer w-full max-w-[200px] ${
               isActive
                 ? "bg-white border-primary shadow-lg scale-105"
                 : "bg-white/80 border-secondary-100 hover:border-primary hover:shadow-md hover:scale-102"
