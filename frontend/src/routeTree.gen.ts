@@ -18,9 +18,13 @@ import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AccountIndexRouteImport } from './routes/account/index'
 import { Route as AboutIndexRouteImport } from './routes/about/index'
 import { Route as CartCheckoutIndexRouteImport } from './routes/cart/checkout/index'
+import { Route as AdminUsersIndexRouteImport } from './routes/admin/users/index'
+import { Route as AdminProductsIndexRouteImport } from './routes/admin/products/index'
+import { Route as AdminOrdersIndexRouteImport } from './routes/admin/orders/index'
 import { Route as AccountOrdersOrderIdRouteImport } from './routes/account/orders/$orderId'
 import { Route as CartCheckoutSuccessIndexRouteImport } from './routes/cart/checkout/success/index'
 import { Route as CartCheckoutCancelIndexRouteImport } from './routes/cart/checkout/cancel/index'
+import { Route as AdminProductsNewIndexRouteImport } from './routes/admin/products/new/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -67,6 +71,21 @@ const CartCheckoutIndexRoute = CartCheckoutIndexRouteImport.update({
   path: '/cart/checkout/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminUsersIndexRoute = AdminUsersIndexRouteImport.update({
+  id: '/admin/users/',
+  path: '/admin/users/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminProductsIndexRoute = AdminProductsIndexRouteImport.update({
+  id: '/admin/products/',
+  path: '/admin/products/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminOrdersIndexRoute = AdminOrdersIndexRouteImport.update({
+  id: '/admin/orders/',
+  path: '/admin/orders/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AccountOrdersOrderIdRoute = AccountOrdersOrderIdRouteImport.update({
   id: '/account/orders/$orderId',
   path: '/account/orders/$orderId',
@@ -83,6 +102,11 @@ const CartCheckoutCancelIndexRoute = CartCheckoutCancelIndexRouteImport.update({
   path: '/cart/checkout/cancel/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminProductsNewIndexRoute = AdminProductsNewIndexRouteImport.update({
+  id: '/admin/products/new/',
+  path: '/admin/products/new/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -94,7 +118,11 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactIndexRoute
   '/shop': typeof ShopIndexRoute
   '/account/orders/$orderId': typeof AccountOrdersOrderIdRoute
+  '/admin/orders': typeof AdminOrdersIndexRoute
+  '/admin/products': typeof AdminProductsIndexRoute
+  '/admin/users': typeof AdminUsersIndexRoute
   '/cart/checkout': typeof CartCheckoutIndexRoute
+  '/admin/products/new': typeof AdminProductsNewIndexRoute
   '/cart/checkout/cancel': typeof CartCheckoutCancelIndexRoute
   '/cart/checkout/success': typeof CartCheckoutSuccessIndexRoute
 }
@@ -108,7 +136,11 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactIndexRoute
   '/shop': typeof ShopIndexRoute
   '/account/orders/$orderId': typeof AccountOrdersOrderIdRoute
+  '/admin/orders': typeof AdminOrdersIndexRoute
+  '/admin/products': typeof AdminProductsIndexRoute
+  '/admin/users': typeof AdminUsersIndexRoute
   '/cart/checkout': typeof CartCheckoutIndexRoute
+  '/admin/products/new': typeof AdminProductsNewIndexRoute
   '/cart/checkout/cancel': typeof CartCheckoutCancelIndexRoute
   '/cart/checkout/success': typeof CartCheckoutSuccessIndexRoute
 }
@@ -123,7 +155,11 @@ export interface FileRoutesById {
   '/contact/': typeof ContactIndexRoute
   '/shop/': typeof ShopIndexRoute
   '/account/orders/$orderId': typeof AccountOrdersOrderIdRoute
+  '/admin/orders/': typeof AdminOrdersIndexRoute
+  '/admin/products/': typeof AdminProductsIndexRoute
+  '/admin/users/': typeof AdminUsersIndexRoute
   '/cart/checkout/': typeof CartCheckoutIndexRoute
+  '/admin/products/new/': typeof AdminProductsNewIndexRoute
   '/cart/checkout/cancel/': typeof CartCheckoutCancelIndexRoute
   '/cart/checkout/success/': typeof CartCheckoutSuccessIndexRoute
 }
@@ -139,7 +175,11 @@ export interface FileRouteTypes {
     | '/contact'
     | '/shop'
     | '/account/orders/$orderId'
+    | '/admin/orders'
+    | '/admin/products'
+    | '/admin/users'
     | '/cart/checkout'
+    | '/admin/products/new'
     | '/cart/checkout/cancel'
     | '/cart/checkout/success'
   fileRoutesByTo: FileRoutesByTo
@@ -153,7 +193,11 @@ export interface FileRouteTypes {
     | '/contact'
     | '/shop'
     | '/account/orders/$orderId'
+    | '/admin/orders'
+    | '/admin/products'
+    | '/admin/users'
     | '/cart/checkout'
+    | '/admin/products/new'
     | '/cart/checkout/cancel'
     | '/cart/checkout/success'
   id:
@@ -167,7 +211,11 @@ export interface FileRouteTypes {
     | '/contact/'
     | '/shop/'
     | '/account/orders/$orderId'
+    | '/admin/orders/'
+    | '/admin/products/'
+    | '/admin/users/'
     | '/cart/checkout/'
+    | '/admin/products/new/'
     | '/cart/checkout/cancel/'
     | '/cart/checkout/success/'
   fileRoutesById: FileRoutesById
@@ -182,7 +230,11 @@ export interface RootRouteChildren {
   ContactIndexRoute: typeof ContactIndexRoute
   ShopIndexRoute: typeof ShopIndexRoute
   AccountOrdersOrderIdRoute: typeof AccountOrdersOrderIdRoute
+  AdminOrdersIndexRoute: typeof AdminOrdersIndexRoute
+  AdminProductsIndexRoute: typeof AdminProductsIndexRoute
+  AdminUsersIndexRoute: typeof AdminUsersIndexRoute
   CartCheckoutIndexRoute: typeof CartCheckoutIndexRoute
+  AdminProductsNewIndexRoute: typeof AdminProductsNewIndexRoute
   CartCheckoutCancelIndexRoute: typeof CartCheckoutCancelIndexRoute
   CartCheckoutSuccessIndexRoute: typeof CartCheckoutSuccessIndexRoute
 }
@@ -252,6 +304,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CartCheckoutIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/users/': {
+      id: '/admin/users/'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/products/': {
+      id: '/admin/products/'
+      path: '/admin/products'
+      fullPath: '/admin/products'
+      preLoaderRoute: typeof AdminProductsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/orders/': {
+      id: '/admin/orders/'
+      path: '/admin/orders'
+      fullPath: '/admin/orders'
+      preLoaderRoute: typeof AdminOrdersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/account/orders/$orderId': {
       id: '/account/orders/$orderId'
       path: '/account/orders/$orderId'
@@ -273,6 +346,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CartCheckoutCancelIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/products/new/': {
+      id: '/admin/products/new/'
+      path: '/admin/products/new'
+      fullPath: '/admin/products/new'
+      preLoaderRoute: typeof AdminProductsNewIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -286,7 +366,11 @@ const rootRouteChildren: RootRouteChildren = {
   ContactIndexRoute: ContactIndexRoute,
   ShopIndexRoute: ShopIndexRoute,
   AccountOrdersOrderIdRoute: AccountOrdersOrderIdRoute,
+  AdminOrdersIndexRoute: AdminOrdersIndexRoute,
+  AdminProductsIndexRoute: AdminProductsIndexRoute,
+  AdminUsersIndexRoute: AdminUsersIndexRoute,
   CartCheckoutIndexRoute: CartCheckoutIndexRoute,
+  AdminProductsNewIndexRoute: AdminProductsNewIndexRoute,
   CartCheckoutCancelIndexRoute: CartCheckoutCancelIndexRoute,
   CartCheckoutSuccessIndexRoute: CartCheckoutSuccessIndexRoute,
 }
