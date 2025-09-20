@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/utils";
 import { Pencil, Trash2, Search } from "lucide-react";
@@ -9,6 +9,12 @@ const columnHelper = createColumnHelper<Product>();
 const columns = [
   columnHelper.accessor("title", {
     header: "Product",
+    cell: (info) => (
+      <span className="font-semibold text-primary">{info.getValue()}</span>
+    ),
+  }),
+  columnHelper.accessor("description", {
+    header: "Description",
     cell: (info) => (
       <span className="font-semibold text-primary">{info.getValue()}</span>
     ),
@@ -55,6 +61,13 @@ const ProductList = () => {
       product.title.toLowerCase().includes(search.trim().toLowerCase())
     );
   }, [search, products]);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setSearch("");
+    }, 30);
+    return () => clearTimeout(timeoutId);
+  }, [products]);
 
   const productsByCategory = categories.map((category) => ({
     ...category,
@@ -105,9 +118,10 @@ const ProductList = () => {
                         key={product.id}
                         className="border-b border-secondary-100"
                       >
-                        <td className="py-2 px-4 font-semibold text-primary">
+                        <td className="py-2 px-4 text-primary">
                           {product.title}
                         </td>
+                        <td className="py-2 px-4">{product.description}</td>
                         <td className="py-2 px-4">
                           {product.stockQuantity > 0 ? (
                             <span>{product.stockQuantity}</span>
