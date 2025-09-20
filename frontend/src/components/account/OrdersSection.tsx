@@ -44,7 +44,8 @@ const OrdersSection = () => {
               <Pagination<typeof search>
                 currentPage={currentPage}
                 totalPages={totalPages}
-                getPageSearch={(page) => ({ section: "orders", page })}
+                getPageSearch={(page) => ({ ...search, page })}
+                to={`.`}
               />
             </>
           ) : !isLoading && items && items.length === 0 ? (
