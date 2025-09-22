@@ -6,6 +6,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import type { Product } from "@/types";
 import useCategories from "@/hooks/useCategories";
 import { useProducts } from "@/hooks/useProducts";
+import { useNavigate } from "@tanstack/react-router";
 
 const columnHelper = createColumnHelper<Product>();
 
@@ -55,6 +56,7 @@ export type Column = (typeof columns)[number];
 
 const ProductList = () => {
   const [search, setSearch] = useState("");
+  const navigate = useNavigate();
   const [debouncedSearch, setDebouncedSearch] = useState(search);
 
   const { categories } = useCategories();
@@ -74,6 +76,16 @@ const ProductList = () => {
     ...category,
     products: products.filter((p) => p.category.id === category.id),
   }));
+
+  const handleProductEdit = (productId: number) => {
+    navigate({ to: `/admin/products/${productId}` });
+  };
+
+  const handleProductDelete = (productId: number) => {
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      console.log("Delete product with ID:", productId);
+    }
+  };
 
   return (
     <div>
@@ -137,10 +149,18 @@ const ProductList = () => {
                           {formatPrice(product.price)}
                         </td>
                         <td className="py-2 px-4 flex gap-2">
-                          <Button size="icon" variant="outline">
+                          <Button
+                            size="icon"
+                            variant="outline"
+                            onClick={() => handleProductEdit(product.id)}
+                          >
                             <Pencil className="size-4" />
                           </Button>
-                          <Button size="icon" variant="destructive">
+                          <Button
+                            size="icon"
+                            variant="destructive"
+                            onClick={() => handleProductDelete(product.id)}
+                          >
                             <Trash2 className="size-4" />
                           </Button>
                         </td>
