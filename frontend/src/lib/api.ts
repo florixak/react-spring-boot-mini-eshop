@@ -36,6 +36,31 @@ export const fetchCategories = async (): Promise<Response<Category[]>> => {
   return data;
 };
 
+export const createCategory = async (
+  title: string
+): Promise<Response<Category>> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/categories/admin`,
+    {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title,
+        description: "New Category",
+        enabled: true,
+      }),
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to add category");
+  }
+  const data = (await response.json()) as Response<Category>;
+  return data;
+};
+
 export const fetchProducts = async (
   filter: ProductFilter
 ): Promise<Response<PagingObjectResponse<Product>>> => {
@@ -69,6 +94,32 @@ export const fetchProducts = async (
   const data = (await response.json()) as Response<
     PagingObjectResponse<Product>
   >;
+  return data;
+};
+
+export const createProduct = async (productData: {
+  title: string;
+  description: string;
+  price: number;
+  stockQuantity: number;
+  categoryId: number;
+  imageUrl?: string | undefined;
+}): Promise<Response<Product>> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/products/admin`,
+    {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ...productData, enabled: true }),
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to create product");
+  }
+  const data = (await response.json()) as Response<Product>;
   return data;
 };
 
