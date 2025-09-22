@@ -11,11 +11,12 @@ export type ProductSearchParams = {
   stock?: string;
   sortBy?: string;
   page?: number;
+  size?: number;
 };
 
 export const useProducts = (
   search: ProductSearchParams,
-  context: "shop" | "home" = "shop"
+  context: "shop" | "home" | "admin" = "shop"
 ) => {
   const formatSearchToFilter = (search: ProductSearchParams): ProductFilter => {
     const filter: ProductFilter = {};
@@ -53,6 +54,12 @@ export const useProducts = (
       filter.page = search.page;
     } else {
       filter.page = 1;
+    }
+
+    if (search.size && search.size > 0) {
+      filter.size = search.size;
+    } else {
+      filter.size = 10;
     }
 
     return filter;
