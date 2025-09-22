@@ -8,9 +8,9 @@ import useOrders from "@/hooks/useOrders";
 
 const columns = [
   { header: "Order ID", accessor: "id" },
-  { header: "Customer", accessor: "customerName" },
+  { header: "Customer", accessor: "customerEmail" },
   { header: "Date", accessor: "createdAt" },
-  { header: "Total", accessor: "total" },
+  { header: "Total", accessor: "totalPrice" },
   { header: "Status", accessor: "status" },
   { header: "Actions", accessor: "actions" },
 ];
@@ -29,8 +29,8 @@ const OrdersList = () => {
     return () => clearTimeout(timeoutId);
   }, [search]);
 
-  const filteredOrders = orders.filter((order: Order) =>
-    order.customerName.toLowerCase().includes(debouncedSearch.toLowerCase())
+  const filteredOrders = orders?.filter((order: Order) =>
+    order.customerEmail.toLowerCase().includes(debouncedSearch.toLowerCase())
   );
 
   const handleOrderDetail = (orderId: number) => {
@@ -64,7 +64,7 @@ const OrdersList = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredOrders.length === 0 ? (
+            {filteredOrders?.length === 0 ? (
               <tr>
                 <td
                   colSpan={columns.length}
@@ -74,14 +74,14 @@ const OrdersList = () => {
                 </td>
               </tr>
             ) : (
-              filteredOrders.map((order: Order) => (
+              filteredOrders?.map((order: Order) => (
                 <tr key={order.id} className="border-b border-secondary-100">
                   <td className="py-2 px-4 text-primary">{order.id}</td>
-                  <td className="py-2 px-4">{order.customerName}</td>
+                  <td className="py-2 px-4">{order.customerEmail}</td>
                   <td className="py-2 px-4">
                     {new Date(order.createdAt).toLocaleDateString()}
                   </td>
-                  <td className="py-2 px-4">{formatPrice(order.total)}</td>
+                  <td className="py-2 px-4">{formatPrice(order.totalPrice)}</td>
                   <td className="py-2 px-4">{order.status}</td>
                   <td className="py-2 px-4">
                     <Button
