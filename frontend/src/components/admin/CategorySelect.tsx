@@ -1,4 +1,4 @@
-import { createCategory, fetchCategories } from "@/lib/api";
+import { createCategory } from "@/lib/api";
 import { Label } from "../ui/label";
 import {
   Select,
@@ -7,12 +7,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import type { Category } from "@/types";
-import type { Response } from "@/types/responses";
 import { Input } from "../ui/input";
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "../ui/button";
+import useCategories from "@/hooks/useCategories";
 
 type CategorySelectProps = {
   watchCategoryId: number;
@@ -28,15 +27,7 @@ const CategorySelect = ({
   isSubmitting,
 }: CategorySelectProps) => {
   const [newCategoryName, setNewCategoryName] = useState<string>("");
-
-  const {
-    data: { data: categories } = { data: [] },
-    isLoading,
-    isError,
-  } = useQuery<Response<Category[]>>({
-    queryKey: ["categories"],
-    queryFn: fetchCategories,
-  });
+  const { categories, isLoading, isError } = useCategories();
 
   const queryClient = useQueryClient();
 
