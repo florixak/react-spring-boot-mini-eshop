@@ -97,3 +97,31 @@ export const passwordChangeSchema = z
   });
 
 export type PasswordChangeFormData = z.infer<typeof passwordChangeSchema>;
+
+export const productSchema = z.object({
+  title: z.string().min(1, "Product title is required"),
+  description: z.string().min(1, "Product description is required"),
+  price: z.number().min(0, "Price must be a positive number"),
+  stockQuantity: z.number().min(0, "Stock must be a positive number"),
+  categoryId: z.number().min(1, "Category is required"),
+  imageUrl: z.string().url("Invalid image URL").optional(),
+});
+
+export type ProductFormData = z.infer<typeof productSchema>;
+
+export const categorySchema = z.object({
+  name: z.string().min(1, "Category name is required"),
+  description: z.string().optional(),
+});
+
+export type CategoryFormData = z.infer<typeof categorySchema>;
+
+export const userSchema = z.object({
+  username: z.string().min(3, "Username must be at least 3 characters"),
+  email: z.string().email("Invalid email address"),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  role: z.enum(["USER", "ADMIN"], { required_error: "Role is required" }),
+});
+
+export type UserFormData = z.infer<typeof userSchema>;
