@@ -16,13 +16,20 @@ import { productSchema, type ProductFormData } from "@/lib/schema";
 import FormField from "../FormField";
 import type { Product } from "@/types";
 import CategorySelect from "./CategorySelect";
-import { createProduct } from "@/lib/api";
+import { createProduct, fetchProduct } from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
 
 type ProductFormProps = {
-  product?: Product;
+  productId?: Product["id"];
 };
 
-const ProductForm = ({ product }: ProductFormProps) => {
+const ProductForm = ({ productId }: ProductFormProps) => {
+  const { data: { data: product } = { data: null } } = useQuery({
+    queryKey: ["product", productId],
+    queryFn: () => fetchProduct(productId),
+    enabled: !!productId,
+  });
+
   const { register, formState, watch, setValue, trigger, handleSubmit } =
     useForm({
       defaultValues: {
