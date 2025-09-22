@@ -97,6 +97,27 @@ export const fetchProducts = async (
   return data;
 };
 
+export const fetchProduct = async (
+  productId: number | undefined
+): Promise<Response<Product>> => {
+  if (!productId) {
+    throw new Error("Product ID is required");
+  }
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/products/${productId}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch product");
+  }
+  const data = (await response.json()) as Response<Product>;
+  return data;
+};
+
 export const createProduct = async (productData: {
   title: string;
   description: string;
