@@ -7,7 +7,7 @@ const useOrders = (params: { query: string; size: number }) => {
     queryFn: () => fetchOrders(params),
   });
 
-  return { orders: data || [], isLoading, error };
+  return { orders: data?.data.items, isLoading, error };
 };
 
 export default useOrders;
