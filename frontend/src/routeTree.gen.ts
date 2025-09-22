@@ -21,6 +21,7 @@ import { Route as CartCheckoutIndexRouteImport } from './routes/cart/checkout/in
 import { Route as AdminUsersIndexRouteImport } from './routes/admin/users/index'
 import { Route as AdminProductsIndexRouteImport } from './routes/admin/products/index'
 import { Route as AdminOrdersIndexRouteImport } from './routes/admin/orders/index'
+import { Route as AdminProductsProductIdRouteImport } from './routes/admin/products/$productId'
 import { Route as AccountOrdersOrderIdRouteImport } from './routes/account/orders/$orderId'
 import { Route as CartCheckoutSuccessIndexRouteImport } from './routes/cart/checkout/success/index'
 import { Route as CartCheckoutCancelIndexRouteImport } from './routes/cart/checkout/cancel/index'
@@ -86,6 +87,11 @@ const AdminOrdersIndexRoute = AdminOrdersIndexRouteImport.update({
   path: '/admin/orders/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminProductsProductIdRoute = AdminProductsProductIdRouteImport.update({
+  id: '/admin/products/$productId',
+  path: '/admin/products/$productId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AccountOrdersOrderIdRoute = AccountOrdersOrderIdRouteImport.update({
   id: '/account/orders/$orderId',
   path: '/account/orders/$orderId',
@@ -118,6 +124,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactIndexRoute
   '/shop': typeof ShopIndexRoute
   '/account/orders/$orderId': typeof AccountOrdersOrderIdRoute
+  '/admin/products/$productId': typeof AdminProductsProductIdRoute
   '/admin/orders': typeof AdminOrdersIndexRoute
   '/admin/products': typeof AdminProductsIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
@@ -136,6 +143,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactIndexRoute
   '/shop': typeof ShopIndexRoute
   '/account/orders/$orderId': typeof AccountOrdersOrderIdRoute
+  '/admin/products/$productId': typeof AdminProductsProductIdRoute
   '/admin/orders': typeof AdminOrdersIndexRoute
   '/admin/products': typeof AdminProductsIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
@@ -155,6 +163,7 @@ export interface FileRoutesById {
   '/contact/': typeof ContactIndexRoute
   '/shop/': typeof ShopIndexRoute
   '/account/orders/$orderId': typeof AccountOrdersOrderIdRoute
+  '/admin/products/$productId': typeof AdminProductsProductIdRoute
   '/admin/orders/': typeof AdminOrdersIndexRoute
   '/admin/products/': typeof AdminProductsIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
@@ -175,6 +184,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/shop'
     | '/account/orders/$orderId'
+    | '/admin/products/$productId'
     | '/admin/orders'
     | '/admin/products'
     | '/admin/users'
@@ -193,6 +203,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/shop'
     | '/account/orders/$orderId'
+    | '/admin/products/$productId'
     | '/admin/orders'
     | '/admin/products'
     | '/admin/users'
@@ -211,6 +222,7 @@ export interface FileRouteTypes {
     | '/contact/'
     | '/shop/'
     | '/account/orders/$orderId'
+    | '/admin/products/$productId'
     | '/admin/orders/'
     | '/admin/products/'
     | '/admin/users/'
@@ -230,6 +242,7 @@ export interface RootRouteChildren {
   ContactIndexRoute: typeof ContactIndexRoute
   ShopIndexRoute: typeof ShopIndexRoute
   AccountOrdersOrderIdRoute: typeof AccountOrdersOrderIdRoute
+  AdminProductsProductIdRoute: typeof AdminProductsProductIdRoute
   AdminOrdersIndexRoute: typeof AdminOrdersIndexRoute
   AdminProductsIndexRoute: typeof AdminProductsIndexRoute
   AdminUsersIndexRoute: typeof AdminUsersIndexRoute
@@ -325,6 +338,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminOrdersIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/products/$productId': {
+      id: '/admin/products/$productId'
+      path: '/admin/products/$productId'
+      fullPath: '/admin/products/$productId'
+      preLoaderRoute: typeof AdminProductsProductIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/account/orders/$orderId': {
       id: '/account/orders/$orderId'
       path: '/account/orders/$orderId'
@@ -366,6 +386,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactIndexRoute: ContactIndexRoute,
   ShopIndexRoute: ShopIndexRoute,
   AccountOrdersOrderIdRoute: AccountOrdersOrderIdRoute,
+  AdminProductsProductIdRoute: AdminProductsProductIdRoute,
   AdminOrdersIndexRoute: AdminOrdersIndexRoute,
   AdminProductsIndexRoute: AdminProductsIndexRoute,
   AdminUsersIndexRoute: AdminUsersIndexRoute,
