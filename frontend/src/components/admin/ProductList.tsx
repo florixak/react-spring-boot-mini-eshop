@@ -1,8 +1,11 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/utils";
 import { Pencil, Trash2, Search } from "lucide-react";
 import { createColumnHelper } from "@tanstack/react-table";
+import type { Product } from "@/types";
+import useCategories from "@/hooks/useCategories";
+import { useProducts } from "@/hooks/useProducts";
 
 const columnHelper = createColumnHelper<Product>();
 
@@ -52,26 +55,24 @@ export type Column = (typeof columns)[number];
 
 const ProductList = () => {
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
 
-  const { products } = useProducts({});
-
-  const filteredProducts = useMemo(() => {
-    if (!search.trim()) return products;
-    return products.filter((product) =>
-      product.title.toLowerCase().includes(search.trim().toLowerCase())
-    );
-  }, [search, products]);
+  const { categories } = useCategories();
+  const { products } = useProducts(
+    { query: debouncedSearch, size: 100 },
+    "admin"
+  );
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      setSearch("");
-    }, 30);
+      setDebouncedSearch(search);
+    }, 300);
     return () => clearTimeout(timeoutId);
-  }, [products]);
+  }, [search]);
 
   const productsByCategory = categories.map((category) => ({
     ...category,
-    products: filteredProducts.filter((p) => p.id === category.id),
+    products: products.filter((p) => p.category.id === category.id),
   }));
 
   return (
@@ -103,12 +104,15 @@ const ProductList = () => {
           <tbody>
             {productsByCategory.map((category) => (
               <Fragment key={category.id}>
-                <tr>
+                <tr className="bg-secondary-50 border-b border-secondary-100">
                   <td
                     colSpan={columns.length}
-                    className="bg-secondary-50 font-bold text-primary px-4 py-3 border-b border-secondary-100"
+                    className="font-bold text-primary px-4 py-3"
                   >
                     {category.title}
+                  </td>
+                  <td className="py-2 px-4 text-secondary-200">
+                    {category.products.length} Products
                   </td>
                 </tr>
                 {category.products.length === 0
@@ -151,8 +155,4 @@ const ProductList = () => {
   );
 };
 
-import { Fragment } from "react";
-import type { Product } from "@/types";
-import { useProducts } from "@/hooks/useProducts";
-import { categories } from "@/dummyData";
 export default ProductList;
