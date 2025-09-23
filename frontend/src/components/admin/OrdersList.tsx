@@ -5,13 +5,22 @@ import { useNavigate } from "@tanstack/react-router";
 import useOrders from "@/hooks/useOrders";
 import { createColumnHelper, type ColumnDef } from "@tanstack/react-table";
 import AdminTable from "./AdminTable";
+import { useState } from "react";
+import useDebounce from "@/hooks/useDebounce";
 
 const columnHelper = createColumnHelper<Order>();
 
 const OrdersList = () => {
   const navigate = useNavigate();
-
-  const { orders, isLoading, error } = useOrders({ size: 100 });
+  const [searchValue, setSearchValue] = useState<string>("");
+  const { debouncedValue } = useDebounce({
+    value: searchValue,
+    delay: 300,
+  });
+  const { orders, isLoading, error } = useOrders({
+    query: debouncedValue,
+    size: 100,
+  });
 
   const columns = [
     columnHelper.accessor("id", {
@@ -57,7 +66,7 @@ const OrdersList = () => {
             size="sm"
             variant="outline"
             onClick={(e) => {
-              e.stopPropagation(); // Prevent row click
+              e.stopPropagation();
               navigate({ to: `/admin/users/${info.row.original.id}` });
             }}
           >
@@ -88,6 +97,8 @@ const OrdersList = () => {
       error={error?.message || null}
       emptyMessage="No orders found."
       onRowClick={(order) => navigate({ to: `/admin/orders/${order.id}` })}
+      searchValue={searchValue}
+      onSearchChange={setSearchValue}
     />
   );
 };
