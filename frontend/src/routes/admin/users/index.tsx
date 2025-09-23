@@ -15,7 +15,7 @@ function RouteComponent() {
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold text-primary font-playfair">Users</h1>
         <Button asChild>
-          <Link to="/admin/users">
+          <Link to="/admin/users/new">
             <Plus className="h-4 w-4 mr-2" />
             Add User
           </Link>
