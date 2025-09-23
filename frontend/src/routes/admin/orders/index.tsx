@@ -19,7 +19,7 @@ function RouteComponent() {
       <Card className="bg-white border border-gray-100 shadow-sm rounded-xl">
         <CardHeader>
           <CardTitle className="text-lg font-semibold text-primary">
-            Product List
+            Order List
           </CardTitle>
         </CardHeader>
         <CardContent>
