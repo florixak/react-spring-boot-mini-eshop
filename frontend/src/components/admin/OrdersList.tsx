@@ -106,8 +106,6 @@ const OrdersList = ({ size }: OrdersListProps) => {
       error={error?.message || null}
       emptyMessage="No orders found."
       onRowClick={(order) => navigate({ to: `/admin/orders/${order.id}` })}
-      searchValue={searchValue}
-      onSearchChange={setSearchValue}
     />
   );
 };

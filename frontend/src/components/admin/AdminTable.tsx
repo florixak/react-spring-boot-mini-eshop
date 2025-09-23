@@ -1,3 +1,5 @@
+import useDebounce from "@/hooks/useDebounce";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import {
   useReactTable,
   getCoreRowModel,
@@ -7,6 +9,7 @@ import {
   type FilterFn,
 } from "@tanstack/react-table";
 import { Search, AlertCircle, Loader2 } from "lucide-react";
+import { useState } from "react";
 
 type GlobalFilterFn<TData> = FilterFn<TData>;
 
@@ -34,9 +37,8 @@ type AdminTableProps<T> = {
   emptyMessage?: string;
   onRowClick?: (row: T) => void;
   className?: string;
-  searchValue?: string;
-  onSearchChange?: (value: string) => void;
   showSearch?: boolean;
+  searchValue?: string;
 };
 
 const AdminTable = <T,>({
@@ -49,10 +51,25 @@ const AdminTable = <T,>({
   emptyMessage = "No data found.",
   onRowClick,
   className = "",
-  searchValue,
-  onSearchChange,
   showSearch = true,
 }: AdminTableProps<T>) => {
+  const navigate = useNavigate();
+  const searchParams = useSearch({ from: "__root__" }) as { search?: string };
+
+  const [searchValue, setSearchValue] = useState(searchParams.search || "");
+
+  const { debouncedValue } = useDebounce({
+    value: searchValue,
+    delay: 300,
+    onDebounce: (debouncedSearchValue) => {
+      navigate({
+        to: ".",
+        search: debouncedSearchValue ? { search: debouncedSearchValue } : {},
+        replace: true,
+      });
+    },
+  });
+
   const table = useReactTable({
     data: data || [],
     columns,
@@ -60,9 +77,9 @@ const AdminTable = <T,>({
     getFilteredRowModel: getFilteredRowModel(),
     globalFilterFn: globalFilterFn,
     state: {
-      globalFilter: searchValue,
+      globalFilter: debouncedValue,
     },
-    onGlobalFilterChange: onSearchChange || (() => {}),
+    onGlobalFilterChange: setSearchValue,
     meta: {
       searchableColumns: searchableColumns.map(String),
     },
@@ -95,7 +112,7 @@ const AdminTable = <T,>({
               type="text"
               placeholder={searchPlaceholder}
               value={searchValue}
-              onChange={(e) => onSearchChange?.(e.target.value)}
+              onChange={(e) => setSearchValue(e.target.value)}
               className="w-full pl-10 pr-3 py-2 border border-secondary-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             />
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-secondary-300" />
