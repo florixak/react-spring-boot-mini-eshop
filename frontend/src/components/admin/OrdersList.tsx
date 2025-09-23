@@ -1,12 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/utils";
 import type { Order } from "@/types";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import useOrders from "@/hooks/useOrders";
 import { createColumnHelper, type ColumnDef } from "@tanstack/react-table";
 import AdminTable from "./AdminTable";
-import { useState } from "react";
-import useDebounce from "@/hooks/useDebounce";
 
 const columnHelper = createColumnHelper<Order>();
 
@@ -16,13 +14,9 @@ type OrdersListProps = {
 
 const OrdersList = ({ size }: OrdersListProps) => {
   const navigate = useNavigate();
-  const [searchValue, setSearchValue] = useState<string>("");
-  const { debouncedValue } = useDebounce({
-    value: searchValue,
-    delay: 300,
-  });
+  const search = useSearch({ from: "__root__" }) as { query?: string };
   const { orders, isLoading, error } = useOrders({
-    query: debouncedValue,
+    query: search.query || "",
     size: size || 100,
   });
 
