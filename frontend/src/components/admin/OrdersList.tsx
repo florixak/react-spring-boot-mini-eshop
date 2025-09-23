@@ -10,7 +10,11 @@ import useDebounce from "@/hooks/useDebounce";
 
 const columnHelper = createColumnHelper<Order>();
 
-const OrdersList = () => {
+type OrdersListProps = {
+  size?: number;
+};
+
+const OrdersList = ({ size }: OrdersListProps) => {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState<string>("");
   const { debouncedValue } = useDebounce({
@@ -19,7 +23,7 @@ const OrdersList = () => {
   });
   const { orders, isLoading, error } = useOrders({
     query: debouncedValue,
-    size: 100,
+    size: size || 100,
   });
 
   const columns = [
@@ -89,7 +93,12 @@ const OrdersList = () => {
 
   return (
     <AdminTable
-      data={orders || []}
+      data={
+        orders?.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        ) || []
+      }
       columns={columns as ColumnDef<Order>[]}
       searchableColumns={["customerEmail", "status", "id"]}
       searchPlaceholder="Search orders..."

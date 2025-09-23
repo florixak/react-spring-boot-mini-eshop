@@ -59,7 +59,7 @@ export const useProducts = (
     if (search.size && search.size > 0) {
       filter.size = search.size;
     } else {
-      filter.size = 10;
+      filter.size = 9;
     }
 
     return filter;
