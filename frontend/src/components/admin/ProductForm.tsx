@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from "@tanstack/react-router";
-import { Plus } from "lucide-react";
+import { Edit, Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { productSchema, type ProductFormData } from "@/lib/schema";
@@ -48,7 +48,6 @@ const ProductForm = ({ productId }: ProductFormProps) => {
 
   const onSubmit = async (data: ProductFormData) => {
     try {
-      console.log("Submitting form with data:", data);
       const isValid = await trigger([
         "title",
         "description",
@@ -85,8 +84,15 @@ const ProductForm = ({ productId }: ProductFormProps) => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <CardHeader className="mb-4">
             <CardTitle className="text-2xl font-bold text-primary flex items-center gap-2">
-              <Plus className="h-5 w-5" />
-              Add New Product
+              {!product ? (
+                <>
+                  <Plus className="h-5 w-5" /> Add New Product
+                </>
+              ) : (
+                <>
+                  <Edit className="h-5 w-5" /> Edit Product
+                </>
+              )}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
