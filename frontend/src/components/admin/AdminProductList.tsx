@@ -7,6 +7,8 @@ import type { Product } from "@/types";
 import useCategories from "@/hooks/useCategories";
 import { useProducts } from "@/hooks/useProducts";
 import { useNavigate } from "@tanstack/react-router";
+import { removeProduct } from "@/lib/api";
+import toast from "react-hot-toast";
 
 const columnHelper = createColumnHelper<Product>();
 
@@ -54,7 +56,7 @@ const columns = [
 
 export type Column = (typeof columns)[number];
 
-const ProductList = () => {
+const AdminProductList = () => {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
   const [debouncedSearch, setDebouncedSearch] = useState(search);
@@ -81,9 +83,19 @@ const ProductList = () => {
     navigate({ to: `/admin/products/${productId}` });
   };
 
-  const handleProductDelete = (productId: number) => {
+  const handleProductDelete = async (productId: number) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
-      console.log("Delete product with ID:", productId);
+      const loadingToast = toast.loading("Deleting product...");
+      try {
+        const response = await removeProduct(productId);
+        if (response.success) {
+          toast.success("Product deleted successfully", { id: loadingToast });
+        } else {
+          toast.error("Failed to delete product", { id: loadingToast });
+        }
+      } catch {
+        toast.error("An error occurred", { id: loadingToast });
+      }
     }
   };
 
@@ -175,4 +187,4 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default AdminProductList;

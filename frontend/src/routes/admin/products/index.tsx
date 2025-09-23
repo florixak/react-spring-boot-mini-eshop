@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import ProductList from "@/components/admin/ProductList";
+import AdminProductList from "@/components/admin/AdminProductList";
 import AdminLayout from "@/components/admin/AdminLayout";
 
 export const Route = createFileRoute("/admin/products/")({
@@ -32,7 +32,7 @@ function RouteComponent() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <ProductList />
+          <AdminProductList />
         </CardContent>
       </Card>
     </AdminLayout>

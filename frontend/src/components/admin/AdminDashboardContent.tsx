@@ -7,7 +7,7 @@ import ProductStats from "./ProductStats";
 import UserStats from "./UserStats";
 import OrderStats from "./OrderStats";
 import RecentOrders from "./RecentOrders";
-import ProductList from "./ProductList";
+import AdminProductList from "./AdminProductList";
 
 const AdminDashboardContent = () => {
   return (
@@ -50,7 +50,7 @@ const AdminDashboardContent = () => {
           </Button>
         </CardHeader>
         <CardContent>
-          <ProductList />
+          <AdminProductList />
         </CardContent>
       </Card>
     </>
