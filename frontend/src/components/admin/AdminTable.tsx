@@ -64,7 +64,7 @@ const AdminTable = <T,>({
     onDebounce: (debouncedSearchValue) => {
       navigate({
         to: ".",
-        search: debouncedSearchValue ? { search: debouncedSearchValue } : {},
+        search: debouncedSearchValue ? { query: debouncedSearchValue } : {},
         replace: true,
       });
     },
