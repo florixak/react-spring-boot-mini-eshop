@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -11,6 +10,7 @@ import { Search, AlertCircle, Loader2 } from "lucide-react";
 
 type GlobalFilterFn<TData> = FilterFn<TData>;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const globalFilterFn: GlobalFilterFn<any> = (row, columnId, value, addMeta) => {
   const tableMeta = row.original?.__table?.options!.meta || addMeta;
   const searchableColumns = tableMeta?.searchableColumns || [];
@@ -34,6 +34,9 @@ type AdminTableProps<T> = {
   emptyMessage?: string;
   onRowClick?: (row: T) => void;
   className?: string;
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
+  showSearch?: boolean;
 };
 
 const AdminTable = <T,>({
@@ -46,17 +49,10 @@ const AdminTable = <T,>({
   emptyMessage = "No data found.",
   onRowClick,
   className = "",
+  searchValue,
+  onSearchChange,
+  showSearch = true,
 }: AdminTableProps<T>) => {
-  const [globalFilter, setGlobalFilter] = useState("");
-  const [debouncedFilter, setDebouncedFilter] = useState(globalFilter);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedFilter(globalFilter);
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [globalFilter]);
-
   const table = useReactTable({
     data: data || [],
     columns,
@@ -64,9 +60,9 @@ const AdminTable = <T,>({
     getFilteredRowModel: getFilteredRowModel(),
     globalFilterFn: globalFilterFn,
     state: {
-      globalFilter: debouncedFilter,
+      globalFilter: searchValue,
     },
-    onGlobalFilterChange: setDebouncedFilter,
+    onGlobalFilterChange: onSearchChange || (() => {}),
     meta: {
       searchableColumns: searchableColumns.map(String),
     },
@@ -92,14 +88,14 @@ const AdminTable = <T,>({
 
   return (
     <div className={className}>
-      {searchableColumns.length > 0 && (
+      {showSearch && searchableColumns.length > 0 && (
         <div className="flex items-center gap-2 mb-6">
           <div className="relative w-full max-w-xs">
             <input
               type="text"
               placeholder={searchPlaceholder}
-              value={globalFilter}
-              onChange={(e) => setGlobalFilter(e.target.value)}
+              value={searchValue}
+              onChange={(e) => onSearchChange?.(e.target.value)}
               className="w-full pl-10 pr-3 py-2 border border-secondary-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             />
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-secondary-300" />
