@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class ProductService {
@@ -26,8 +27,16 @@ public class ProductService {
 		this.categoryService = categoryService;
 	}
 
+	public List<Product> getAllProducts() {
+		return productRepository.findAll();
+	}
+
 	public Page<Product> getAllProducts(Pageable pageable) {
 		return productRepository.findAll(pageable);
+	}
+
+	public int countProducts() {
+		return (int) productRepository.count();
 	}
 
 	@Transactional(readOnly = true)
