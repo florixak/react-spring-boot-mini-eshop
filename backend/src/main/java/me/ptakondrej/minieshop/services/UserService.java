@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,6 +42,14 @@ public class UserService {
 		}
 		return userRepository.findById(userId)
 				.orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+	}
+
+	public List<User> getAllUsers() {
+		return userRepository.findAll();
+	}
+
+	public int countUsers() {
+		return (int) userRepository.count();
 	}
 
 	@Transactional
