@@ -59,6 +59,14 @@ public class OrderService {
 		return orderRepository.findAllByUserId(userId, pageable);
 	}
 
+	public List<Order> getAllOrders() {
+		return orderRepository.findAll();
+	}
+
+	public int countOrders() {
+		return (int) orderRepository.count();
+	}
+
 	@Transactional
 	public OrderPriceModel createOrder(Long userId, OrderCreationRequest request) {
 
