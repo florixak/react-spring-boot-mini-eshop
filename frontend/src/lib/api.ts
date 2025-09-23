@@ -389,6 +389,20 @@ export const fetchCurrentUser = async (): Promise<globalThis.Response> => {
   return response;
 };
 
+export const fetchUsers = async (): Promise<Response<User[]>> => {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/users`, {
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    throw new Error("Failed to fetch users");
+  }
+  const data = (await response.json()) as Response<User[]>;
+  return data;
+};
+
 export const fetchWishlist = async ({
   page = 1,
 }: {
