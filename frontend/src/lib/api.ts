@@ -147,9 +147,12 @@ export const createProduct = async (productData: {
 export const fetchOrders = async ({
   page = 1,
   size = 10,
+  query = "",
 }): Promise<Response<PagingObjectResponse<Order>>> => {
   const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/orders?page=${page - 1}&size=${size}`,
+    `${import.meta.env.VITE_API_URL}/orders?page=${
+      page - 1
+    }&size=${size}&search=${query}`,
     {
       credentials: "include",
       headers: {
