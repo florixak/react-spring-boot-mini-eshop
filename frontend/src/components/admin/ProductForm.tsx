@@ -18,6 +18,7 @@ import type { Product } from "@/types";
 import CategorySelect from "./CategorySelect";
 import { createProduct, fetchProduct } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 type ProductFormProps = {
   productId?: Product["id"];
@@ -61,15 +62,11 @@ const ProductForm = ({ productId }: ProductFormProps) => {
         console.log("Form validation failed");
         return;
       }
-
-      const { data: newProduct, success, message } = await createProduct(data);
-
-      if (!success) {
-        console.error("Failed to create product:", message);
-        return;
-      }
-
-      console.log("Product created successfully:", newProduct);
+      toast.promise(createProduct(data), {
+        loading: "Creating product...",
+        success: "Product created successfully!",
+        error: "Failed to create product.",
+      });
     } catch (error) {
       console.error("Failed to create product:", error);
       return;

@@ -85,17 +85,11 @@ const AdminProductList = () => {
 
   const handleProductDelete = async (productId: number) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
-      const loadingToast = toast.loading("Deleting product...");
-      try {
-        const response = await removeProduct(productId);
-        if (response.success) {
-          toast.success("Product deleted successfully", { id: loadingToast });
-        } else {
-          toast.error("Failed to delete product", { id: loadingToast });
-        }
-      } catch {
-        toast.error("An error occurred", { id: loadingToast });
-      }
+      toast.promise(removeProduct(productId), {
+        loading: "Deleting product...",
+        success: "Product deleted successfully",
+        error: "Failed to delete product",
+      });
     }
   };
 
