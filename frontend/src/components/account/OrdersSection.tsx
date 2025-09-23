@@ -41,10 +41,11 @@ const OrdersSection = () => {
                   <OrderCard key={order.id} order={order} />
                 ))}
               </div>
-              <Pagination<{ page: number }>
+              <Pagination<typeof search>
                 currentPage={currentPage}
                 totalPages={totalPages}
-                getPageSearch={(page) => ({ page })}
+                getPageSearch={(page) => ({ ...search, page })}
+                to={`.`}
               />
             </>
           ) : !isLoading && items && items.length === 0 ? (

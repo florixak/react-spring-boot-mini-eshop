@@ -15,16 +15,20 @@ import {
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
-import { Route } from "@/routes/account/orders/$orderId";
 import { SHIPPING_METHODS } from "@/constants";
 import OrderDetailsHeader from "./OrderDetailsHeader";
 import OrderDetailsItems from "./OrderDetailsItems";
 import OrderDetailsSummary from "./OrderDetailsSummary";
 import { useUserStore } from "@/stores/useUserStore";
+import toast from "react-hot-toast";
 
-const OrderDetailsPage = () => {
+type OrderDetailsPageProps = {
+  orderId: string;
+  isAdminView?: boolean;
+};
+
+const OrderDetailsPage = ({ orderId, isAdminView }: OrderDetailsPageProps) => {
   const { isAuthenticated } = useUserStore();
-  const { orderId } = Route.useParams();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["order", orderId],
@@ -37,22 +41,28 @@ const OrderDetailsPage = () => {
 
   const { mutate } = useMutation({
     mutationFn: async () => await cancelOrder(Number(orderId), isAuthenticated),
+    onMutate: async () => {
+      toast.loading("Cancelling order...", { id: "cancel-order" });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["order", orderId] });
+      toast.success("Order cancelled successfully", { id: "cancel-order" });
     },
     onError: () => {
-      alert("Failed to cancel the order. Please try again.");
+      toast.error("Failed to cancel the order. Please try again.", {
+        id: "cancel-order",
+      });
     },
   });
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-secondary-50 px-6 md:px-16 lg:px-28 py-8">
+      <div className="min-h-screen bg-white px-6 md:px-16 lg:px-28 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="animate-pulse space-y-6">
-            <div className="h-8 bg-secondary-100 rounded w-1/4"></div>
-            <div className="h-64 bg-secondary-100 rounded"></div>
-            <div className="h-48 bg-secondary-100 rounded"></div>
+            <div className="h-8 bg-secondary-50 rounded w-1/4"></div>
+            <div className="h-64 bg-secondary-50 rounded"></div>
+            <div className="h-48 bg-secondary-50 rounded"></div>
           </div>
         </div>
       </div>
@@ -97,7 +107,10 @@ const OrderDetailsPage = () => {
     <div className="min-h-screen bg-secondary-50 px-6 md:px-16 lg:px-28 py-8 pt-28">
       <div className="max-w-4xl mx-auto space-y-6">
         <Button variant="outline" asChild>
-          <Link to="/account" search={{ section: "orders" }}>
+          <Link
+            to={isAdminView ? "/admin/orders" : "/account"}
+            search={!isAdminView ? { section: "orders" } : undefined}
+          >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Orders
           </Link>
@@ -214,26 +227,29 @@ const OrderDetailsPage = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 pt-4">
-          <Button className="flex-1" asChild>
-            <Link
-              to="/shop"
-              search={{
-                category: "all",
-                sortBy: "no-filter",
-                view: "grid",
-                query: "",
-                price: "0-1000",
-                stock: "in-stock",
-                page: 1,
-              }}
-            >
-              Continue Shopping
-            </Link>
-          </Button>
-          <Button variant="outline" className="flex-1">
-            <MessageSquare className="h-4 w-4 mr-2" />
-            Contact Support
-          </Button>
+          {!isAdminView && (
+            <>
+              <Link
+                to="/shop"
+                search={{
+                  category: "all",
+                  sortBy: "no-filter",
+                  view: "grid",
+                  query: "",
+                  price: "0-1000",
+                  stock: "in-stock",
+                  page: 1,
+                }}
+              >
+                Continue Shopping
+              </Link>
+              <Button variant="outline" className="flex-1">
+                <MessageSquare className="h-4 w-4 mr-2" />
+                Contact Support
+              </Button>
+            </>
+          )}
+
           {order.status.toLowerCase() === "pending" && (
             <Button
               variant="outline"

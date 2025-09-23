@@ -12,6 +12,7 @@ import {
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { useCartStore } from "@/stores/useCartStore";
+import { useUserStore } from "@/stores/useUserStore";
 
 const navLinks = [
   {
@@ -33,10 +34,14 @@ const navLinks = [
 ];
 
 const Header = () => {
+  const { isAuthenticated, isAdmin, user } = useUserStore();
   const { getTotalItems } = useCartStore();
 
   return (
-    <header className="fixed flex flex-row items-center justify-between px-6 md:px-16 lg:px-36 py-4 bg-white shadow-sm font-playfair w-full z-50">
+    <header
+      key={isAuthenticated ? user?.id ?? "auth" : "guest"}
+      className="fixed flex flex-row items-center justify-between px-6 md:px-16 lg:px-36 py-4 bg-white shadow-sm font-playfair w-full z-50"
+    >
       <Link
         to="/"
         search={{ category: "all", sortBy: "no-filter", view: "grid" }}
@@ -56,6 +61,18 @@ const Header = () => {
             {link.title}
           </Link>
         ))}
+        {isAuthenticated && isAdmin() && (
+          <Link
+            to="/admin"
+            className="text-primary hover:text-secondary-200"
+            activeProps={{ className: "font-bold text-primary cursor-default" }}
+            inactiveProps={{
+              className: "text-primary hover:text-secondary-200",
+            }}
+          >
+            Admin
+          </Link>
+        )}
       </nav>
       <div className="flex flex-row gap-2 md:gap-6 items-center">
         <Button
@@ -134,6 +151,22 @@ const Header = () => {
                   </Link>
                 </SheetClose>
               ))}
+              {isAuthenticated && isAdmin() && (
+                <SheetClose asChild>
+                  <Link
+                    to="/admin"
+                    className="text-lg text-primary hover:text-secondary-200"
+                    activeProps={{
+                      className: "font-bold text-primary cursor-default",
+                    }}
+                    inactiveProps={{
+                      className: "text-primary hover:text-secondary-200",
+                    }}
+                  >
+                    Admin
+                  </Link>
+                </SheetClose>
+              )}
             </nav>
             <SheetFooter>
               <p className="text-center text-sm text-secondary-200">

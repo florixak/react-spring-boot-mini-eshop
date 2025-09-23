@@ -1,12 +1,14 @@
 import { useUserStore } from "@/stores/useUserStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addToWishlist, fetchWishlist, removeFromWishlist } from "@/lib/api";
+import {
+  addToWishlist,
+  fetchWholeWishlist,
+  removeFromWishlist,
+} from "@/lib/api";
 import type { Response } from "@/types/responses";
 import type { Product } from "@/types";
-import useObjectPaging from "./useObjectPaging";
 
-export const useWishlist = ({ page }: { page?: number } = {}) => {
-  const { user } = useUserStore();
+export const useWishlist = () => {
   const { isAuthenticated } = useUserStore();
   const {
     data: wishlist,
@@ -14,10 +16,11 @@ export const useWishlist = ({ page }: { page?: number } = {}) => {
     isError,
     refetch,
   } = useQuery({
-    queryKey: ["wishlist", user?.id, page],
-    queryFn: () => fetchWishlist({ page }),
+    queryKey: ["wishlist"],
+    queryFn: () => fetchWholeWishlist(),
     enabled: isAuthenticated,
   });
+
   const queryClient = useQueryClient();
   const { mutate: toggleWishlist } = useMutation({
     mutationFn: async (productId: number) => {
@@ -39,7 +42,7 @@ export const useWishlist = ({ page }: { page?: number } = {}) => {
           }
         );
       } else {
-        const product = wishlistProducts.find((p) => p.id === productId);
+        const product = wishlist?.data.find((p) => p.id === productId);
         if (product) {
           queryClient.setQueryData(
             ["wishlist"],
@@ -62,15 +65,12 @@ export const useWishlist = ({ page }: { page?: number } = {}) => {
     },
   });
 
-  const { items, currentPage, totalPages, totalItems } =
-    useObjectPaging<Product>(wishlist?.data);
-
   const isInWishlist = (productId: number) => {
-    return items.some((item) => item.id === productId);
+    return wishlist?.data.some((item) => item.id === productId) || false;
   };
 
   return {
-    wishlist: items,
+    wishlist: wishlist?.data || [],
     isInWishlist,
     toggleWishlist,
     isLoading,

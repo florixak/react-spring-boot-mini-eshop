@@ -23,7 +23,7 @@ const ProductCard = ({
 }: ProductCardProps) => {
   const isList = viewMode === "list";
   const cardClass = isList
-    ? "flex flex-col md:flex-row items-stretch min-h-[180px]"
+    ? "flex flex-col md:flex-row items-stretch min-h-[180px] max-h-[200px]"
     : "flex flex-col";
 
   const handleAddToCart = () => {
@@ -51,14 +51,16 @@ const ProductCard = ({
       <CardHeader
         className={
           isList
-            ? "w-full md:max-w-[16rem] md:h-auto flex-shrink-0 overflow-hidden rounded-t-md md:rounded-l-md md:rounded-tr-none p-0"
+            ? "w-full aspect-[4/3] md:aspect-auto md:max-w-[16rem] md:h-auto flex-shrink-0 overflow-hidden rounded-t-md md:rounded-l-md md:rounded-tr-none p-0"
             : "w-full aspect-[4/3] overflow-hidden rounded-t-md p-0"
         }
       >
         <img
           src={product.imageUrl}
           alt="Product Image"
-          className="w-full h-full object-cover object-center"
+          className={`w-full h-full md:max-h-none object-cover object-center transition-transform duration-300 ease-in-out group-hover:scale-105 ${
+            isList ? "md:rounded-l-md md:rounded-tr-none" : ""
+          }`}
         />
       </CardHeader>
 
