@@ -123,4 +123,62 @@ public class OrderController {
 			);
 		}
 	}
+
+	@GetMapping("/admin")
+	public ResponseEntity<Response<List<OrderDTO>>> getAllOrders(@RequestAttribute Long userId) {
+		try {
+			List<Order> orders = orderService.getAllUserOrders(userId);
+			List<OrderDTO> orderDTOs = orders.stream()
+					.map(OrderMapper::convertToDto)
+					.toList();
+			return ResponseEntity.ok(
+					new Response<>(true, orderDTOs, "Orders retrieved successfully")
+			);
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(
+					new Response<>(false, null, "Invalid request: " + e.getMessage())
+			);
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(
+					new Response<>(false, null, "An error occurred while retrieving orders: " + e.getMessage())
+			);
+		}
+	}
+
+	@DeleteMapping("/admin/{orderId}")
+	public ResponseEntity<Response<Void>> cancelOrderAdmin(@PathVariable Long orderId) {
+		try {
+			if (orderId == null || orderId <= 0) {
+				return ResponseEntity.badRequest().body(
+						new Response<Void>(false, null, "Invalid order ID")
+				);
+			}
+
+			Order order = orderService.getOrderById(orderId);
+			if (order == null) {
+				return ResponseEntity.status(404).body(
+						new Response<Void>(false, null, "Order not found")
+				);
+			}
+
+			if (order.getStatus() != OrderStatus.PENDING) {
+				return ResponseEntity.badRequest().body(
+						new Response<Void>(false, null, "Only orders with PENDING status can be cancelled")
+				);
+			}
+
+			orderService.updateOrderStatus(orderId, OrderStatus.CANCELLED);
+			return ResponseEntity.ok(
+					new Response<Void>(true, null, "Order cancelled successfully")
+			);
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(
+					new Response<Void>(false, null, "Invalid request: " + e.getMessage())
+			);
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(
+					new Response<Void>(false, null, "An error occurred while cancelling the order: " + e.getMessage())
+			);
+		}
+	}
 }
