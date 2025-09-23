@@ -1,49 +1,37 @@
 import { Button } from "@/components/ui/button";
-import { formatPrice } from "@/lib/utils";
-import type { Order } from "@/types";
 import { useNavigate } from "@tanstack/react-router";
-import useOrders from "@/hooks/useOrders";
-import { createColumnHelper, type ColumnDef } from "@tanstack/react-table";
+import useUsers from "@/hooks/useUsers";
 import AdminTable from "./AdminTable";
+import type { User } from "@/types";
+import { createColumnHelper, type ColumnDef } from "@tanstack/react-table";
 
-const columnHelper = createColumnHelper<Order>();
+const columnHelper = createColumnHelper<User>();
 
-const OrdersList = () => {
+const UsersList = () => {
+  const { users, isLoading, error } = useUsers({ size: 100 });
   const navigate = useNavigate();
-
-  const { orders, isLoading, error } = useOrders({ size: 100 });
 
   const columns = [
     columnHelper.accessor("id", {
-      header: "Order ID",
+      header: "User ID",
       cell: (info) => (
         <span className="text-primary font-medium">{info.getValue()}</span>
       ),
     }),
-    columnHelper.accessor("customerEmail", {
-      header: "Customer Email",
+    columnHelper.accessor("email", {
+      header: "Email",
       cell: (info) => (
         <span className="text-secondary-200">{info.getValue()}</span>
       ),
     }),
-    columnHelper.accessor("createdAt", {
-      header: "Date",
-      cell: (info) => (
-        <span className="text-secondary-200">
-          {new Date(info.getValue()).toLocaleDateString()}
-        </span>
-      ),
+    columnHelper.accessor("firstName", {
+      header: "First Name",
     }),
-    columnHelper.accessor("totalPrice", {
-      header: "Total Price",
-      cell: (info) => (
-        <span className="text-secondary-200">
-          {formatPrice(info.getValue())}
-        </span>
-      ),
+    columnHelper.accessor("lastName", {
+      header: "Last Name",
     }),
-    columnHelper.accessor("status", {
-      header: "Status",
+    columnHelper.accessor("role", {
+      header: "Role",
       cell: (info) => (
         <span className="capitalize text-secondary-200">{info.getValue()}</span>
       ),
@@ -80,16 +68,16 @@ const OrdersList = () => {
 
   return (
     <AdminTable
-      data={orders || []}
-      columns={columns as ColumnDef<Order>[]}
-      searchableColumns={["customerEmail", "status", "id"]}
-      searchPlaceholder="Search orders..."
+      data={users || []}
+      columns={columns as ColumnDef<User>[]}
+      searchableColumns={["email", "firstName", "lastName"]}
+      searchPlaceholder="Search users..."
       isLoading={isLoading}
       error={error?.message || null}
-      emptyMessage="No orders found."
-      onRowClick={(order) => navigate({ to: `/admin/orders/${order.id}` })}
+      emptyMessage="No users found."
+      onRowClick={(user) => navigate({ to: `/admin/users/${user.id}` })}
     />
   );
 };
 
-export default OrdersList;
+export default UsersList;
