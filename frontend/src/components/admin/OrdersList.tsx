@@ -65,7 +65,7 @@ const OrdersList = ({ size }: OrdersListProps) => {
             variant="outline"
             onClick={(e) => {
               e.stopPropagation();
-              navigate({ to: `/admin/users/${info.row.original.id}` });
+              navigate({ to: `/admin/orders/${info.row.original.id}` });
             }}
           >
             View
@@ -75,7 +75,7 @@ const OrdersList = ({ size }: OrdersListProps) => {
             variant="outline"
             onClick={(e) => {
               e.stopPropagation();
-              navigate({ to: `/admin/users/${info.row.original.id}/edit` });
+              navigate({ to: `/admin/orders/${info.row.original.id}/edit` });
             }}
           >
             Edit
