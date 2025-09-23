@@ -144,9 +144,49 @@ export const createProduct = async (productData: {
   return data;
 };
 
+export const removeProduct = async (
+  productId: number
+): Promise<Response<null>> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/products/admin/${productId}`,
+    {
+      method: "DELETE",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to delete product");
+  }
+  const data = (await response.json()) as Response<null>;
+  return data;
+};
+
+export const fetchUserOrders = async ({
+  page = 1,
+  size = 9,
+}): Promise<Response<PagingObjectResponse<Order>>> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/orders/me?page=${page - 1}&size=${size}`,
+    {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch user orders");
+  }
+  const data = (await response.json()) as Response<PagingObjectResponse<Order>>;
+  return data;
+};
+
 export const fetchOrders = async ({
   page = 1,
-  size = 10,
+  size = 9,
   query = "",
 }): Promise<Response<PagingObjectResponse<Order>>> => {
   const response = await fetch(
