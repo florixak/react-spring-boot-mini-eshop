@@ -12,7 +12,10 @@ import lombok.Setter;
 public class AdminDashboardStatsDTO {
 
 	private long totalUsers;
+	private long newUsers;
 	private long totalOrders;
 	private long totalProducts;
 	private double totalRevenue;
+	private long lowStockProducts;
+	private long totalPendingOrders;
 }

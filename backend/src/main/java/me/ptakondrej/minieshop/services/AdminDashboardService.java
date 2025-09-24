@@ -3,6 +3,7 @@ package me.ptakondrej.minieshop.services;
 import me.ptakondrej.minieshop.order.Order;
 import me.ptakondrej.minieshop.order.OrderStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,14 +25,31 @@ public class AdminDashboardService {
 		return userService.countUsers();
 	}
 
+	public long getNewUsersLastWeek() {
+		return userService.countNewUsersInLastDays(7);
+	}
+
 	public long getTotalOrders() {
 		return orderService.countOrders();
+	}
+
+	public long getTotalPendingOrders() {
+		return orderService.countPendingOrders();
 	}
 
 	public long getTotalProducts() {
 		return productService.countProducts();
 	}
 
+	public long getTotalActiveProducts() {
+		return productService.countActiveProducts();
+	}
+
+	public long getLowStockProducts() {
+		return productService.countLowStockProducts();
+	}
+
+	@Transactional(readOnly = true)
 	public List<Order> getRecentOrders() {
 		return orderService.getAllOrders().stream()
 				.sorted((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()))
@@ -39,6 +57,7 @@ public class AdminDashboardService {
 				.toList();
 	}
 
+	@Transactional(readOnly = true)
 	public double getTotalRevenue() {
 		List<Order> allOrders = orderService.getAllOrders();
 		if (allOrders.isEmpty()) {
@@ -49,9 +68,4 @@ public class AdminDashboardService {
 				.mapToDouble(order -> order.getTotalPrice().doubleValue())
 				.sum();
 	}
-
-
-
-
-
 }

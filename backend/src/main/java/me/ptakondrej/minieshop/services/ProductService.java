@@ -39,6 +39,17 @@ public class ProductService {
 		return (int) productRepository.count();
 	}
 
+	public int countActiveProducts() {
+		return (int) productRepository.countByEnabledTrueAndDeletedFalse();
+	}
+
+	public  int countLowStockProducts() {
+		List<Product> allProducts = productRepository.findAll();
+		return (int) allProducts.stream()
+				.filter(product -> product.getStockQuantity() <= 5 && !product.getDeleted())
+				.count();
+	}
+
 	@Transactional(readOnly = true)
 	public Page<Product> filterProducts(
 			String categorySlug,

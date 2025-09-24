@@ -18,5 +18,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	List<Order> findAllByStatusAndExpiresAtBefore(OrderStatus status, LocalDateTime dateTime);
 	@Query("SELECT o FROM Order o WHERE o.user.id = :userId")
 	Page<Order> findAllByUserId(@Param("userId") Long userId, Pageable pageable);
+	long countByStatus(OrderStatus status);
 
 }

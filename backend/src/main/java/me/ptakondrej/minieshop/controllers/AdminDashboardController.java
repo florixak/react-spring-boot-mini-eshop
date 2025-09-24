@@ -28,9 +28,12 @@ public class AdminDashboardController {
 		try {
 			AdminDashboardStatsDTO stats = new AdminDashboardStatsDTO(
 					adminDashboardService.getTotalUsers(),
+					adminDashboardService.getNewUsersLastWeek(),
 					adminDashboardService.getTotalOrders(),
-					adminDashboardService.getTotalProducts(),
-					adminDashboardService.getTotalRevenue()
+					adminDashboardService.getTotalActiveProducts(),
+					adminDashboardService.getTotalRevenue(),
+					adminDashboardService.getLowStockProducts(),
+					adminDashboardService.getTotalPendingOrders()
 			);
 			return ResponseEntity.ok(new Response<>(true, stats, "Dashboard stats retrieved successfully"));
 		} catch (IllegalArgumentException e) {

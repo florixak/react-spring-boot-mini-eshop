@@ -67,6 +67,10 @@ public class OrderService {
 		return (int) orderRepository.count();
 	}
 
+	public int countPendingOrders() {
+		return (int) orderRepository.countByStatus(OrderStatus.PENDING);
+	}
+
 	@Transactional
 	public OrderPriceModel createOrder(Long userId, OrderCreationRequest request) {
 

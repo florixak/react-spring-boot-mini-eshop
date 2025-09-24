@@ -52,6 +52,14 @@ public class UserService {
 		return (int) userRepository.count();
 	}
 
+	public int countNewUsersInLastDays(int days) {
+		if (days <= 0) {
+			throw new IllegalArgumentException("Days must be greater than 0");
+		}
+		LocalDateTime since = LocalDateTime.now().minusDays(days);
+		return (int) userRepository.countByCreatedAtAfter(since);
+	}
+
 	@Transactional
 	public void updatePassword(Long userId, PasswordRequest request) {
 		if (userId == null || userId <= 0) {
