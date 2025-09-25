@@ -46,7 +46,7 @@ public class OrderService {
 	}
 
 	public List<Order> getAllUserOrders(Long userId) {
-		return orderRepository.findAllByUserId(userId);
+		return orderRepository.findAllByUserIdOrderByCreatedAtDesc(userId);
 	}
 
 	public Page<Order> getAllOrders(Long userId, Pageable pageable) {
@@ -56,7 +56,7 @@ public class OrderService {
 		if (pageable == null) {
 			throw new IllegalArgumentException("Pageable cannot be null");
 		}
-		return orderRepository.findAllByUserId(userId, pageable);
+		return orderRepository.findAllByUserIdOrderByCreatedAtDesc(userId, pageable);
 	}
 
 	public List<Order> getAllOrders() {
