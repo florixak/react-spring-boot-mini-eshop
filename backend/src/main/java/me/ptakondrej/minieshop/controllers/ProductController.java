@@ -98,6 +98,25 @@ public class ProductController {
 		}
 	}
 
+	@GetMapping("/admin/{id}")
+	public ResponseEntity<Response<ProductDTO>> getProductByIdAdmin(@PathVariable Long id) {
+		try {
+			if (id == null || id <= 0) {
+				return ResponseEntity.badRequest().body(new Response<ProductDTO>(false, null, "Invalid product ID"));
+			}
+			Product product = productService.getProductById(id);
+			if (product == null) {
+				return ResponseEntity.notFound().build();
+			}
+			ProductDTO productDTO = ProductMapper.convertToDto(product);
+			return ResponseEntity.ok(new Response<ProductDTO>(true, productDTO, "Product retrieved successfully"));
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(new Response<ProductDTO>(false, null, e.getMessage()));
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(new Response<ProductDTO>(false, null, "An error occurred while retrieving the product: " + e.getMessage()));
+		}
+	}
+
 	@PostMapping("/admin")
 	public ResponseEntity<Response<ProductDTO>> createProduct(@RequestBody ProductRequest request) {
 		try {
