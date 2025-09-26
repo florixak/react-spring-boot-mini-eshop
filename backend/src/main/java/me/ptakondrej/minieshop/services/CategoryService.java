@@ -30,6 +30,11 @@ public class CategoryService {
 		}
 	}
 
+	@Transactional(readOnly = true)
+	public List<Category> getAllCategories() {
+		return categoryRepository.findAll();
+	}
+
 	@Transactional
 	public Category createCategory(CategoryRequest request) throws IllegalArgumentException {
 		if (!validateCategoryRequest(request)) {
