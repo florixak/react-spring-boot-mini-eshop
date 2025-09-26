@@ -1,9 +1,11 @@
 package me.ptakondrej.minieshop.services;
 
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import me.ptakondrej.minieshop.models.LoginUserDTO;
 import me.ptakondrej.minieshop.models.RegisterUserDTO;
+import me.ptakondrej.minieshop.models.VerifyUserDTO;
 import me.ptakondrej.minieshop.user.Role;
 import me.ptakondrej.minieshop.user.User;
 import me.ptakondrej.minieshop.user.UserRepository;
@@ -12,7 +14,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.Random;
 
 @Service
 public class AuthService {
@@ -24,9 +28,10 @@ public class AuthService {
 	private final WishlistService wishlistService;
 	private final JwtService jwtService;
 	private final RefreshTokenService refreshTokenService;
+	private final EmailService emailService;
 
 	public AuthService(UserRepository userRepository, UserService userService, PasswordEncoder passwordEncoder,
-			AuthenticationManager authenticationManager, WishlistService wishlistService, JwtService jwtService, RefreshTokenService refreshTokenService) {
+			AuthenticationManager authenticationManager, WishlistService wishlistService, JwtService jwtService, RefreshTokenService refreshTokenService, EmailService emailService) {
 		this.userRepository = userRepository;
 		this.userService = userService;
 		this.passwordEncoder = passwordEncoder;
@@ -34,6 +39,7 @@ public class AuthService {
 		this.wishlistService = wishlistService;
 		this.jwtService = jwtService;
 		this.refreshTokenService = refreshTokenService;
+		this.emailService = emailService;
 	}
 
 	public User signUp(RegisterUserDTO registerUserDTO) {
@@ -75,6 +81,69 @@ public class AuthService {
 		userDetails.put("enabled", user.isEnabled());
 		userDetails.put("role", user.getRole().name());
 		return userDetails;
+	}
+
+	public void verifyUser(VerifyUserDTO verifyUserDTO) {
+		User user = userRepository.findByEmail(verifyUserDTO.getEmail())
+				.orElseThrow(() -> new RuntimeException("User not found with email: " + verifyUserDTO.getEmail()));
+
+		if (user.getVerificationCodeExpiresAt().isBefore(LocalDateTime.now())) {
+			throw new RuntimeException("Verification code has expired.");
+		}
+
+		if (!user.getVerificationCode().equals(verifyUserDTO.getVerificationCode())) {
+			throw new RuntimeException("Invalid verification code.");
+		}
+
+		user.setVerificationCode(null);
+		user.setVerificationCodeExpiresAt(null);
+		userRepository.save(user);
+	}
+
+	public void resendVerificationEmail(String email) {
+		User user = userRepository.findByEmail(email)
+				.orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+
+		if (user.getVerificationCode() == null) {
+			throw new RuntimeException("User account is already verified.");
+		}
+
+		user.setVerificationCode(generateVerificationCode());
+		user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
+		userRepository.save(user);
+		sendVerificationEmail(user);
+	}
+
+	public void sendVerificationEmail(User user) {
+		String subject = "Account Verification";
+		String verificationCode = "VERIFICATION CODE " + user.getVerificationCode();
+		String htmlMessage = "<html>"
+				+ "<body style=\"font-family: Arial, sans-serif;\">"
+				+ "<div style=\"background-color: #f5f5f5; padding: 20px;\">"
+				+ "<h2 style=\"color: #333;\">Welcome to our app!</h2>"
+				+ "<p style=\"font-size: 16px;\">Please enter the verification code below to continue:</p>"
+				+ "<div style=\"background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1);\">"
+				+ "<h3 style=\"color: #333;\">Verification Code:</h3>"
+				+ "<p style=\"font-size: 18px; font-weight: bold; color: #007bff;\">" + verificationCode + "</p>"
+				+ "</div>"
+				+ "</div>"
+				+ "</body>"
+				+ "</html>";
+		try {
+			emailService.sendEmail(user.getEmail(), subject, htmlMessage);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private String generateVerificationCode() {
+		Random random = new Random();
+		String code;
+		do {
+			int randomCode = random.nextInt(999999) + 100000;
+			code = String.format("%06d", randomCode);
+		} while (userRepository.existsByVerificationCode(code));
+		return code;
 	}
 
 	public void setCookies(HttpServletResponse response, String token, String refreshToken) {

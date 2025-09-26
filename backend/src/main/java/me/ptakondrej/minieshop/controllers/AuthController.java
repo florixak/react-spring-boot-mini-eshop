@@ -1,12 +1,8 @@
 package me.ptakondrej.minieshop.controllers;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import me.ptakondrej.minieshop.auth.RefreshToken;
-import me.ptakondrej.minieshop.models.LoginDataDTO;
-import me.ptakondrej.minieshop.models.LoginUserDTO;
-import me.ptakondrej.minieshop.models.RegisterUserDTO;
-import me.ptakondrej.minieshop.models.UserDTO;
+import me.ptakondrej.minieshop.models.*;
 import me.ptakondrej.minieshop.responses.LoginResponse;
 import me.ptakondrej.minieshop.responses.Response;
 import me.ptakondrej.minieshop.services.AuthService;
@@ -135,6 +131,41 @@ public class AuthController {
 			return ResponseEntity.status(404).body(new Response<UserDTO>(false, null, e.getMessage()));
 		} catch (Exception e) {
 			return ResponseEntity.status(500).body(new Response<UserDTO>(false, null, "An error occurred while retrieving the user: " + e.getMessage()));
+		}
+	}
+
+	@GetMapping("/verify")
+	public ResponseEntity<Response<String>> verifyEmail(@RequestParam String token, @RequestParam(required = false) String email) {
+		try {
+			if (token == null || token.isEmpty()) {
+				return ResponseEntity.badRequest().body(new Response<String>(false, null, "Verification code must not be null or empty."));
+			}
+			if (email == null || email.isEmpty()) {
+				return ResponseEntity.badRequest().body(new Response<String>(false, null, "Email must not be null or empty."));
+			}
+			VerifyUserDTO verifyUserDTO = new VerifyUserDTO(token, email);
+			authService.verifyUser(verifyUserDTO);
+			return ResponseEntity.ok(new Response<String>(true, null, "Email verified successfully"));
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(new Response<String>(false, null, e.getMessage()));
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(new Response<String>(false, null, "An error occurred during email verification: " + e.getMessage()));
+		}
+	}
+
+	@PostMapping("/resend-verification")
+	public ResponseEntity<Response<String>> resendVerificationEmail(@RequestBody EmailRequestDTO emailRequestDTO) {
+		try {
+			String email = emailRequestDTO.getEmail();
+			if (email == null || email.isEmpty()) {
+				return ResponseEntity.badRequest().body(new Response<String>(false, null, "Email must not be null or empty."));
+			}
+			authService.resendVerificationEmail(email);
+			return ResponseEntity.ok(new Response<String>(true, null, "Verification email resent successfully."));
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(new Response<String>(false, null, e.getMessage()));
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(new Response<String>(false, null, "An error occurred while resending verification email: " + e.getMessage()));
 		}
 	}
 }

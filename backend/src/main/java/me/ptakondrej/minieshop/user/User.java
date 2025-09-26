@@ -60,6 +60,10 @@ public class User implements UserDetails {
 	private boolean deleted;
 	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
+	@Column(name = "verification_code", length = 64)
+	private String verificationCode;
+	@Column(name = "verification_code_expires_at")
+	private LocalDateTime verificationCodeExpiresAt;
 
 	@Override
 	public String getUsername() {
