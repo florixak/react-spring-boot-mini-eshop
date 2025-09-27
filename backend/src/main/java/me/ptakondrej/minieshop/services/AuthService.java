@@ -52,9 +52,13 @@ public class AuthService {
 				.deleted(false)
 				.role(Role.USER)
 				.enabled(true)
+				.verified(false)
+				.verificationCode(generateVerificationCode())
+				.verificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15))
 				.build();
 		User createdUser = userRepository.save(user);
 		wishlistService.createWishlist(user.getId());
+		emailService.sendVerificationEmail(createdUser);
 		return createdUser;
 	}
 
@@ -97,6 +101,7 @@ public class AuthService {
 
 		user.setVerificationCode(null);
 		user.setVerificationCodeExpiresAt(null);
+		user.setVerified(true);
 		userRepository.save(user);
 	}
 
@@ -111,29 +116,7 @@ public class AuthService {
 		user.setVerificationCode(generateVerificationCode());
 		user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
 		userRepository.save(user);
-		sendVerificationEmail(user);
-	}
-
-	public void sendVerificationEmail(User user) {
-		String subject = "Account Verification";
-		String verificationCode = "VERIFICATION CODE " + user.getVerificationCode();
-		String htmlMessage = "<html>"
-				+ "<body style=\"font-family: Arial, sans-serif;\">"
-				+ "<div style=\"background-color: #f5f5f5; padding: 20px;\">"
-				+ "<h2 style=\"color: #333;\">Welcome to our app!</h2>"
-				+ "<p style=\"font-size: 16px;\">Please enter the verification code below to continue:</p>"
-				+ "<div style=\"background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1);\">"
-				+ "<h3 style=\"color: #333;\">Verification Code:</h3>"
-				+ "<p style=\"font-size: 18px; font-weight: bold; color: #007bff;\">" + verificationCode + "</p>"
-				+ "</div>"
-				+ "</div>"
-				+ "</body>"
-				+ "</html>";
-		try {
-			emailService.sendEmail(user.getEmail(), subject, htmlMessage);
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		}
+		emailService.sendVerificationEmail(user);
 	}
 
 	private String generateVerificationCode() {
