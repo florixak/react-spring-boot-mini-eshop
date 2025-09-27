@@ -1,7 +1,6 @@
 package me.ptakondrej.minieshop.controllers;
 
 import me.ptakondrej.minieshop.models.OrderDTO;
-import me.ptakondrej.minieshop.models.ProductDTO;
 import me.ptakondrej.minieshop.order.Order;
 import me.ptakondrej.minieshop.order.OrderMapper;
 import me.ptakondrej.minieshop.order.OrderStatus;
@@ -125,9 +124,9 @@ public class OrderController {
 	}
 
 	@GetMapping("/admin")
-	public ResponseEntity<Response<List<OrderDTO>>> getAllOrders(@RequestAttribute Long userId) {
+	public ResponseEntity<Response<List<OrderDTO>>> getAllOrders(@RequestParam(required = false) String search) {
 		try {
-			List<Order> orders = orderService.getAllUserOrders(userId);
+			List<Order> orders = orderService.getAllOrders(search);
 			List<OrderDTO> orderDTOs = orders.stream()
 					.map(OrderMapper::convertToDto)
 					.toList();

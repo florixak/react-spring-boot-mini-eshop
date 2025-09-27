@@ -5,6 +5,7 @@ import com.stripe.model.checkout.Session;
 import me.ptakondrej.minieshop.models.OrderPriceModel;
 import me.ptakondrej.minieshop.order.Order;
 import me.ptakondrej.minieshop.order.OrderRepository;
+import me.ptakondrej.minieshop.order.OrderSpecification;
 import me.ptakondrej.minieshop.order.OrderStatus;
 import me.ptakondrej.minieshop.orderItem.OrderItem;
 import me.ptakondrej.minieshop.product.Product;
@@ -29,12 +30,14 @@ public class OrderService {
 	private final UserService userService;
 	private final OrderItemService orderItemService;
 	private final ProductService productService;
+	private final EmailService emailService;
 
-	public OrderService(OrderRepository orderRepository, UserService userService, OrderItemService orderItemService, ProductService productService) {
+	public OrderService(OrderRepository orderRepository, UserService userService, OrderItemService orderItemService, ProductService productService, EmailService emailService) {
 		this.orderRepository = orderRepository;
 		this.userService = userService;
 		this.orderItemService = orderItemService;
 		this.productService = productService;
+		this.emailService = emailService;
 	}
 
 	public Order getOrderById(Long orderId) {
@@ -61,6 +64,10 @@ public class OrderService {
 
 	public List<Order> getAllOrders() {
 		return orderRepository.findAll();
+	}
+
+	public List<Order> getAllOrders(String search) {
+		return orderRepository.findAll(OrderSpecification.filter(search));
 	}
 
 	public int countOrders() {
@@ -140,6 +147,12 @@ public class OrderService {
 
 		savedOrder.setOrderItems(new ArrayList<>(orderItems));
 
+		try {
+			emailService.sendOrderConfirmationEmail(savedOrder.getCustomerEmail(), savedOrder.toString());
+		} catch (Exception e) {
+			System.err.println("Failed to send new order notification to admin: " + e.getMessage());
+		}
+
 		return new OrderPriceModel(orderRepository.save(savedOrder), subtotal, tax, shippingCost, totalPrice);
 	}
 
@@ -177,6 +190,11 @@ public class OrderService {
 			order.setStripeSessionId(session.getId());
 			order.setPaymentAt(LocalDateTime.now());
 			orderRepository.save(order);
+			try {
+				emailService.sendOrderPaymentSuccessEmail(order.getCustomerEmail(), order.toString());
+			} catch (Exception e) {
+				System.err.println("Failed to send payment success email: " + e.getMessage());
+			}
 		}
 	}
 
