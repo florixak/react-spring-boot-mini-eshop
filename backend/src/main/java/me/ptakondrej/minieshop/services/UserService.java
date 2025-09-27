@@ -5,6 +5,8 @@ import me.ptakondrej.minieshop.requests.PasswordRequest;
 import me.ptakondrej.minieshop.requests.UserEditRequest;
 import me.ptakondrej.minieshop.user.User;
 import me.ptakondrej.minieshop.user.UserRepository;
+import me.ptakondrej.minieshop.user.UserSpecification;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,8 +46,8 @@ public class UserService {
 				.orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
 	}
 
-	public List<User> getAllUsers() {
-		return userRepository.findAll();
+	public List<User> getAllUsers(String search) {
+		return userRepository.findAll(UserSpecification.filter(search), Sort.by("id").descending());
 	}
 
 	public int countUsers() {

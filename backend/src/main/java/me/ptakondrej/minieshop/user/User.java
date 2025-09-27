@@ -64,6 +64,8 @@ public class User implements UserDetails {
 	private String verificationCode;
 	@Column(name = "verification_code_expires_at")
 	private LocalDateTime verificationCodeExpiresAt;
+	@Column(name = "verified", nullable = false, columnDefinition = "boolean default false")
+	private boolean verified;
 
 	@Override
 	public String getUsername() {
