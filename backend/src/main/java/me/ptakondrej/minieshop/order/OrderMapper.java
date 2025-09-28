@@ -29,7 +29,7 @@ public class OrderMapper {
 				.user(orderDTO.getUser() != null ? UserMapper.convertToEntity(orderDTO.getUser()) : null)
 				.customerEmail(orderDTO.getCustomerEmail())
 				.customerPhone(orderDTO.getCustomerPhone())
-				.shippingAddress(orderDTO.getUser().getAddress())
+				.shippingAddress(orderDTO.getShippingAddress())
 				.shippingMethod(orderDTO.getShippingMethod())
 				.stripeSessionId(orderDTO.getStripeSessionId())
 				.orderItems(orderDTO.getOrderItems().stream()
