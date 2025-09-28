@@ -26,4 +26,6 @@ public class UserDTO {
 	private LocalDateTime createdAt;
 	private Role role;
 	private boolean enabled;
+	private boolean deleted;
+	private boolean verified;
 }

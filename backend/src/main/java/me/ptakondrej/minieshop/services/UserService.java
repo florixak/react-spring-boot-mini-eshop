@@ -5,11 +5,14 @@ import me.ptakondrej.minieshop.requests.PasswordRequest;
 import me.ptakondrej.minieshop.requests.UserEditRequest;
 import me.ptakondrej.minieshop.user.User;
 import me.ptakondrej.minieshop.user.UserRepository;
+import me.ptakondrej.minieshop.user.UserSpecification;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,6 +44,22 @@ public class UserService {
 		}
 		return userRepository.findById(userId)
 				.orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+	}
+
+	public List<User> getAllUsers(String search) {
+		return userRepository.findAll(UserSpecification.filter(search), Sort.by("id").descending());
+	}
+
+	public int countUsers() {
+		return (int) userRepository.count();
+	}
+
+	public int countNewUsersInLastDays(int days) {
+		if (days <= 0) {
+			throw new IllegalArgumentException("Days must be greater than 0");
+		}
+		LocalDateTime since = LocalDateTime.now().minusDays(days);
+		return (int) userRepository.countByCreatedAtAfter(since);
 	}
 
 	@Transactional

@@ -1,7 +1,6 @@
 package me.ptakondrej.minieshop.controllers;
 
 import me.ptakondrej.minieshop.models.OrderDTO;
-import me.ptakondrej.minieshop.models.ProductDTO;
 import me.ptakondrej.minieshop.order.Order;
 import me.ptakondrej.minieshop.order.OrderMapper;
 import me.ptakondrej.minieshop.order.OrderStatus;
@@ -110,6 +109,64 @@ public class OrderController {
 			}
 
 			orderService.updateOrderStatus(userId, orderId, OrderStatus.CANCELLED);
+			return ResponseEntity.ok(
+					new Response<Void>(true, null, "Order cancelled successfully")
+			);
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(
+					new Response<Void>(false, null, "Invalid request: " + e.getMessage())
+			);
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(
+					new Response<Void>(false, null, "An error occurred while cancelling the order: " + e.getMessage())
+			);
+		}
+	}
+
+	@GetMapping("/admin")
+	public ResponseEntity<Response<List<OrderDTO>>> getAllOrders(@RequestParam(required = false) String search) {
+		try {
+			List<Order> orders = orderService.getAllOrders(search);
+			List<OrderDTO> orderDTOs = orders.stream()
+					.map(OrderMapper::convertToDto)
+					.toList();
+			return ResponseEntity.ok(
+					new Response<>(true, orderDTOs, "Orders retrieved successfully")
+			);
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(
+					new Response<>(false, null, "Invalid request: " + e.getMessage())
+			);
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(
+					new Response<>(false, null, "An error occurred while retrieving orders: " + e.getMessage())
+			);
+		}
+	}
+
+	@DeleteMapping("/admin/{orderId}")
+	public ResponseEntity<Response<Void>> cancelOrderAdmin(@PathVariable Long orderId) {
+		try {
+			if (orderId == null || orderId <= 0) {
+				return ResponseEntity.badRequest().body(
+						new Response<Void>(false, null, "Invalid order ID")
+				);
+			}
+
+			Order order = orderService.getOrderById(orderId);
+			if (order == null) {
+				return ResponseEntity.status(404).body(
+						new Response<Void>(false, null, "Order not found")
+				);
+			}
+
+			if (order.getStatus() != OrderStatus.PENDING) {
+				return ResponseEntity.badRequest().body(
+						new Response<Void>(false, null, "Only orders with PENDING status can be cancelled")
+				);
+			}
+
+			orderService.updateOrderStatus(orderId, OrderStatus.CANCELLED);
 			return ResponseEntity.ok(
 					new Response<Void>(true, null, "Order cancelled successfully")
 			);

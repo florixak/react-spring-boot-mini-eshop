@@ -33,7 +33,10 @@ public class SecurityConfig {
 				)
 				.authorizeHttpRequests(authorize -> authorize
 						.requestMatchers("/api/products/admin", "/api/products/admin/**").hasRole("ADMIN")
+						.requestMatchers("/api/orders/admin", "/api/orders/admin/**").hasRole("ADMIN")
 						.requestMatchers("/api/categories/admin", "/api/categories/admin/**").hasRole("ADMIN")
+						.requestMatchers("/api/users/admin", "/api/users/admin/**").hasRole("ADMIN")
+						.requestMatchers("/api/admin/dashboard/**").hasRole("ADMIN")
 						.requestMatchers("/api/products").permitAll()
 						.requestMatchers("/api/checkout/create-checkout-session").permitAll()
 						.requestMatchers("/api/auth/**").permitAll()

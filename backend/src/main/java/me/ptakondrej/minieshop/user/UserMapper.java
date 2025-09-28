@@ -20,6 +20,8 @@ public class UserMapper {
 				.createdAt(user.getCreatedAt())
 				.role(user.getRole())
 				.enabled(user.isEnabled())
+				.deleted(user.isDeleted())
+				.verified(user.isVerified())
 				.build();
 	}
 
@@ -38,6 +40,8 @@ public class UserMapper {
 				.state(userDTO.getState())
 				.role(userDTO.getRole())
 				.enabled(userDTO.isEnabled())
+				.deleted(userDTO.isDeleted())
+				.verified(userDTO.isVerified())
 				.build();
 	}
 }

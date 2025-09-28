@@ -9,7 +9,7 @@ public class OrderMapper {
 	public static OrderDTO convertToDto(Order order) {
 		return OrderDTO.builder()
 				.id(order.getId())
-				.user(UserMapper.convertToDto(order.getUser()))
+				.user(order.getUser() != null ? UserMapper.convertToDto(order.getUser()) : null)
 				.customerEmail(order.getCustomerEmail())
 				.customerPhone(order.getCustomerPhone())
 				.shippingAddress(order.getShippingAddress())
@@ -26,10 +26,10 @@ public class OrderMapper {
 	public static Order convertToEntity(OrderDTO orderDTO) {
 		return Order.builder()
 				.id(orderDTO.getId())
-				.user(UserMapper.convertToEntity(orderDTO.getUser()))
+				.user(orderDTO.getUser() != null ? UserMapper.convertToEntity(orderDTO.getUser()) : null)
 				.customerEmail(orderDTO.getCustomerEmail())
 				.customerPhone(orderDTO.getCustomerPhone())
-				.shippingAddress(orderDTO.getUser().getAddress())
+				.shippingAddress(orderDTO.getShippingAddress())
 				.shippingMethod(orderDTO.getShippingMethod())
 				.stripeSessionId(orderDTO.getStripeSessionId())
 				.orderItems(orderDTO.getOrderItems().stream()

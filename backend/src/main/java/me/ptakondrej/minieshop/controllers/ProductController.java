@@ -6,7 +6,6 @@ import me.ptakondrej.minieshop.product.ProductMapper;
 import me.ptakondrej.minieshop.requests.ProductRequest;
 import me.ptakondrej.minieshop.responses.PageableResponse;
 import me.ptakondrej.minieshop.responses.Response;
-import me.ptakondrej.minieshop.services.CategoryService;
 import me.ptakondrej.minieshop.services.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,7 +37,6 @@ public class ProductController {
 			@RequestParam(defaultValue = "false") boolean inStock,
 			@RequestParam(defaultValue = "id,asc") String[] sort) {
 		try {
-			System.out.println("Received parameters - page: " + page + ", size: " + size + ", categorySlug: " + categorySlug + ", minPrice: " + minPrice + ", maxPrice: " + maxPrice + ", search: " + search + ", inStock: " + inStock + ", sort: " + String.join(",", sort));
 			if (page < 0 || size <= 0) {
 				return ResponseEntity.badRequest().body(new Response<>(false, null, "Invalid request parameters"));
 			}
@@ -75,6 +73,38 @@ public class ProductController {
 				return ResponseEntity.badRequest().body(new Response<ProductDTO>(false, null, "Product slug cannot be null or empty"));
 			}
 			Product product = productService.getProductBySlug(slug);
+			if (product == null) {
+				return ResponseEntity.notFound().build();
+			}
+			ProductDTO productDTO = ProductMapper.convertToDto(product);
+			return ResponseEntity.ok(new Response<ProductDTO>(true, productDTO, "Product retrieved successfully"));
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(new Response<ProductDTO>(false, null, e.getMessage()));
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(new Response<ProductDTO>(false, null, "An error occurred while retrieving the product: " + e.getMessage()));
+		}
+	}
+
+	@GetMapping("/admin")
+	public ResponseEntity<Response<List<ProductDTO>>> getAllProductsAdmin() {
+		try {
+			List<Product> products = productService.getAllProducts();
+			List<ProductDTO> productDTOs = products.stream()
+					.map(ProductMapper::convertToDto)
+					.toList();
+			return ResponseEntity.ok(new Response<List<ProductDTO>>(true, productDTOs, "Products retrieved successfully"));
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(new Response<List<ProductDTO>>(false, null, "An error occurred while retrieving products: " + e.getMessage()));
+		}
+	}
+
+	@GetMapping("/admin/{id}")
+	public ResponseEntity<Response<ProductDTO>> getProductByIdAdmin(@PathVariable Long id) {
+		try {
+			if (id == null || id <= 0) {
+				return ResponseEntity.badRequest().body(new Response<ProductDTO>(false, null, "Invalid product ID"));
+			}
+			Product product = productService.getProductById(id);
 			if (product == null) {
 				return ResponseEntity.notFound().build();
 			}

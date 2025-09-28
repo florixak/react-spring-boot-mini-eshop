@@ -22,6 +22,8 @@ public class ProductSpecification {
 			if (inStock) {
 				predicate = cb.and(predicate, cb.greaterThan(root.get("stockQuantity"), 0));
 			}
+			predicate = cb.and(predicate, cb.isFalse(root.get("deleted")));
+			predicate = cb.and(predicate, cb.isTrue(root.get("enabled")));
 			return predicate;
 		};
 	}

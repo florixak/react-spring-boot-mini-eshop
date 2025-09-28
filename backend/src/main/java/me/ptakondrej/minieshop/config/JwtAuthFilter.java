@@ -69,7 +69,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 					.orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
 
 			if (user.isDeleted()) {
-				response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User account is deleted");
+				response.sendError(HttpServletResponse.SC_NOT_FOUND, "User account is deleted");
 				return;
 			}
 
