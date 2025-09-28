@@ -1,10 +1,12 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Users } from "lucide-react";
 
-const UserStats = () => {
-  const totalUsers = 542;
-  const newUsers = 12;
+type UserStatsProps = {
+  totalUsers: number;
+  newUsers: number;
+};
 
+const UserStats = ({ totalUsers, newUsers }: UserStatsProps) => {
   return (
     <Card>
       <CardContent className="flex flex-col items-start py-6">

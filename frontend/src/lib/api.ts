@@ -10,6 +10,7 @@ import type {
   CreateOrderResponse,
   LoginResponse,
   PagingObjectResponse,
+  AdminStatsResponse,
 } from "@/types/responses";
 
 export type ProductFilter = {
@@ -104,8 +105,9 @@ export const fetchProduct = async (
     throw new Error("Product ID is required");
   }
   const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/products/${productId}`,
+    `${import.meta.env.VITE_API_URL}/products/admin/${productId}`,
     {
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -164,23 +166,33 @@ export const removeProduct = async (
   return data;
 };
 
-export const fetchUserOrders = async ({
-  page = 1,
-  size = 9,
-}): Promise<Response<PagingObjectResponse<Order>>> => {
+export const updateProduct = async (
+  productId: number,
+  productData: {
+    title: string;
+    description: string;
+    price: number;
+    stockQuantity: number;
+    categoryId: number;
+    imageUrl?: string | undefined;
+    enabled: boolean;
+  }
+): Promise<Response<Product>> => {
   const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/orders/me?page=${page - 1}&size=${size}`,
+    `${import.meta.env.VITE_API_URL}/products/admin/${productId}`,
     {
+      method: "PUT",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify(productData),
     }
   );
   if (!response.ok) {
-    throw new Error("Failed to fetch user orders");
+    throw new Error("Failed to update product");
   }
-  const data = (await response.json()) as Response<PagingObjectResponse<Order>>;
+  const data = (await response.json()) as Response<Product>;
   return data;
 };
 
@@ -204,6 +216,25 @@ export const fetchOrders = async ({
     throw new Error("Failed to fetch orders");
   }
   const data = (await response.json()) as Response<PagingObjectResponse<Order>>;
+  return data;
+};
+
+export const fetchOrdersAdmin = async ({
+  query = "",
+}): Promise<Response<Order[]>> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/orders/admin?search=${query}`,
+    {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch orders");
+  }
+  const data = (await response.json()) as Response<Order[]>;
   return data;
 };
 
@@ -432,13 +463,16 @@ export const fetchCurrentUser = async (): Promise<globalThis.Response> => {
   return response;
 };
 
-export const fetchUsers = async (): Promise<Response<User[]>> => {
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/users`, {
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+export const fetchUsers = async ({ query = "" }): Promise<Response<User[]>> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/users/admin?search=${query}`,
+    {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
   if (!response.ok) {
     throw new Error("Failed to fetch users");
   }
@@ -520,5 +554,41 @@ export const removeFromWishlist = async (
     throw new Error("Failed to remove from wishlist");
   }
   const data = (await response.json()) as Response<null>;
+  return data;
+};
+
+export const fetchAdminStats = async (): Promise<
+  Response<AdminStatsResponse>
+> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/admin/dashboard/stats`,
+    {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch admin stats");
+  }
+  const data = (await response.json()) as Response<AdminStatsResponse>;
+  return data;
+};
+
+export const fetchRecentOrders = async (): Promise<Response<Order[]>> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/admin/dashboard/recent-orders`,
+    {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch recent orders");
+  }
+  const data = (await response.json()) as Response<Order[]>;
   return data;
 };
