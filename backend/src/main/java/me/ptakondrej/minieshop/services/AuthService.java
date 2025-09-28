@@ -123,7 +123,7 @@ public class AuthService {
 		Random random = new Random();
 		String code;
 		do {
-			int randomCode = random.nextInt(999999) + 100000;
+			int randomCode = random.nextInt(900000) + 100000;
 			code = String.format("%06d", randomCode);
 		} while (userRepository.existsByVerificationCode(code));
 		return code;
