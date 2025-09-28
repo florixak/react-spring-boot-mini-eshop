@@ -124,6 +124,8 @@ const LoginForm = ({ redirectTo }: LoginFormProps) => {
         {isLoading ? "Signing in..." : "Sign In"}
       </Button>
 
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+
       <Separator orientation="horizontal" className="bg-secondary-100" />
 
       <p className="mt-4 text-sm text-primary text-center">

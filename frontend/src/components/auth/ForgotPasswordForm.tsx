@@ -97,6 +97,8 @@ const ForgotPasswordForm = ({ redirectTo }: ForgotPasswordFormProps) => {
           {isLoading ? "Resending..." : "Resend Email"}
         </Button>
 
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+
         <Separator orientation="horizontal" className="bg-secondary-100" />
 
         <Link
