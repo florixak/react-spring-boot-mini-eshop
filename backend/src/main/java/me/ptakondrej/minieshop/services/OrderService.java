@@ -67,7 +67,7 @@ public class OrderService {
 	}
 
 	public List<Order> getAllOrders(String search) {
-		return orderRepository.findAll(OrderSpecification.filter(search));
+		return sortOrdersByCreatedAtDesc(orderRepository.findAll(OrderSpecification.filter(search)));
 	}
 
 	public int countOrders() {
@@ -219,5 +219,10 @@ public class OrderService {
 			return GSON.fromJson(json, Session.class);
 		}
 		return null;
+	}
+
+	private List<Order> sortOrdersByCreatedAtDesc(List<Order> orders) {
+		orders.sort((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()));
+		return orders;
 	}
 }
