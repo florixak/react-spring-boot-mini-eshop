@@ -43,7 +43,7 @@ public class ProductService {
 		return (int) productRepository.countByEnabledTrueAndDeletedFalse();
 	}
 
-	public  int countLowStockProducts() {
+	public int countLowStockProducts() {
 		List<Product> allProducts = productRepository.findAll();
 		return (int) allProducts.stream()
 				.filter(product -> product.getStockQuantity() <= 5 && !product.getDeleted())
