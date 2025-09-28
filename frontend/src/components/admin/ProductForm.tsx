@@ -16,9 +16,10 @@ import { productSchema, type ProductFormData } from "@/lib/schema";
 import FormField from "../FormField";
 import type { Product } from "@/types";
 import CategorySelect from "./CategorySelect";
-import { createProduct, fetchProduct } from "@/lib/api";
+import { createProduct, fetchProduct, updateProduct } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 type ProductFormProps = {
   productId?: Product["id"];
@@ -45,6 +46,17 @@ const ProductForm = ({ productId }: ProductFormProps) => {
     });
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (product) {
+      setValue("title", product.title);
+      setValue("description", product.description);
+      setValue("price", product.price);
+      setValue("stockQuantity", product.stockQuantity);
+      setValue("categoryId", product.category.id);
+      setValue("imageUrl", product.imageUrl);
+    }
+  }, [product, setValue]);
+
   const watchCategoryId = watch("categoryId");
 
   const onSubmit = async (data: ProductFormData) => {
@@ -62,11 +74,19 @@ const ProductForm = ({ productId }: ProductFormProps) => {
         console.log("Form validation failed");
         return;
       }
-      toast.promise(createProduct(data), {
-        loading: "Creating product...",
-        success: "Product created successfully!",
-        error: "Failed to create product.",
-      });
+      if (product) {
+        toast.promise(updateProduct(product.id, { enabled: true, ...data }), {
+          loading: "Updating product...",
+          success: "Product updated successfully!",
+          error: "Failed to update product.",
+        });
+      } else {
+        toast.promise(createProduct(data), {
+          loading: "Creating product...",
+          success: "Product created successfully!",
+          error: "Failed to create product.",
+        });
+      }
     } catch (error) {
       console.error("Failed to create product:", error);
       return;
@@ -179,7 +199,12 @@ const ProductForm = ({ productId }: ProductFormProps) => {
               Cancel
             </Button>
             <Button type="submit" disabled={formState.isSubmitting}>
-              {formState.isSubmitting ? "Saving..." : "Add Product"}
+              {formState.isSubmitting
+                ? "Saving..."
+                : product
+                ? "Save"
+                : "Create"}{" "}
+              Product
             </Button>
           </CardFooter>
         </form>
