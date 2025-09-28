@@ -14,7 +14,7 @@ import { useState } from "react";
 type GlobalFilterFn<TData> = FilterFn<TData>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const globalFilterFn: GlobalFilterFn<any> = (row, columnId, value, addMeta) => {
+const globalFilterFn: GlobalFilterFn<any> = (row, value, addMeta) => {
   const tableMeta = row.original?.__table?.options!.meta || addMeta;
   const searchableColumns = tableMeta?.searchableColumns || [];
 
@@ -65,7 +65,7 @@ const AdminTable = <T,>({
       navigate({
         to: ".",
         search: debouncedSearchValue ? { query: debouncedSearchValue } : {},
-        replace: true,
+        replace: false,
       });
     },
   });

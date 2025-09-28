@@ -1,10 +1,12 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingCart } from "lucide-react";
 
-const OrderStats = () => {
-  const totalOrders = 321;
-  const pending = 5;
+type OrderStatsProps = {
+  totalOrders: number;
+  totalPendingOrders?: number;
+};
 
+const OrderStats = ({ totalOrders, totalPendingOrders }: OrderStatsProps) => {
   return (
     <Card>
       <CardContent className="flex flex-col items-start py-6">
@@ -13,7 +15,9 @@ const OrderStats = () => {
           <span className="text-lg font-semibold text-primary">Orders</span>
         </div>
         <div className="text-3xl font-bold text-primary">{totalOrders}</div>
-        <div className="text-sm text-secondary-200">{pending} pending</div>
+        <div className="text-sm text-secondary-200">
+          {totalPendingOrders} pending
+        </div>
       </CardContent>
     </Card>
   );

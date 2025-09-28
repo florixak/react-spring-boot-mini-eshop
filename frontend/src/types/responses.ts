@@ -15,6 +15,16 @@ type LoginResponse = {
   user: User;
 };
 
+type AdminStatsResponse = {
+  totalUsers: number;
+  newUsers: number;
+  totalProducts: number;
+  lowStockProducts: number;
+  totalOrders: number;
+  totalPendingOrders: number;
+  totalRevenue: number;
+};
+
 type PagingObjectResponse<T> = {
   items: T[];
   page: number;
@@ -28,4 +38,5 @@ export type {
   CreateOrderResponse,
   LoginResponse,
   PagingObjectResponse,
+  AdminStatsResponse,
 };

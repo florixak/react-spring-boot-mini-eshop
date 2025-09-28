@@ -215,6 +215,8 @@ const RegisterForm = ({ redirectTo }: RegisterFormProps) => {
         {isLoading ? "Creating Account..." : "Create Account"}
       </Button>
 
+      {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+
       <Separator orientation="horizontal" className="bg-secondary-100" />
 
       <p className="mt-4 text-sm text-primary text-center">

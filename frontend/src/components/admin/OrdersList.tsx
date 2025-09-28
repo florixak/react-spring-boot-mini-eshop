@@ -10,14 +10,16 @@ const columnHelper = createColumnHelper<Order>();
 
 type OrdersListProps = {
   size?: number;
+  recent?: boolean;
 };
 
-const OrdersList = ({ size }: OrdersListProps) => {
+const OrdersList = ({ size, recent = false }: OrdersListProps) => {
   const navigate = useNavigate();
   const search = useSearch({ from: "__root__" }) as { query?: string };
   const { orders, isLoading, error } = useOrders({
     query: search.query || "",
     size: size || 100,
+    recent,
   });
 
   const columns = [

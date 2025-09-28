@@ -1,3 +1,4 @@
+import BackendCheck from "@/components/BackendCheck";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
@@ -33,6 +34,7 @@ function RouteComponent() {
           },
         }}
       />
+      <BackendCheck />
       <main className="min-h-screen">
         <Outlet />
       </main>

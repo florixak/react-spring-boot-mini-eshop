@@ -3,13 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 
 type UseUsersParams = {
   query?: string;
-  size: number;
 };
 
-const useUsers = ({ query, size }: UseUsersParams) => {
+const useUsers = ({ query }: UseUsersParams) => {
   const { data, isLoading, error } = useQuery({
-    queryKey: ["users", { query, size }],
-    queryFn: fetchUsers,
+    queryKey: ["users", query],
+    queryFn: () => fetchUsers({ query }),
   });
 
   return {

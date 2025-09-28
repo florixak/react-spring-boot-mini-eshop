@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import useUsers from "@/hooks/useUsers";
 import AdminTable from "./AdminTable";
 import type { User } from "@/types";
@@ -8,7 +8,10 @@ import { createColumnHelper, type ColumnDef } from "@tanstack/react-table";
 const columnHelper = createColumnHelper<User>();
 
 const UsersList = () => {
-  const { users, isLoading, error } = useUsers({ size: 100 });
+  const searchParams = useSearch({ from: "__root__" }) as { query?: string };
+  const { users, isLoading, error } = useUsers({
+    query: searchParams.query || "",
+  });
   const navigate = useNavigate();
 
   const columns = [

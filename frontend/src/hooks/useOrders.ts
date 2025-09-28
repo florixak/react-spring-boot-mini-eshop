@@ -1,13 +1,20 @@
-import { fetchOrders } from "@/lib/api";
+import { fetchOrdersAdmin, fetchRecentOrders } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 
-const useOrders = (params: { query: string; size: number }) => {
+const useOrders = (params: {
+  query: string;
+  size: number;
+  recent: boolean;
+}) => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["orders", params],
-    queryFn: () => fetchOrders(params),
+    queryFn: () =>
+      params.recent
+        ? fetchRecentOrders()
+        : fetchOrdersAdmin({ query: params.query }),
   });
 
-  return { orders: data?.data.items, isLoading, error };
+  return { orders: data?.data, isLoading, error };
 };
 
 export default useOrders;

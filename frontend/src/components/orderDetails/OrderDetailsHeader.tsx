@@ -10,13 +10,8 @@ type OrderDetailsHeaderProps = {
 };
 
 const OrderDetailsHeader = ({ order }: OrderDetailsHeaderProps) => {
-  const {
-    getStatusIcon,
-    copyOrderId,
-    isOrderIdCopied,
-    getStatusColor,
-    calculations,
-  } = useOrder(order);
+  const { getStatusIcon, copyOrderId, isOrderIdCopied, getStatusColor } =
+    useOrder(order);
   const StatusIcon = getStatusIcon();
 
   return (
