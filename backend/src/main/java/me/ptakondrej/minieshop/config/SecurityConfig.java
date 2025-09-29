@@ -61,7 +61,9 @@ public class SecurityConfig {
 		config.setAllowedOrigins(List.of(
 				"http://localhost:8080",
 				"http://localhost:5173",
-				"https://react-spring-boot-mini-eshop.vercel.app"
+				"https://react-spring-boot-mini-eshop.vercel.app/",
+				"https://react-spring-boot-mini-eshop-git-main-florixaks-projects.vercel.app/",
+				"https://react-spring-boot-mini-eshop-m75dwuaxt-florixaks-projects.vercel.app/"
 		));
 		config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Stripe-Signature", "X-SCHEDULER-TOKEN"));
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
