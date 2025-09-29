@@ -155,22 +155,22 @@ public class AuthService {
 		Cookie jwtCookie = new Cookie("accessToken", null);
 		jwtCookie.setHttpOnly(true);
 		jwtCookie.setPath("/");
-		jwtCookie.setSecure(false);
+		jwtCookie.setSecure(true);
 		jwtCookie.setMaxAge(0);
 		response.addCookie(jwtCookie);
 
 		Cookie refreshTokenCookie = new Cookie("refreshToken", null);
 		refreshTokenCookie.setHttpOnly(true);
 		refreshTokenCookie.setPath("/");
-		refreshTokenCookie.setSecure(false);
+		refreshTokenCookie.setSecure(true);
 		refreshTokenCookie.setMaxAge(0);
 		response.addCookie(refreshTokenCookie);
 
-		response.setHeader("Set-Cookie",
-				"accessToken=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax");
+		response.addHeader("Set-Cookie",
+				"accessToken=; HttpOnly; Path=/; Max-Age=0; SameSite=None; Secure");
 
 		response.addHeader("Set-Cookie",
-				"refreshToken=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax");
+				"refreshToken=; HttpOnly; Path=/; Max-Age=0; SameSite=None; Secure");
 	}
 
 
