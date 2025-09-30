@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Random;
@@ -57,7 +58,13 @@ public class AuthService {
 				.verificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15))
 				.build();
 		User createdUser = userRepository.save(user);
-		wishlistService.createWishlist(user.getId());
+		try {
+			wishlistService.createWishlist(user.getId());
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		emailService.sendVerificationEmail(createdUser);
 		return createdUser;
 	}
@@ -120,12 +127,19 @@ public class AuthService {
 	}
 
 	private String generateVerificationCode() {
-		Random random = new Random();
+		SecureRandom random = new SecureRandom();
 		String code;
+		final int maxAttempts = 10000;
+		int attempts = 0;
+
 		do {
-			int randomCode = random.nextInt(900000) + 100000;
+			int randomCode = 100000 + random.nextInt(900000); // 100000..999999
 			code = String.format("%06d", randomCode);
+			if (++attempts > maxAttempts) {
+				throw new RuntimeException("Unable to generate unique verification code after " + maxAttempts + " attempts");
+			}
 		} while (userRepository.existsByVerificationCode(code));
+
 		return code;
 	}
 
