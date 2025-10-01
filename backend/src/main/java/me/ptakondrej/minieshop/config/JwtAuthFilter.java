@@ -73,6 +73,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 				return;
 			}
 
+			if (requestPath.equals("/api/auth/verify")) {
+				filterChain.doFilter(request, response);
+				return;
+			}
+
 			if (!user.isVerified()) {
 				response.sendError(HttpServletResponse.SC_FORBIDDEN, "User account is not verified");
 				return;
