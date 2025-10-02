@@ -157,7 +157,7 @@ public class AuthService {
 		refreshTokenCookie.setMaxAge(refreshTokenDurationSeconds);
 		response.addCookie(refreshTokenCookie);
 
-		response.setHeader("Set-Cookie",
+		response.addHeader("Set-Cookie",
 				"accessToken=" + token + "; HttpOnly; Path=/; Max-Age=" + jwtDurationSeconds + "; SameSite=None; Secure");
 
 		response.addHeader("Set-Cookie",
