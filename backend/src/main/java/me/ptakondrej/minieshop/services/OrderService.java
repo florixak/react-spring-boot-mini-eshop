@@ -131,6 +131,12 @@ public class OrderService {
 
 		if (userId != null) {
 			User user = userService.findById(userId);
+			if (user == null) {
+				throw new IllegalArgumentException("User not found with ID: " + userId);
+			}
+			if (!user.isVerified()) {
+				throw new IllegalArgumentException("User email is not verified");
+			}
 			order.setUser(user);
 		}
 

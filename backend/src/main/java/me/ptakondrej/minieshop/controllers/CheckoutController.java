@@ -11,6 +11,8 @@ import me.ptakondrej.minieshop.requests.OrderCreationRequest;
 import me.ptakondrej.minieshop.responses.Response;
 import me.ptakondrej.minieshop.services.OrderService;
 import me.ptakondrej.minieshop.services.StripeService;
+import me.ptakondrej.minieshop.services.UserService;
+import me.ptakondrej.minieshop.user.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,20 +21,31 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/checkout")
 public class CheckoutController {
 
+	private final UserService userService;
 	@Value("${app.frontend.url}")
 	private String frontendUrl;
 
 	private final OrderService orderService;
 	private final StripeService stripeService;
 
-	public CheckoutController(OrderService orderService, StripeService stripeService) {
+	public CheckoutController(OrderService orderService, StripeService stripeService, UserService userService) {
 		this.orderService = orderService;
 		this.stripeService = stripeService;
+		this.userService = userService;
 	}
 
 	@PostMapping("/create-checkout-session")
 	public ResponseEntity<Response<CheckoutDTO>> createCheckoutSession(@RequestAttribute(value = "userId", required = false) Long userId, @RequestBody OrderCreationRequest checkoutRequest) {
 		try {
+			if (userId != null) {
+				User user = userService.findById(userId);
+				if (user == null) {
+					return ResponseEntity.status(404).body(new Response<>(false, null, "User not found"));
+				}
+				if (!user.isVerified()) {
+					return ResponseEntity.status(403).body(new Response<>(false, null, "Email not verified"));
+				}
+			}
 			OrderPriceModel order = orderService.createOrder(userId, checkoutRequest);
 			String checkoutUrl = stripeService.createCheckoutSession(order);
 			return ResponseEntity.ok().body(new Response<>(true, new CheckoutDTO(order.getOrder().getId(), checkoutUrl), "Checkout session created successfully"));

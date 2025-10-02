@@ -78,11 +78,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 				return;
 			}
 
-			if (!user.isVerified()) {
-				response.sendError(HttpServletResponse.SC_FORBIDDEN, "User account is not verified");
-				return;
-			}
-
 			if (!jwtService.isTokenValid(token, user)) {
 				response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT token");
 				return;
