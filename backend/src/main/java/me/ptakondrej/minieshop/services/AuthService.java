@@ -144,25 +144,30 @@ public class AuthService {
 	}
 
 	public void setCookies(HttpServletResponse response, String token, String refreshToken) {
+
+		int jwtDurationSeconds = (int) (jwtService.getExpirationTime() / 1000);
+
 		Cookie jwtCookie = new Cookie("accessToken", token);
 		jwtCookie.setHttpOnly(true);
 		jwtCookie.setPath("/");
 		jwtCookie.setSecure(true);
-		jwtCookie.setMaxAge((int) (jwtService.getExpirationTime() / 1000));
+		jwtCookie.setMaxAge(jwtDurationSeconds);
 		response.addCookie(jwtCookie);
+
+		int refreshTokenDurationSeconds = (int) (refreshTokenService.getRefreshTokenDurationMs() / 1000);
 
 		Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
 		refreshTokenCookie.setHttpOnly(true);
 		refreshTokenCookie.setPath("/");
 		refreshTokenCookie.setSecure(true);
-		refreshTokenCookie.setMaxAge((int) (refreshTokenService.getRefreshTokenDurationMs() / 1000));
+		refreshTokenCookie.setMaxAge(refreshTokenDurationSeconds);
 		response.addCookie(refreshTokenCookie);
 
 		response.setHeader("Set-Cookie",
-				"accessToken=" + token + "; HttpOnly; Path=/; Max-Age=" + (jwtService.getExpirationTime() / 1000) + "; SameSite=None; Secure");
+				"accessToken=" + token + "; HttpOnly; Path=/; Max-Age=" + jwtDurationSeconds + "; SameSite=None; Secure");
 
 		response.addHeader("Set-Cookie",
-				"refreshToken=" + refreshToken + "; HttpOnly; Path=/; Max-Age=" + (refreshTokenService.getRefreshTokenDurationMs() / 1000) + "; SameSite=None; Secure");
+				"refreshToken=" + refreshToken + "; HttpOnly; Path=/; Max-Age=" + refreshTokenDurationSeconds + "; SameSite=None; Secure");
 	}
 
 	public void clearCookies(HttpServletResponse response) {
