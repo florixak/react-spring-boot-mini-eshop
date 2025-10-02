@@ -147,22 +147,22 @@ public class AuthService {
 		Cookie jwtCookie = new Cookie("accessToken", token);
 		jwtCookie.setHttpOnly(true);
 		jwtCookie.setPath("/");
-		jwtCookie.setSecure(false);
+		jwtCookie.setSecure(true);
 		jwtCookie.setMaxAge((int) (jwtService.getExpirationTime() / 1000));
 		response.addCookie(jwtCookie);
 
 		Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
 		refreshTokenCookie.setHttpOnly(true);
 		refreshTokenCookie.setPath("/");
-		refreshTokenCookie.setSecure(false);
+		refreshTokenCookie.setSecure(true);
 		refreshTokenCookie.setMaxAge((int) (refreshTokenService.getRefreshTokenDurationMs() / 1000));
 		response.addCookie(refreshTokenCookie);
 
 		response.setHeader("Set-Cookie",
-				"accessToken=" + token + "; HttpOnly; Path=/; Max-Age=" + (jwtService.getExpirationTime() / 1000) + "; SameSite=Lax");
+				"accessToken=" + token + "; HttpOnly; Path=/; Max-Age=" + (jwtService.getExpirationTime() / 1000) + "; SameSite=None; Secure");
 
 		response.addHeader("Set-Cookie",
-				"refreshToken=" + refreshToken + "; HttpOnly; Path=/; Max-Age=" + (refreshTokenService.getRefreshTokenDurationMs() / 1000) + "; SameSite=Lax");
+				"refreshToken=" + refreshToken + "; HttpOnly; Path=/; Max-Age=" + (refreshTokenService.getRefreshTokenDurationMs() / 1000) + "; SameSite=None; Secure");
 	}
 
 	public void clearCookies(HttpServletResponse response) {
