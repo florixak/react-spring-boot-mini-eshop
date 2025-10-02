@@ -58,13 +58,7 @@ public class AuthService {
 				.verificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15))
 				.build();
 		User createdUser = userRepository.save(user);
-		try {
-			wishlistService.createWishlist(user.getId());
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		wishlistService.createWishlist(user.getId());
 		emailService.sendVerificationEmail(createdUser);
 		return createdUser;
 	}
