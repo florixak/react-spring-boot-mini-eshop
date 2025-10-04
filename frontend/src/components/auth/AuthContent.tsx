@@ -3,6 +3,7 @@ import LoginForm from "./LoginForm";
 import AuthCard from "./AuthCard";
 import RegisterForm from "./RegisterForm";
 import ForgotPasswordForm from "./ForgotPasswordForm";
+import VerifyEmail from "./VerifyEmail";
 
 const AuthContent = () => {
   const search = Route.useSearch();
@@ -28,6 +29,15 @@ const AuthContent = () => {
         return (
           <AuthCard title="Forgot Password" description="Reset your password">
             <ForgotPasswordForm />
+          </AuthCard>
+        );
+      case "verify-email":
+        return (
+          <AuthCard
+            title="Verify Your Email"
+            description="Please check your email to verify your account"
+          >
+            <VerifyEmail />
           </AuthCard>
         );
       default:
