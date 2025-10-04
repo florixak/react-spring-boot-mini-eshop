@@ -34,6 +34,8 @@ type User = {
   country?: string;
   state?: string;
   createdAt: string;
+  updatedAt: string;
+  verified: boolean;
 };
 
 type OrderStatus =

@@ -5,6 +5,7 @@ import type {
   ShippingMethodKey,
   User,
 } from "@/types";
+import type { VerifyPayload } from "@/types/auth";
 import type {
   Response,
   CreateOrderResponse,
@@ -591,4 +592,36 @@ export const fetchRecentOrders = async (): Promise<Response<Order[]>> => {
   }
   const data = (await response.json()) as Response<Order[]>;
   return data;
+};
+
+export const verifyEmailCode = async (payload: VerifyPayload) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/auth/verify?email=${payload.email}&token=${
+      payload.code
+    }`,
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+  if (!response.ok) {
+    throw new Error((await response.json()).message || "Verification failed");
+  }
+  return response.json();
+};
+
+export const resendVerificationCode = async (email?: string) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/auth/resend-verification`,
+    {
+      credentials: "include",
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    }
+  );
+  if (!response.ok) {
+    throw new Error((await response.json()).message || "Resend failed");
+  }
+  return response.json();
 };

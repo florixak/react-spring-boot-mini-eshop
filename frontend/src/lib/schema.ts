@@ -125,3 +125,12 @@ export const userSchema = z.object({
 });
 
 export type UserFormData = z.infer<typeof userSchema>;
+
+export const verifyEmailSchema = z.object({
+  code: z
+    .string()
+    .length(6, "Code must be 6 numeric digits")
+    .regex(/^\d+$/, "Code must be numeric"),
+  email: z.string().email().optional(),
+});
+export type VerifyEmailValues = z.infer<typeof verifyEmailSchema>;
