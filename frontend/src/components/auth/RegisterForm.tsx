@@ -10,6 +10,7 @@ import { Route } from "@/routes/auth";
 import { Separator } from "../ui/separator";
 import { registerSchema, type RegisterFormData } from "@/lib/schema";
 import { useUserStore } from "@/stores/useUserStore";
+import toast from "react-hot-toast";
 
 type RegisterFormProps = {
   redirectTo?: string;
@@ -20,7 +21,6 @@ const RegisterForm = ({ redirectTo }: RegisterFormProps) => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
   const navigate = Route.useNavigate();
   const { register: registerUser } = useUserStore();
 
@@ -47,25 +47,22 @@ const RegisterForm = ({ redirectTo }: RegisterFormProps) => {
         phone: "",
       });
 
-      setSuccess(true);
       reset();
+      toast.success("Registration successful! Please verify your email.");
 
       setTimeout(() => {
         navigate({
           to: "/auth",
-          search: { mode: "login", redirectTo },
+          search: { mode: "verify-email", redirectTo, email: data.email },
         });
       }, 2000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");
+      toast.error(err instanceof Error ? err.message : "Registration failed");
     } finally {
       setIsLoading(false);
     }
   };
-
-  if (success) {
-    return <div className="text-center py-8">{/* Success Message */}</div>;
-  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 font-inter">
