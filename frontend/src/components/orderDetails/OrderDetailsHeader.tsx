@@ -26,7 +26,7 @@ const OrderDetailsHeader = ({ order }: OrderDetailsHeaderProps) => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-3xl font-bold text-primary font-playfair">
+              <h1 className="text-3xl font-bold text-primary">
                 Order #{order.id}
               </h1>
               <Button
