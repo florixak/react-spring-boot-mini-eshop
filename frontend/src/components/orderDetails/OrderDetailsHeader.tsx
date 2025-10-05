@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import { Card, CardHeader } from "../ui/card";
 import type { Order } from "@/types";
 import { useOrder } from "@/hooks/useOrder";
+import { useNavigate } from "@tanstack/react-router";
 
 type OrderDetailsHeaderProps = {
   order: Order;
@@ -12,7 +13,12 @@ type OrderDetailsHeaderProps = {
 const OrderDetailsHeader = ({ order }: OrderDetailsHeaderProps) => {
   const { getStatusIcon, copyOrderId, isOrderIdCopied, getStatusColor } =
     useOrder(order);
+  const navigate = useNavigate();
   const StatusIcon = getStatusIcon();
+
+  const handleSupport = () => {
+    navigate({ to: "/contact#contact" as "/contact" });
+  };
 
   return (
     <Card className="shadow-sm border-secondary-100">
@@ -60,7 +66,7 @@ const OrderDetailsHeader = ({ order }: OrderDetailsHeaderProps) => {
                 <Download className="h-4 w-4 mr-2" />
                 Invoice
               </Button>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" onClick={handleSupport}>
                 <MessageSquare className="h-4 w-4 mr-2" />
                 Support
               </Button>

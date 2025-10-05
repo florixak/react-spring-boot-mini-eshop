@@ -13,7 +13,7 @@ import {
   CreditCard,
   MessageSquare,
 } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
 import { SHIPPING_METHODS } from "@/constants";
 import OrderDetailsHeader from "./OrderDetailsHeader";
@@ -29,6 +29,7 @@ type OrderDetailsPageProps = {
 
 const OrderDetailsPage = ({ orderId, isAdminView }: OrderDetailsPageProps) => {
   const { isAuthenticated } = useUserStore();
+  const navigate = useNavigate();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["order", orderId],
@@ -101,6 +102,10 @@ const OrderDetailsPage = ({ orderId, isAdminView }: OrderDetailsPageProps) => {
     ) {
       mutate();
     }
+  };
+
+  const handleSupport = () => {
+    navigate({ to: "/contact#support" as "/contact" });
   };
 
   return (
@@ -243,7 +248,11 @@ const OrderDetailsPage = ({ orderId, isAdminView }: OrderDetailsPageProps) => {
               >
                 Continue Shopping
               </Link>
-              <Button variant="outline" className="flex-1">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={handleSupport}
+              >
                 <MessageSquare className="h-4 w-4 mr-2" />
                 Contact Support
               </Button>
