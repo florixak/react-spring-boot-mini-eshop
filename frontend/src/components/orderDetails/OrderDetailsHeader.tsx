@@ -1,10 +1,11 @@
 import { formatDate, cn, formatPrice, firstLetterUppercase } from "@/lib/utils";
-import { Check, Copy, Badge, Download, MessageSquare } from "lucide-react";
+import { Check, Copy, Download, MessageSquare } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card, CardHeader } from "../ui/card";
 import type { Order } from "@/types";
 import { useOrder } from "@/hooks/useOrder";
 import { useNavigate } from "@tanstack/react-router";
+import { Badge } from "../ui/badge";
 
 type OrderDetailsHeaderProps = {
   order: Order;
@@ -52,7 +53,7 @@ const OrderDetailsHeader = ({ order }: OrderDetailsHeaderProps) => {
               )}
             >
               {<StatusIcon />}
-              {firstLetterUppercase(order.status)}
+              <span>{firstLetterUppercase(order.status)}</span>
             </Badge>
           </div>
 
