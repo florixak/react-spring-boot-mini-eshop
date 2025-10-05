@@ -234,20 +234,22 @@ const OrderDetailsPage = ({ orderId, isAdminView }: OrderDetailsPageProps) => {
         <div className="flex flex-col sm:flex-row gap-3 pt-4">
           {!isAdminView && (
             <>
-              <Link
-                to="/shop"
-                search={{
-                  category: "all",
-                  sortBy: "no-filter",
-                  view: "grid",
-                  query: "",
-                  price: "0-1000",
-                  stock: "in-stock",
-                  page: 1,
-                }}
-              >
-                Continue Shopping
-              </Link>
+              <Button variant="outline" className="flex-1" asChild>
+                <Link
+                  to="/shop"
+                  search={{
+                    category: "all",
+                    sortBy: "no-filter",
+                    view: "grid",
+                    query: "",
+                    price: "0-1000",
+                    stock: "in-stock",
+                    page: 1,
+                  }}
+                >
+                  Continue Shopping
+                </Link>
+              </Button>
               <Button
                 variant="outline"
                 className="flex-1"
