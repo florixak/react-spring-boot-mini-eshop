@@ -263,7 +263,7 @@ const OrderDetailsPage = ({ orderId, isAdminView }: OrderDetailsPageProps) => {
 
           {order.status.toLowerCase() === "pending" && (
             <Button
-              variant="outline"
+              variant="destructive"
               className="flex-1"
               onClick={handleCancelOrder}
             >
