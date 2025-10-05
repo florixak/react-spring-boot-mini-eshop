@@ -1,4 +1,4 @@
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { cancelOrder, fetchOrder } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
@@ -38,7 +38,7 @@ const OrderDetailsPage = ({ orderId, isAdminView }: OrderDetailsPageProps) => {
 
   const order = data?.data;
 
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
     mutationFn: async () => await cancelOrder(Number(orderId), isAuthenticated),
