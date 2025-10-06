@@ -43,28 +43,16 @@ const UsersList = () => {
       id: "actions",
       header: "Actions",
       cell: (info) => (
-        <div className="flex gap-2">
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={(e) => {
-              e.stopPropagation(); // Prevent row click
-              navigate({ to: `/admin/users/${info.row.original.id}` });
-            }}
-          >
-            View
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate({ to: `/admin/users/${info.row.original.id}/edit` });
-            }}
-          >
-            Edit
-          </Button>
-        </div>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate({ to: `/admin/users/${info.row.original.id}` });
+          }}
+        >
+          View
+        </Button>
       ),
     }),
   ];
