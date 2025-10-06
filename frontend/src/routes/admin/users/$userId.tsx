@@ -1,4 +1,5 @@
 import AdminLayout from "@/components/admin/AdminLayout";
+import UserDetails from "@/components/admin/UserDetails";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/admin/users/$userId")({
@@ -6,9 +7,10 @@ export const Route = createFileRoute("/admin/users/$userId")({
 });
 
 function RouteComponent() {
+  const { userId } = Route.useParams();
   return (
     <AdminLayout>
-      <div>User Details Page - to be implemented</div>
+      <UserDetails userId={Number(userId)} />
     </AdminLayout>
   );
 }
