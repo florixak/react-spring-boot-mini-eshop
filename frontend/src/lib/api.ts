@@ -222,9 +222,17 @@ export const fetchOrders = async ({
 
 export const fetchOrdersAdmin = async ({
   query = "",
+  userId,
+  size,
+}: {
+  query: string;
+  userId?: number;
+  size: number;
 }): Promise<Response<Order[]>> => {
   const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/orders/admin?search=${query}`,
+    `${
+      import.meta.env.VITE_API_URL
+    }/orders/admin?search=${query}&userId=${userId}&size=${size}`,
     {
       credentials: "include",
       headers: {
@@ -478,6 +486,43 @@ export const fetchUsers = async ({ query = "" }): Promise<Response<User[]>> => {
     throw new Error("Failed to fetch users");
   }
   const data = (await response.json()) as Response<User[]>;
+  return data;
+};
+
+export const fetchUser = async (userId: number): Promise<Response<User>> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/users/admin/${userId}`,
+    {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch user");
+  }
+  const data = (await response.json()) as Response<User>;
+  return data;
+};
+
+export const deactivateUser = async (
+  userId: number
+): Promise<Response<null>> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/users/admin/${userId}/deactivate`,
+    {
+      method: "PATCH",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to deactivate user");
+  }
+  const data = (await response.json()) as Response<null>;
   return data;
 };
 
