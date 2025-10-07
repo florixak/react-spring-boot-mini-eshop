@@ -197,6 +197,22 @@ export const updateProduct = async (
   return data;
 };
 
+export const fetchTheMostExpensiveProductPrice = async (): Promise<number> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/products/most-expensive`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch the most expensive product price");
+  }
+  const data = (await response.json()) as Response<{ price: number }>;
+  return data.data.price;
+};
+
 export const fetchOrders = async ({
   page = 1,
   size = 9,
