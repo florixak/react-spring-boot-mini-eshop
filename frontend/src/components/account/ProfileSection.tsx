@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { profileSchema } from "@/lib/schema";
 import { updateUserProfile } from "@/lib/api";
 import FormField from "../FormField";
+import toast from "react-hot-toast";
 
 const ProfileSection = () => {
   const { user } = useUserStore();
@@ -57,9 +58,9 @@ const ProfileSection = () => {
     const response = await updateUserProfile(getValues());
 
     if (response.success) {
-      console.log("Profile updated successfully");
+      toast.success("Profile updated successfully!");
     } else {
-      console.error("Failed to update profile:", response.message);
+      toast.error("Failed to update profile.");
     }
   };
 
