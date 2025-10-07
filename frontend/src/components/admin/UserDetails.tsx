@@ -1,20 +1,20 @@
-import { useMemo, useCallback } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, formatPrice } from "@/lib/utils";
-import { resendVerificationCode, deactivateUser } from "@/lib/api";
+import { deactivateUser } from "@/lib/api";
 import useOrders from "@/hooks/useOrders";
 import type { User, Order } from "@/types";
 import toast from "react-hot-toast";
 import useUsers from "@/hooks/useUsers";
+import { useMemo } from "react";
 
-type Props = {
+type UserDetailsProps = {
   userId: User["id"] | undefined;
 };
 
-const UserDetails = ({ userId }: Props) => {
+const UserDetails = ({ userId }: UserDetailsProps) => {
   const navigate = useNavigate();
   const {
     user,
@@ -38,20 +38,7 @@ const UserDetails = ({ userId }: Props) => {
     [orders]
   );
 
-  const handleResend = useCallback(async () => {
-    if (!user?.email) {
-      toast.error("No email available to resend verification.");
-      return;
-    }
-    try {
-      await resendVerificationCode(user.email);
-      toast.success("Verification code resent.");
-    } catch (err) {
-      toast.error((err as Error)?.message || "Failed to resend code.");
-    }
-  }, [user]);
-
-  const handleDeactivate = useCallback(async () => {
+  const handleDeactivate = async () => {
     if (!user) return;
     if (!confirm(`Deactivate user ${user.email}?`)) return;
     try {
@@ -61,7 +48,7 @@ const UserDetails = ({ userId }: Props) => {
     } catch (err) {
       toast.error((err as Error)?.message || "Failed to deactivate user.");
     }
-  }, [user, refetchUser]);
+  };
 
   if (userLoading) {
     return (
