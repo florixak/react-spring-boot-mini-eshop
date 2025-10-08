@@ -37,27 +37,6 @@ const Products = ({
   const { addToCart } = useCartStore();
   const { isInWishlist, toggleWishlist } = useWishlist();
 
-  if (isError) {
-    return (
-      <div className="w-full">
-        <p className="text-center text-red-500">Error loading products.</p>
-        {retry && (
-          <Button onClick={retry} variant="outline">
-            Retry
-          </Button>
-        )}
-      </div>
-    );
-  }
-
-  if ((!products || products.length === 0) && !isLoading) {
-    return (
-      <div className="w-full">
-        <p className="text-center text-gray-500">No products found.</p>
-      </div>
-    );
-  }
-
   return (
     <div className="w-full">
       <div
@@ -70,6 +49,14 @@ const Products = ({
           className
         )}
       >
+        {isError && (
+          <div className="col-span-full text-center py-20">
+            <p className="text-red-500 mb-4">Failed to load products.</p>
+            <Button variant="outline" onClick={retry}>
+              Retry
+            </Button>
+          </div>
+        )}
         {!isLoading && products
           ? products.map((product) => (
               <ProductCard
