@@ -78,7 +78,7 @@ export const useProducts = (
     useObjectPaging<Product>(data?.data);
 
   return {
-    products: items,
+    products: items || [],
     total: totalItems,
     totalPages,
     currentPage,
