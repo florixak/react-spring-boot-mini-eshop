@@ -1,6 +1,8 @@
 import BackendCheck from "@/components/BackendCheck";
+import Error from "@/components/Error";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import NotFound from "@/components/NotFound";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Toaster } from "react-hot-toast";
@@ -46,4 +48,6 @@ function RouteComponent() {
 
 export const Route = createRootRoute({
   component: RouteComponent,
+  notFoundComponent: () => <NotFound />,
+  errorComponent: () => <Error />,
 });
