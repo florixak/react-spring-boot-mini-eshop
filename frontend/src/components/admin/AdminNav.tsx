@@ -10,7 +10,7 @@ const navItems = [
 
 const AdminNav = () => {
   return (
-    <nav className="mb-8 flex gap-4 items-center justify-start">
+    <nav className="mb-8 flex gap-4 items-center justify-start flex-wrap">
       {navItems.map((link) => {
         const Icon = link.icon;
         const isActive = window.location.pathname === link.to;
