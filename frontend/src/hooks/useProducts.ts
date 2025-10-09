@@ -3,6 +3,7 @@ import type { Product } from "@/types";
 import type { PagingObjectResponse, Response } from "@/types/responses";
 import { useQuery } from "@tanstack/react-query";
 import useObjectPaging from "./useObjectPaging";
+import { getDummyProducts, products } from "@/lib/dummyData";
 
 export type ProductSearchParams = {
   category?: string;
@@ -71,14 +72,28 @@ export const useProducts = (
     Response<PagingObjectResponse<Product>>
   >({
     queryKey: [context, "products", search],
-    queryFn: async () => await fetchProducts(productFilter),
+    queryFn: async () => {
+      try {
+        return await fetchProducts(productFilter);
+      } catch {
+        return {
+          data: {
+            items: getDummyProducts(productFilter),
+            totalItems: products.length,
+            totalPages: Math.ceil(products.length / 9),
+            page: 1,
+            size: 9,
+          },
+        } as Response<PagingObjectResponse<Product>>;
+      }
+    },
   });
 
   const { items, totalItems, totalPages, currentPage } =
     useObjectPaging<Product>(data?.data);
 
   return {
-    products: items || [],
+    products: items || products,
     total: totalItems,
     totalPages,
     currentPage,
