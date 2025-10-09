@@ -66,7 +66,7 @@ const UserDetails = ({ userId }: UserDetailsProps) => {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex items-start justify-between gap-4 flex-col sm:flex-row">
             <div>
               <h2 className="text-2xl font-semibold text-primary">
                 {user?.firstName} {user?.lastName}
@@ -87,7 +87,7 @@ const UserDetails = ({ userId }: UserDetailsProps) => {
               </p>
             </div>
 
-            <div className="flex flex-col items-end gap-3">
+            <div className="flex flex-col items-start md:items-end gap-3">
               <div className="flex gap-2">
                 <Button
                   size="sm"
