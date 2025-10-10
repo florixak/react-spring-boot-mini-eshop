@@ -7,7 +7,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useProducts } from "@/hooks/useProducts";
 
 export type ShopSearch = {
-  category: string;
+  category: string | "all";
   sortBy: (typeof PRODUCT_FILTERS)[number]["value"];
   view: View;
   query: string;
