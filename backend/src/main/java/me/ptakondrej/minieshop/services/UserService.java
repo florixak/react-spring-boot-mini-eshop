@@ -118,7 +118,7 @@ public class UserService {
 			}
 			user.setEmail(trimmedEmail);
 		}
-		// Some values are not trimmed to allow multi part values like "New York"
+
 		if (request.getAddress() != null && !request.getAddress().isBlank()) {
 			user.setAddress(request.getAddress());
 		}
