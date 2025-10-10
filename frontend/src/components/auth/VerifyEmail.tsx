@@ -67,6 +67,14 @@ const VerifyEmail = () => {
 
   const onSubmit = async (values: VerifyEmailValues) => {
     try {
+      if (!values.email || values.email.length === 0) {
+        toast.error("Email is required.");
+        return;
+      }
+      if (!values.code || values.code.length === 0) {
+        toast.error("Verification code is required.");
+        return;
+      }
       await verifyEmailCode({ email: values.email, code: values.code });
       reset();
       toast.success(
