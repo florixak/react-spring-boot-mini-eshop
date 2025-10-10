@@ -42,21 +42,25 @@ const Footer = () => {
           </div>
         ))}
       </div>
-      <div className="space-y-2">
+      <div className="space-y-2 flex flex-col items-center justify-center sm:flex-row sm:justify-between sm:items-start">
         <p className="text-sm text-secondary-200">
           &copy; {new Date().getFullYear()} Minimal. All rights reserved.
         </p>
-        <p className="text-sm text-secondary-200">Follow us on social media:</p>
-        <div className="flex justify-center space-x-4">
-          <a href="#" className="text-secondary-200 hover:text-primary">
-            Facebook
-          </a>
-          <a href="#" className="text-secondary-200 hover:text-primary">
-            Instagram
-          </a>
-          <a href="#" className="text-secondary-200 hover:text-primary">
-            Twitter
-          </a>
+        <div className="flex justify-center flex-col items-center sm:items-start">
+          <p className="text-sm text-secondary-200">
+            Follow us on social media:
+          </p>
+          <div className="flex justify-center space-x-4 text-sm">
+            <a href="#" className="text-secondary-200 hover:text-primary">
+              Facebook
+            </a>
+            <a href="#" className="text-secondary-200 hover:text-primary">
+              Instagram
+            </a>
+            <a href="#" className="text-secondary-200 hover:text-primary">
+              Twitter
+            </a>
+          </div>
         </div>
       </div>
     </div>

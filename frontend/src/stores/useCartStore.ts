@@ -29,6 +29,7 @@ export const useCartStore = create<CartState>()(
           );
 
           if (existingItem) {
+            if (existingItem.quantity >= item.product.stockQuantity) return;
             existingItem.quantity += item.quantity;
           } else {
             state.cartItems.push(item);
@@ -73,7 +74,7 @@ export const useCartStore = create<CartState>()(
           const item = state.cartItems.find(
             (item) => item.product.id === productId
           );
-          if (item) {
+          if (item && item.quantity < item.product.stockQuantity) {
             item.quantity += 1;
           }
         }),

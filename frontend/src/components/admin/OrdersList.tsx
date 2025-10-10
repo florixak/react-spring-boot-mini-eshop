@@ -61,28 +61,16 @@ const OrdersList = ({ size, recent = false }: OrdersListProps) => {
       id: "actions",
       header: "Actions",
       cell: (info) => (
-        <div className="flex gap-2">
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate({ to: `/admin/orders/${info.row.original.id}` });
-            }}
-          >
-            View
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate({ to: `/admin/orders/${info.row.original.id}/edit` });
-            }}
-          >
-            Edit
-          </Button>
-        </div>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate({ to: `/admin/orders/${info.row.original.id}` });
+          }}
+        >
+          View
+        </Button>
       ),
     }),
   ];
@@ -101,7 +89,6 @@ const OrdersList = ({ size, recent = false }: OrdersListProps) => {
       isLoading={isLoading}
       error={error?.message || null}
       emptyMessage="No orders found."
-      onRowClick={(order) => navigate({ to: `/admin/orders/${order.id}` })}
     />
   );
 };

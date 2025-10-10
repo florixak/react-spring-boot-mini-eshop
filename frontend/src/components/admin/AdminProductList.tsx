@@ -120,60 +120,68 @@ const AdminProductList = () => {
             </tr>
           </thead>
           <tbody>
-            {productsByCategory.map((category) => (
-              <Fragment key={category.id}>
-                <tr className="bg-secondary-50 border-b border-secondary-100">
-                  <td
-                    colSpan={columns.length}
-                    className="font-bold text-primary px-4 py-3"
-                  >
-                    {category.title}
-                  </td>
-                  <td className="py-2 px-4 text-secondary-200">
-                    {category.products.length} Products
-                  </td>
-                </tr>
-                {category.products.length === 0
-                  ? null
-                  : category.products.map((product) => (
-                      <tr
-                        key={product.id}
-                        className="border-b border-secondary-100"
-                      >
-                        <td className="py-2 px-4 text-primary">
-                          {product.title}
-                        </td>
-                        <td className="py-2 px-4">{product.description}</td>
-                        <td className="py-2 px-4">
-                          {product.stockQuantity > 0 ? (
-                            <span>{product.stockQuantity}</span>
-                          ) : (
-                            <span className="text-red-500">Out of stock</span>
-                          )}
-                        </td>
-                        <td className="py-2 px-4">
-                          {formatPrice(product.price)}
-                        </td>
-                        <td className="py-2 px-4 flex gap-2">
-                          <Button
-                            size="icon"
-                            variant="outline"
-                            onClick={() => handleProductEdit(product.id)}
-                          >
-                            <Pencil className="size-4" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="destructive"
-                            onClick={() => handleProductDelete(product.id)}
-                          >
-                            <Trash2 className="size-4" />
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
-              </Fragment>
-            ))}
+            {products.length === 0 ? (
+              <tr>
+                <td colSpan={columns.length} className="py-4 text-center">
+                  No products found
+                </td>
+              </tr>
+            ) : (
+              productsByCategory.map((category) => (
+                <Fragment key={category.id}>
+                  <tr className="bg-secondary-50 border-b border-secondary-100">
+                    <td
+                      colSpan={columns.length}
+                      className="font-bold text-primary px-4 py-3"
+                    >
+                      {category.title}{" "}
+                      <span className="text-secondary-200">
+                        ({category.products.length})
+                      </span>
+                    </td>
+                  </tr>
+                  {category.products.length === 0
+                    ? null
+                    : category.products.map((product) => (
+                        <tr
+                          key={product.id}
+                          className="border-b border-secondary-100"
+                        >
+                          <td className="py-2 px-4 text-primary">
+                            {product.title}
+                          </td>
+                          <td className="py-2 px-4">{product.description}</td>
+                          <td className="py-2 px-4">
+                            {product.stockQuantity > 0 ? (
+                              <span>{product.stockQuantity}</span>
+                            ) : (
+                              <span className="text-red-500">Out of stock</span>
+                            )}
+                          </td>
+                          <td className="py-2 px-4">
+                            {formatPrice(product.price)}
+                          </td>
+                          <td className="py-2 px-4 flex gap-2">
+                            <Button
+                              size="icon"
+                              variant="outline"
+                              onClick={() => handleProductEdit(product.id)}
+                            >
+                              <Pencil className="size-4" />
+                            </Button>
+                            <Button
+                              size="icon"
+                              variant="destructive"
+                              onClick={() => handleProductDelete(product.id)}
+                            >
+                              <Trash2 className="size-4" />
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                </Fragment>
+              ))
+            )}
           </tbody>
         </table>
       </div>

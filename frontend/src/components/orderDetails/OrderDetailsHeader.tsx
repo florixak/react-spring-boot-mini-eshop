@@ -1,9 +1,11 @@
 import { formatDate, cn, formatPrice, firstLetterUppercase } from "@/lib/utils";
-import { Check, Copy, Badge, Download, MessageSquare } from "lucide-react";
+import { Check, Copy, Download, MessageSquare } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card, CardHeader } from "../ui/card";
 import type { Order } from "@/types";
 import { useOrder } from "@/hooks/useOrder";
+import { useNavigate } from "@tanstack/react-router";
+import { Badge } from "../ui/badge";
 
 type OrderDetailsHeaderProps = {
   order: Order;
@@ -12,7 +14,12 @@ type OrderDetailsHeaderProps = {
 const OrderDetailsHeader = ({ order }: OrderDetailsHeaderProps) => {
   const { getStatusIcon, copyOrderId, isOrderIdCopied, getStatusColor } =
     useOrder(order);
+  const navigate = useNavigate();
   const StatusIcon = getStatusIcon();
+
+  const handleSupport = () => {
+    navigate({ to: "/contact#contact" as "/contact" });
+  };
 
   return (
     <Card className="shadow-sm border-secondary-100">
@@ -20,7 +27,7 @@ const OrderDetailsHeader = ({ order }: OrderDetailsHeaderProps) => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-3xl font-bold text-primary font-playfair">
+              <h1 className="text-3xl font-bold text-primary">
                 Order #{order.id}
               </h1>
               <Button
@@ -46,7 +53,7 @@ const OrderDetailsHeader = ({ order }: OrderDetailsHeaderProps) => {
               )}
             >
               {<StatusIcon />}
-              {firstLetterUppercase(order.status)}
+              <span>{firstLetterUppercase(order.status)}</span>
             </Badge>
           </div>
 
@@ -60,7 +67,7 @@ const OrderDetailsHeader = ({ order }: OrderDetailsHeaderProps) => {
                 <Download className="h-4 w-4 mr-2" />
                 Invoice
               </Button>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" onClick={handleSupport}>
                 <MessageSquare className="h-4 w-4 mr-2" />
                 Support
               </Button>

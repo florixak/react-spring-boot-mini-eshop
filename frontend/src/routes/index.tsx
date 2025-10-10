@@ -2,13 +2,12 @@ import CategoryProducts from "@/components/home/CategoryProducts";
 import Hero from "@/components/home/Hero";
 import StayUpdated from "@/components/home/StayUpdated";
 import type { PRODUCT_FILTERS } from "@/constants";
-import type { categories } from "@/dummyData";
 import type { View } from "@/types";
 import { createFileRoute } from "@tanstack/react-router";
 import LandingImage from "../assets/landing-image4.jpg";
 
 type IndexSearch = {
-  category: (typeof categories)[number]["slug"];
+  category: string;
   sortBy: (typeof PRODUCT_FILTERS)[number]["value"];
   view: View;
 };
@@ -16,7 +15,7 @@ type IndexSearch = {
 export const Route = createFileRoute("/")({
   component: Index,
   validateSearch: (search): IndexSearch => ({
-    category: (search.category as (typeof categories)[number]["slug"]) ?? "all",
+    category: (search.category as string) ?? "all",
     sortBy:
       (search.sortBy as (typeof PRODUCT_FILTERS)[number]["value"]) ??
       "no-filter",

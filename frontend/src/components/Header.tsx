@@ -13,6 +13,7 @@ import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { useCartStore } from "@/stores/useCartStore";
 import { useUserStore } from "@/stores/useUserStore";
+import NotVerifiedModal from "./auth/NotVerifiedModal";
 
 const navLinks = [
   {
@@ -75,6 +76,7 @@ const Header = () => {
         )}
       </nav>
       <div className="flex flex-row gap-2 md:gap-6 items-center">
+        {user && !user.verified && <NotVerifiedModal />}
         <Button
           variant="ghost"
           size="icon"

@@ -1,4 +1,4 @@
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { cancelOrder, fetchOrder } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
@@ -13,7 +13,7 @@ import {
   CreditCard,
   MessageSquare,
 } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
 import { SHIPPING_METHODS } from "@/constants";
 import OrderDetailsHeader from "./OrderDetailsHeader";
@@ -29,6 +29,7 @@ type OrderDetailsPageProps = {
 
 const OrderDetailsPage = ({ orderId, isAdminView }: OrderDetailsPageProps) => {
   const { isAuthenticated } = useUserStore();
+  const navigate = useNavigate();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["order", orderId],
@@ -37,7 +38,7 @@ const OrderDetailsPage = ({ orderId, isAdminView }: OrderDetailsPageProps) => {
 
   const order = data?.data;
 
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
     mutationFn: async () => await cancelOrder(Number(orderId), isAuthenticated),
@@ -101,6 +102,10 @@ const OrderDetailsPage = ({ orderId, isAdminView }: OrderDetailsPageProps) => {
     ) {
       mutate();
     }
+  };
+
+  const handleSupport = () => {
+    navigate({ to: "/contact#support" as "/contact" });
   };
 
   return (
@@ -229,21 +234,27 @@ const OrderDetailsPage = ({ orderId, isAdminView }: OrderDetailsPageProps) => {
         <div className="flex flex-col sm:flex-row gap-3 pt-4">
           {!isAdminView && (
             <>
-              <Link
-                to="/shop"
-                search={{
-                  category: "all",
-                  sortBy: "no-filter",
-                  view: "grid",
-                  query: "",
-                  price: "0-1000",
-                  stock: "in-stock",
-                  page: 1,
-                }}
+              <Button variant="outline" className="flex-1" asChild>
+                <Link
+                  to="/shop"
+                  search={{
+                    category: "all",
+                    sortBy: "no-filter",
+                    view: "grid",
+                    query: "",
+                    price: "0-1000",
+                    stock: "in-stock",
+                    page: 1,
+                  }}
+                >
+                  Continue Shopping
+                </Link>
+              </Button>
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={handleSupport}
               >
-                Continue Shopping
-              </Link>
-              <Button variant="outline" className="flex-1">
                 <MessageSquare className="h-4 w-4 mr-2" />
                 Contact Support
               </Button>
@@ -252,7 +263,7 @@ const OrderDetailsPage = ({ orderId, isAdminView }: OrderDetailsPageProps) => {
 
           {order.status.toLowerCase() === "pending" && (
             <Button
-              variant="outline"
+              variant="destructive"
               className="flex-1"
               onClick={handleCancelOrder}
             >

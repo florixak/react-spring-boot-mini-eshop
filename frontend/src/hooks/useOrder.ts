@@ -20,7 +20,6 @@ export const useOrder = (
   const getStatusIcon = () => {
     switch (order?.status.toLowerCase()) {
       case "pending":
-        return Package;
       case "processing":
         return Package;
       case "paid":

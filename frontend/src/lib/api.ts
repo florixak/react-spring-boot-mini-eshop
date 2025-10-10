@@ -5,6 +5,7 @@ import type {
   ShippingMethodKey,
   User,
 } from "@/types";
+import type { VerifyPayload } from "@/types/auth";
 import type {
   Response,
   CreateOrderResponse,
@@ -196,6 +197,22 @@ export const updateProduct = async (
   return data;
 };
 
+export const fetchTheMostExpensiveProductPrice = async (): Promise<number> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/products/most-expensive`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch the most expensive product price");
+  }
+  const data = (await response.json()) as Response<{ price: number }>;
+  return data.data.price;
+};
+
 export const fetchOrders = async ({
   page = 1,
   size = 9,
@@ -221,9 +238,17 @@ export const fetchOrders = async ({
 
 export const fetchOrdersAdmin = async ({
   query = "",
+  userId,
+  size,
+}: {
+  query: string;
+  userId?: number;
+  size: number;
 }): Promise<Response<Order[]>> => {
   const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/orders/admin?search=${query}`,
+    `${
+      import.meta.env.VITE_API_URL
+    }/orders/admin?search=${query}&userId=${userId}&size=${size}`,
     {
       credentials: "include",
       headers: {
@@ -480,6 +505,43 @@ export const fetchUsers = async ({ query = "" }): Promise<Response<User[]>> => {
   return data;
 };
 
+export const fetchUser = async (userId: number): Promise<Response<User>> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/users/admin/${userId}`,
+    {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch user");
+  }
+  const data = (await response.json()) as Response<User>;
+  return data;
+};
+
+export const deactivateUser = async (
+  userId: number
+): Promise<Response<null>> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/users/admin/${userId}/deactivate`,
+    {
+      method: "PATCH",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to deactivate user");
+  }
+  const data = (await response.json()) as Response<null>;
+  return data;
+};
+
 export const fetchWishlist = async ({
   page = 1,
 }: {
@@ -590,5 +652,43 @@ export const fetchRecentOrders = async (): Promise<Response<Order[]>> => {
     throw new Error("Failed to fetch recent orders");
   }
   const data = (await response.json()) as Response<Order[]>;
+  return data;
+};
+
+export const verifyEmailCode = async (
+  payload: VerifyPayload
+): Promise<Response<null>> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/auth/verify?email=${payload.email}&token=${
+      payload.code
+    }`,
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+  if (!response.ok) {
+    throw new Error((await response.json()).message || "Verification failed");
+  }
+  const data = (await response.json()) as Response<null>;
+  return data;
+};
+
+export const resendVerificationCode = async (
+  email?: string
+): Promise<Response<null>> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/auth/resend-verification`,
+    {
+      credentials: "include",
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    }
+  );
+  if (!response.ok) {
+    throw new Error((await response.json()).message || "Resend failed");
+  }
+  const data = (await response.json()) as Response<null>;
   return data;
 };

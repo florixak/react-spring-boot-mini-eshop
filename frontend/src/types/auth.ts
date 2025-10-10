@@ -12,4 +12,9 @@ type RegisterCredentials = {
   phone: string;
 };
 
-export type { LoginCredentials, RegisterCredentials };
+type VerifyPayload = {
+  email?: string;
+  code: string;
+};
+
+export type { LoginCredentials, RegisterCredentials, VerifyPayload };

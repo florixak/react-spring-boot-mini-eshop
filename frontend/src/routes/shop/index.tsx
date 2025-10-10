@@ -2,13 +2,12 @@ import FilterSidebar from "@/components/shop/FilterSidebar";
 import Products from "@/components/Products";
 import SectionHeader from "@/components/SectionHeader";
 import type { PRODUCT_FILTERS } from "@/constants";
-import type { categories } from "@/dummyData";
 import type { View } from "@/types";
 import { createFileRoute } from "@tanstack/react-router";
 import { useProducts } from "@/hooks/useProducts";
 
 export type ShopSearch = {
-  category: (typeof categories)[number]["slug"];
+  category: string | "all";
   sortBy: (typeof PRODUCT_FILTERS)[number]["value"];
   view: View;
   query: string;
@@ -20,7 +19,7 @@ export type ShopSearch = {
 export const Route = createFileRoute("/shop/")({
   component: Shop,
   validateSearch: (search): ShopSearch => ({
-    category: (search.category as (typeof categories)[number]["slug"]) ?? "all",
+    category: (search.category as string) ?? "all",
     sortBy:
       (search.sortBy as (typeof PRODUCT_FILTERS)[number]["value"]) ??
       "no-filter",

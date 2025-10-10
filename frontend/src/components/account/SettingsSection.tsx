@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader } from "../ui/card";
-import { Switch } from "../ui/switch";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { useForm } from "react-hook-form";
@@ -65,36 +64,6 @@ const SettingsSection = () => {
           </p>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div>
-            <h3 className="text-lg font-semibold text-primary font-playfair mb-4">
-              Notifications (Not implemented)
-            </h3>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-semibold text-primary">
-                    Email Notifications
-                  </p>
-                  <p className="text-sm text-secondary-200">
-                    Receive updates about your orders
-                  </p>
-                </div>
-                <Switch defaultChecked />
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-semibold text-primary">Marketing Emails</p>
-                  <p className="text-sm text-secondary-200">
-                    Get notified about sales and new products
-                  </p>
-                </div>
-                <Switch />
-              </div>
-            </div>
-          </div>
-
-          <Separator className="bg-secondary-100" />
-
           <form onSubmit={handlePasswordUpdate} className="space-y-4">
             <h3 className="text-lg font-semibold text-primary font-playfair mb-4">
               Security
