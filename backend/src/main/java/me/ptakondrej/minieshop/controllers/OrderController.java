@@ -134,6 +134,16 @@ public class OrderController {
 			} else {
 				orders = orderService.getAllOrders(search);
 			}
+
+			if (search != null && search.contains("user:")) {
+				String[] parts = search.split("user:");
+				if (parts.length == 2 && parts[1] != null && parts[1].matches("\\d+")) {
+					Long userId = Long.parseLong(parts[1]);
+					orders = orderService.getAllUserOrders(userId);
+				} else {
+					orders = List.of();
+				}
+			}
 			List<OrderDTO> orderDTOs = orders.stream()
 					.map(OrderMapper::convertToDto)
 					.toList();
