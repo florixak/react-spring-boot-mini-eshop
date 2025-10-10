@@ -37,7 +37,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 		String requestPath = request.getRequestURI();
 
 		if (requestPath.equals("/api/auth/login") || requestPath.equals("/api/auth/signup") ||
-				requestPath.equals("/api/auth/refresh-token") || requestPath.equals("/api/auth/verify")) {
+				requestPath.equals("/api/auth/refresh-token") || requestPath.equals("/api/auth/verify")
+				|| requestPath.equals("/api/auth/resend-verification")) {
 			filterChain.doFilter(request, response);
 			return;
 		}
