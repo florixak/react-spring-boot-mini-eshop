@@ -38,6 +38,7 @@ public class SecurityConfig {
 						.requestMatchers("/api/users/admin", "/api/users/admin/**").hasRole("ADMIN")
 						.requestMatchers("/api/admin/dashboard/**").hasRole("ADMIN")
 						.requestMatchers("/api/products").permitAll()
+						.requestMatchers("/api/products/most-expensive").permitAll()
 						.requestMatchers("/api/checkout/create-checkout-session").permitAll()
 						.requestMatchers("/api/auth/**").permitAll()
 						.requestMatchers("/api/categories/**").permitAll()
