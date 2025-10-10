@@ -72,7 +72,14 @@ public class UserController {
 	@GetMapping("/admin")
 	public ResponseEntity<Response<List<UserDTO>>> getAllUsers(@RequestParam(required = false) String search) {
 		try {
-			List<User> users = userService.getAllUsers(search);
+			List<User> users;
+			if (search != null && !search.trim().isEmpty() && search.trim().matches("\\d+")) {
+				Long id = Long.parseLong(search.trim());
+				User order = userService.findById(id);
+				users = order == null ? List.of() : List.of(order);
+			} else {
+				users = userService.getAllUsers(search);
+			}
 			List<UserDTO> userDTOs = users.stream()
 					.map(UserMapper::convertToDto)
 					.toList();
@@ -92,6 +99,31 @@ public class UserController {
 			return ResponseEntity.badRequest().body(new Response<UserDTO>(false, null, e.getMessage()));
 		} catch (Exception e) {
 			return ResponseEntity.status(500).body(new Response<UserDTO>(false, null, "Internal server error"));
+		}
+	}
+
+	@PutMapping("/admin/{userId}")
+	public ResponseEntity<Response<UserDTO>> updateUserById(@PathVariable Long userId, @RequestBody UserEditRequest request) {
+		try {
+			User updatedUser = userService.updateUser(userId, request);
+			UserDTO updatedUserDTO = UserMapper.convertToDto(updatedUser);
+			return ResponseEntity.ok(new Response<UserDTO>(true, updatedUserDTO, "User updated successfully"));
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(new Response<UserDTO>(false, null, e.getMessage()));
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(new Response<UserDTO>(false, null, "Internal server error"));
+		}
+	}
+
+	@DeleteMapping("/admin/{userId}")
+	public ResponseEntity<Response<Void>> deleteUserById(@PathVariable Long userId) {
+		try {
+			userService.deleteUser(userId);
+			return ResponseEntity.ok(new Response<Void>(true, null, "User deleted successfully"));
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(new Response<Void>(false, null, e.getMessage()));
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(new Response<Void>(false, null, "Internal server error"));
 		}
 	}
 }
