@@ -89,7 +89,6 @@ const OrdersList = ({ size, recent = false }: OrdersListProps) => {
       isLoading={isLoading}
       error={error?.message || null}
       emptyMessage="No orders found."
-      onRowClick={(order) => navigate({ to: `/admin/orders/${order.id}` })}
     />
   );
 };

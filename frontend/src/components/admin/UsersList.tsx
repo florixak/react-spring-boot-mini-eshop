@@ -66,7 +66,6 @@ const UsersList = () => {
       isLoading={isLoading}
       error={error?.message || null}
       emptyMessage="No users found."
-      onRowClick={(user) => navigate({ to: `/admin/users/${user.id}` })}
     />
   );
 };
