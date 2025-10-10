@@ -75,8 +75,13 @@ public class UserController {
 			List<User> users;
 			if (search != null && !search.trim().isEmpty() && search.trim().matches("\\d+")) {
 				Long id = Long.parseLong(search.trim());
-				User order = userService.findById(id);
-				users = order == null ? List.of() : List.of(order);
+				User user;
+				try {
+					user = userService.findById(id);
+				} catch (IllegalArgumentException e) {
+					user = null;
+				}
+				users = user == null ? List.of() : List.of(user);
 			} else {
 				users = userService.getAllUsers(search);
 			}
