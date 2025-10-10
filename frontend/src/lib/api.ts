@@ -655,7 +655,9 @@ export const fetchRecentOrders = async (): Promise<Response<Order[]>> => {
   return data;
 };
 
-export const verifyEmailCode = async (payload: VerifyPayload) => {
+export const verifyEmailCode = async (
+  payload: VerifyPayload
+): Promise<Response<null>> => {
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/auth/verify?email=${payload.email}&token=${
       payload.code
@@ -668,10 +670,13 @@ export const verifyEmailCode = async (payload: VerifyPayload) => {
   if (!response.ok) {
     throw new Error((await response.json()).message || "Verification failed");
   }
-  return response.json();
+  const data = (await response.json()) as Response<null>;
+  return data;
 };
 
-export const resendVerificationCode = async (email?: string) => {
+export const resendVerificationCode = async (
+  email?: string
+): Promise<Response<null>> => {
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/auth/resend-verification`,
     {
@@ -684,5 +689,6 @@ export const resendVerificationCode = async (email?: string) => {
   if (!response.ok) {
     throw new Error((await response.json()).message || "Resend failed");
   }
-  return response.json();
+  const data = (await response.json()) as Response<null>;
+  return data;
 };
