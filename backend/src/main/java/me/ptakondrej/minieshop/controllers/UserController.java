@@ -2,6 +2,7 @@ package me.ptakondrej.minieshop.controllers;
 
 import jakarta.servlet.http.HttpServletResponse;
 import me.ptakondrej.minieshop.models.UserDTO;
+import me.ptakondrej.minieshop.requests.AdminUserEditRequest;
 import me.ptakondrej.minieshop.requests.PasswordRequest;
 import me.ptakondrej.minieshop.requests.UserEditRequest;
 import me.ptakondrej.minieshop.responses.Response;
@@ -108,7 +109,7 @@ public class UserController {
 	}
 
 	@PutMapping("/admin/{userId}")
-	public ResponseEntity<Response<UserDTO>> updateUserById(@PathVariable Long userId, @RequestBody UserEditRequest request) {
+	public ResponseEntity<Response<UserDTO>> updateUserById(@PathVariable Long userId, @RequestBody AdminUserEditRequest request) {
 		try {
 			User updatedUser = userService.updateUser(userId, request);
 			UserDTO updatedUserDTO = UserMapper.convertToDto(updatedUser);

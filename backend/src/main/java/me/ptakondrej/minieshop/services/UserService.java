@@ -1,8 +1,10 @@
 package me.ptakondrej.minieshop.services;
 
+import me.ptakondrej.minieshop.requests.AdminUserEditRequest;
 import me.ptakondrej.minieshop.requests.EmailRequest;
 import me.ptakondrej.minieshop.requests.PasswordRequest;
 import me.ptakondrej.minieshop.requests.UserEditRequest;
+import me.ptakondrej.minieshop.user.Role;
 import me.ptakondrej.minieshop.user.User;
 import me.ptakondrej.minieshop.user.UserRepository;
 import me.ptakondrej.minieshop.user.UserSpecification;
@@ -140,6 +142,45 @@ public class UserService {
 			}
 			user.setPhone(request.getPhone().trim());
 		}
+		return userRepository.save(user);
+	}
+
+	@Transactional
+	public User updateUser(Long userId, AdminUserEditRequest request) {
+		if (userId == null || userId <= 0) {
+			throw new IllegalArgumentException("Invalid user ID: " + userId);
+		}
+		if (request == null) {
+			throw new IllegalArgumentException("Request cannot be null");
+		}
+		User user = userRepository.findById(userId)
+				.orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+
+		if (request.getFirstName() != null && !request.getFirstName().isBlank()) {
+			user.setFirstName(request.getFirstName().trim());
+		}
+		if (request.getLastName() != null && !request.getLastName().isBlank()) {
+			user.setLastName(request.getLastName().trim());
+		}
+		if (request.getEmail() != null && !request.getEmail().isBlank()) {
+			if (!request.getEmail().contains("@") || !request.getEmail().contains(".")) {
+				throw new IllegalArgumentException("Invalid email format");
+			}
+			String trimmedEmail = request.getEmail().trim();
+			if (userRepository.findByEmail(trimmedEmail).isPresent() && !user.getEmail().equalsIgnoreCase(trimmedEmail)) {
+				throw new IllegalArgumentException("Email is already in use");
+			}
+			user.setEmail(trimmedEmail);
+		}
+
+		if (request.getRole() != null) {
+			user.setRole(Role.fromString(request.getRole()));
+		}
+
+		if (request.getVerified() != null) {
+			user.setVerified(request.getVerified());
+		}
+
 		return userRepository.save(user);
 	}
 
