@@ -11,7 +11,7 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import { Info } from "lucide-react";
-import { toast } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { resendVerificationCode } from "@/lib/api";
 import { useUserStore } from "@/stores/useUserStore";
 
