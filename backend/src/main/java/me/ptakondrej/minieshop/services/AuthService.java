@@ -110,7 +110,7 @@ public class AuthService {
 		User user = userRepository.findByEmail(email)
 				.orElseThrow(() -> new RuntimeException("User not found with email: " + email));
 
-		if (user.getVerificationCode() == null) {
+		if (user.isVerified()) {
 			throw new RuntimeException("User account is already verified.");
 		}
 
