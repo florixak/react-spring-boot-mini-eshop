@@ -47,9 +47,9 @@ const FilterSidebar = ({ search, navigate }: FilterSidebarProps) => {
             maxPrice={
               isLoading || isError
                 ? 1000
-                : data
+                : data != null
                 ? Math.round(data)
-                : data || 1000
+                : 1000
             }
           />
         </div>
