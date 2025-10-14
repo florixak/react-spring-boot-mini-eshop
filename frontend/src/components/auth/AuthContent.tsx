@@ -51,7 +51,13 @@ const AuthContent = () => {
 
   return (
     <section className="flex flex-col items-center justify-center min-h-screen px-4 gap-5">
-      <h1 className="text-4xl font-bold text-primary font-playfair">Minimal</h1>
+      {search.mode !== "register" ? (
+        <h1 className="text-4xl font-bold text-primary font-playfair">
+          Minimal
+        </h1>
+      ) : (
+        <div className="h-16"></div>
+      )}
       {renderContent()}
       <p className="text-center text-secondary-200 text-xs max-w-xs mx-auto">
         By continuing, you agree to our Terms of Service and Privacy Policy
