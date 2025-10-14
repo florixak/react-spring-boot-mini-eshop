@@ -176,7 +176,11 @@ public class UserService {
 		}
 
 		if (request.getRole() != null) {
-			user.setRole(Role.fromString(request.getRole()));
+			try {
+				Role.fromString(request.getRole());
+			} catch (IllegalArgumentException e) {
+				throw new IllegalArgumentException("Invalid role: " + request.getRole());
+			}
 		}
 
 		if (request.getVerified() != null) {
