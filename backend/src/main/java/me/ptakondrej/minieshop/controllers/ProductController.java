@@ -100,6 +100,9 @@ public class ProductController {
 	public ResponseEntity<Response<BigDecimal>> getMostExpensivePrice(@RequestParam(required = false) String categorySlug) {
 		try {
 			Product product = productService.getMostExpensiveProduct(categorySlug);
+			if (product == null) {
+				return ResponseEntity.notFound().build();
+			}
 			return ResponseEntity.ok(new Response<>(true, product.getPrice(), "Most expensive price retrieved successfully"));
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().body(new Response<>(false, null, e.getMessage()));
