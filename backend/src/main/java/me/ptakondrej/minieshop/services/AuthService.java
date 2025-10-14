@@ -1,11 +1,7 @@
 package me.ptakondrej.minieshop.services;
 
-import jakarta.mail.MessagingException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import me.ptakondrej.minieshop.models.LoginUserDTO;
-import me.ptakondrej.minieshop.models.RegisterUserDTO;
-import me.ptakondrej.minieshop.models.VerifyUserDTO;
+import me.ptakondrej.minieshop.models.*;
 import me.ptakondrej.minieshop.user.Role;
 import me.ptakondrej.minieshop.user.User;
 import me.ptakondrej.minieshop.user.UserRepository;
@@ -13,11 +9,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.HashMap;
-import java.util.Random;
 
 @Service
 public class AuthService {
@@ -43,6 +40,7 @@ public class AuthService {
 		this.emailService = emailService;
 	}
 
+	@Transactional
 	public User signUp(RegisterUserDTO registerUserDTO) {
 		User user = User.builder()
 				.username(registerUserDTO.getUsername())
@@ -63,6 +61,7 @@ public class AuthService {
 		return createdUser;
 	}
 
+	@Transactional
 	public User authenticate(LoginUserDTO loginUserDTO) {
 
 		if (loginUserDTO.getUsernameOrEmail() == null || loginUserDTO.getPassword() == null) {
@@ -88,6 +87,7 @@ public class AuthService {
 		return userDetails;
 	}
 
+	@Transactional
 	public void verifyUser(VerifyUserDTO verifyUserDTO) {
 		User user = userRepository.findByEmail(verifyUserDTO.getEmail())
 				.orElseThrow(() -> new RuntimeException("User not found with email: " + verifyUserDTO.getEmail()));
@@ -106,6 +106,7 @@ public class AuthService {
 		userRepository.save(user);
 	}
 
+	@Transactional
 	public void resendVerificationEmail(String email) {
 		User user = userRepository.findByEmail(email)
 				.orElseThrow(() -> new RuntimeException("User not found with email: " + email));
@@ -118,6 +119,66 @@ public class AuthService {
 		user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
 		userRepository.save(user);
 		emailService.sendVerificationEmail(user);
+	}
+
+	@Transactional
+	public void requestPasswordReset(PasswordResetRequestDTO dto) {
+		userRepository.findByEmail(dto.getEmail()).ifPresent(user -> {
+			user.setPasswordResetToken(generatePasswordResetToken());
+			user.setPasswordResetTokenExpiresAt(LocalDateTime.now().plusMinutes(30));
+			userRepository.save(user);
+			try {
+				emailService.sendPasswordResetEmail(user);
+			} catch (Exception e) {
+				// Failed to send password reset email
+			}
+		});
+	}
+
+	@Transactional
+	public void resendPasswordResetEmail(PasswordResetRequestDTO dto) {
+		requestPasswordReset(dto);
+	}
+
+	@Transactional
+	public void resetPassword(PasswordResetDTO dto) {
+		User user = userRepository.findByPasswordResetToken(dto.getToken())
+				.orElseThrow(() -> new RuntimeException("Invalid or expired password reset token."));
+
+		if (user.getPasswordResetTokenExpiresAt() == null || user.getPasswordResetTokenExpiresAt().isBefore(LocalDateTime.now())) {
+			throw new RuntimeException("Invalid or expired password reset token.");
+		}
+
+		user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+		user.setPasswordResetToken(null);
+		user.setPasswordResetTokenExpiresAt(null);
+		userRepository.save(user);
+
+		refreshTokenService.deleteAllByUserId(user.getId());
+	}
+
+	@Transactional(readOnly = true)
+	public boolean isPasswordResetTokenValid(String token) {
+		return userRepository.findByPasswordResetToken(token)
+				.map(user -> user.getPasswordResetTokenExpiresAt() != null && user.getPasswordResetTokenExpiresAt().isAfter(LocalDateTime.now()))
+				.orElse(false);
+	}
+
+	private String generatePasswordResetToken() {
+		SecureRandom random = new SecureRandom();
+		byte[] bytes = new byte[24];
+		random.nextBytes(bytes);
+		String token = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+		final int maxAttempts = 1000;
+		int attempts = 0;
+		while (userRepository.existsByPasswordResetToken(token)) {
+			if (++attempts > maxAttempts) {
+				throw new RuntimeException("Unable to generate unique password reset token");
+			}
+			random.nextBytes(bytes);
+			token = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+		}
+		return token;
 	}
 
 	private String generateVerificationCode() {

@@ -168,4 +168,69 @@ public class AuthController {
 			return ResponseEntity.status(500).body(new Response<String>(false, null, "An error occurred while resending verification email: " + e.getMessage()));
 		}
 	}
+
+	@PostMapping("/forgot-password")
+	public ResponseEntity<Response<String>> forgotPassword(@RequestBody PasswordResetRequestDTO prRequestDTO) {
+		try {
+			if (prRequestDTO == null || prRequestDTO.getEmail() == null || prRequestDTO.getEmail().isEmpty()) {
+				return ResponseEntity.badRequest().body(new Response<String>(false, null, "Email must not be null or empty."));
+			}
+			authService.requestPasswordReset(prRequestDTO);
+
+			return ResponseEntity.ok(new Response<String>(true, null, "If an account with that email exists, a password reset link has been sent."));
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(new Response<String>(false, null, "An error occurred while processing password reset request."));
+		}
+	}
+
+	@PostMapping("/resend-password-reset")
+	public ResponseEntity<Response<String>> resendPasswordResetEmail(@RequestBody PasswordResetRequestDTO prRequestDTO) {
+		try {
+			if (prRequestDTO == null || prRequestDTO.getEmail() == null || prRequestDTO.getEmail().isEmpty()) {
+				return ResponseEntity.badRequest().body(new Response<String>(false, null, "Email must not be null or empty."));
+			}
+			authService.resendPasswordResetEmail(prRequestDTO);
+			return ResponseEntity.ok(new Response<String>(true, null, "Password reset link resend."));
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(new Response<String>(false, null, "An error occurred while resending password reset email."));
+		}
+	}
+
+	@PostMapping("/reset-password")
+	public ResponseEntity<Response<String>> resetPassword(@RequestBody PasswordResetDTO passwordResetDTO) {
+		try {
+			if (passwordResetDTO == null || passwordResetDTO.getToken() == null || passwordResetDTO.getToken().isEmpty()
+					|| passwordResetDTO.getNewPassword() == null || passwordResetDTO.getNewPassword().isEmpty()) {
+				return ResponseEntity.badRequest().body(new Response<String>(false, null, "Token and new password must not be null or empty."));
+			}
+
+			authService.resetPassword(passwordResetDTO);
+
+			return ResponseEntity.ok(new Response<String>(true, null, "Password has been reset successfully."));
+		} catch (RuntimeException e) {
+			return ResponseEntity.badRequest().body(new Response<String>(false, null, e.getMessage()));
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(new Response<String>(false, null, "An error occurred while resetting the password."));
+		}
+	}
+
+	@GetMapping("/verify-reset-token")
+	public ResponseEntity<Response<String>> verifyResetToken(@RequestParam String token) {
+		try {
+			if (token == null || token.isEmpty()) {
+				return ResponseEntity.badRequest().body(new Response<String>(false, null, "Reset token must not be null or empty."));
+			}
+			boolean isValid = authService.isPasswordResetTokenValid(token);
+			if (!isValid) {
+				return ResponseEntity.status(410).body(new Response<String>(false, null, "Invalid or expired reset token."));
+			}
+			return ResponseEntity.ok(new Response<String>(true, null, "Reset token is valid."));
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(new Response<String>(false, null, e.getMessage()));
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(new Response<String>(false, null, "An error occurred while verifying the reset token: " + e.getMessage()));
+		}
+	}
+
+
 }
