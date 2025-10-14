@@ -7,22 +7,10 @@ import { Button } from "../ui/button";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, CheckCircle } from "lucide-react";
 import { Separator } from "../ui/separator";
-import { z } from "zod";
 import toast from "react-hot-toast";
 import { resetPassword } from "@/lib/api"; // implement this API call
 import AuthCard from "./AuthCard";
-
-const resetPasswordSchema = z
-  .object({
-    password: z.string().min(8, "Password must be at least 8 characters"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
-
-type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
+import { resetPasswordSchema, type ResetPasswordFormData } from "@/lib/schema";
 
 type ResetPasswordFormProps = {
   token: string;
@@ -40,15 +28,15 @@ const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
   } = useForm<ResetPasswordFormData>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
-      password: "",
-      confirmPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
     },
   });
 
   const onSubmit = async (data: ResetPasswordFormData) => {
     setIsLoading(true);
     try {
-      const response = await resetPassword(token, data.password);
+      const response = await resetPassword(token, data.newPassword);
       if (!response.success) {
         throw new Error(response.message || "Failed to reset password");
       }
@@ -107,14 +95,14 @@ const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
             New Password
           </Label>
           <Input
-            {...register("password")}
+            {...register("newPassword")}
             type="password"
             className="mt-1"
             placeholder="Enter new password"
           />
-          {errors.password && (
+          {errors.newPassword && (
             <p className="text-red-500 text-xs mt-1">
-              {errors.password.message}
+              {errors.newPassword.message}
             </p>
           )}
         </div>
@@ -124,14 +112,14 @@ const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
             Confirm Password
           </Label>
           <Input
-            {...register("confirmPassword")}
+            {...register("confirmNewPassword")}
             type="password"
             className="mt-1"
             placeholder="Confirm new password"
           />
-          {errors.confirmPassword && (
+          {errors.confirmNewPassword && (
             <p className="text-red-500 text-xs mt-1">
-              {errors.confirmPassword.message}
+              {errors.confirmNewPassword.message}
             </p>
           )}
         </div>
