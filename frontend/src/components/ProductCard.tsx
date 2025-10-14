@@ -61,6 +61,7 @@ const ProductCard = ({
           className={`w-full h-full md:max-h-none object-cover object-center transition-transform duration-300 ease-in-out group-hover:scale-105 ${
             isList ? "md:rounded-l-md md:rounded-tr-none" : ""
           }`}
+          loading="lazy"
         />
       </CardHeader>
 
