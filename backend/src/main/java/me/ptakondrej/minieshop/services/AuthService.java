@@ -117,8 +117,15 @@ public class AuthService {
 
 		user.setVerificationCode(generateVerificationCode());
 		user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
-		userRepository.save(user);
-		emailService.sendVerificationEmail(user);
+		try {
+			emailService.sendVerificationEmail(user);
+		} catch (Exception e) {
+			user.setVerificationCode(null);
+			user.setVerificationCodeExpiresAt(null);
+			throw new RuntimeException("Failed to send verification email", e);
+		} finally {
+			userRepository.save(user);
+		}
 	}
 
 	@Transactional
@@ -126,11 +133,14 @@ public class AuthService {
 		userRepository.findByEmail(dto.getEmail()).ifPresent(user -> {
 			user.setPasswordResetToken(generatePasswordResetToken());
 			user.setPasswordResetTokenExpiresAt(LocalDateTime.now().plusMinutes(30));
-			userRepository.save(user);
 			try {
 				emailService.sendPasswordResetEmail(user);
 			} catch (Exception e) {
-				// Failed to send password reset email
+				user.setPasswordResetToken(null);
+				user.setPasswordResetTokenExpiresAt(null);
+				throw new RuntimeException("Failed to send password reset email", e);
+			} finally {
+				userRepository.save(user);
 			}
 		});
 	}
