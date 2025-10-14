@@ -36,6 +36,7 @@ export const products: Product[] = [
     stockQuantity: 15,
     category: categories[0],
     enabled: true,
+    createdAt: "2024-01-15T10:00:00Z",
   },
   {
     id: 102,
@@ -47,6 +48,7 @@ export const products: Product[] = [
     stockQuantity: 7,
     category: categories[0],
     enabled: true,
+    createdAt: "2024-02-20T12:30:00Z",
   },
   {
     id: 201,
@@ -58,6 +60,7 @@ export const products: Product[] = [
     stockQuantity: 30,
     category: categories[1],
     enabled: true,
+    createdAt: "2024-03-05T09:15:00Z",
   },
   {
     id: 202,
@@ -69,6 +72,7 @@ export const products: Product[] = [
     stockQuantity: 12,
     category: categories[1],
     enabled: true,
+    createdAt: "2024-04-10T14:45:00Z",
   },
   {
     id: 301,
@@ -80,6 +84,7 @@ export const products: Product[] = [
     stockQuantity: 50,
     category: categories[2],
     enabled: true,
+    createdAt: "2024-05-01T11:20:00Z",
   },
   {
     id: 302,
@@ -91,6 +96,7 @@ export const products: Product[] = [
     stockQuantity: 22,
     category: categories[2],
     enabled: true,
+    createdAt: "2024-06-18T16:05:00Z",
   },
 ];
 
@@ -132,10 +138,30 @@ export const getDummyProducts = (filter: ProductFilter): Product[] => {
     }
   }
 
+  if (filter.sortBy && filter.sortBy !== "no-filter") {
+    switch (filter.sortBy) {
+      case "price_low_to_high":
+        filteredProducts = filteredProducts.sort((a, b) => a.price - b.price);
+        break;
+      case "price_high_to_low":
+        filteredProducts = filteredProducts.sort((a, b) => b.price - a.price);
+        break;
+      case "newest_arrivals":
+        filteredProducts = filteredProducts.sort((a, b) =>
+          a.createdAt.localeCompare(b.createdAt)
+        );
+        break;
+    }
+  }
+
   const page = filter.page || 1;
   const size = filter.size || 9;
   const startIndex = (page - 1) * size;
   const endIndex = startIndex + size;
 
   return filteredProducts.slice(startIndex, endIndex);
+};
+
+export const getMostExpensivePrice = (): number => {
+  return Math.max(...products.map((p) => p.price));
 };

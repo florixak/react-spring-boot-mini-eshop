@@ -16,6 +16,7 @@ type Product = {
   stockQuantity: number;
   category: Category;
   enabled: boolean;
+  createdAt: string;
 };
 
 type Role = "USER" | "ADMIN";
