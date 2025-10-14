@@ -216,7 +216,7 @@ export const updateProduct = async (
 };
 
 export const fetchTheMostExpensiveProductPrice = async (
-  category: string
+  category?: string
 ): Promise<number> => {
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/products/most-expensive${
