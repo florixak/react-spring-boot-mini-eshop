@@ -112,13 +112,22 @@ const OrderDetailsPage = ({ orderId, isAdminView }: OrderDetailsPageProps) => {
     <div className="min-h-screen bg-secondary-50 px-6 md:px-16 lg:px-28 py-8 pt-28">
       <div className="max-w-4xl mx-auto space-y-6">
         <Button variant="outline" asChild>
-          <Link
-            to={isAdminView ? "/admin/orders" : "/account"}
-            search={!isAdminView ? { section: "orders" } : undefined}
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Orders
-          </Link>
+          {isAdminView ? (
+            <Link
+              to="/admin/orders"
+              search={{
+                query: "",
+              }}
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Orders
+            </Link>
+          ) : (
+            <Link to="/account" search={{ section: "orders" }}>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Orders
+            </Link>
+          )}
         </Button>
 
         <OrderDetailsHeader order={order} />
