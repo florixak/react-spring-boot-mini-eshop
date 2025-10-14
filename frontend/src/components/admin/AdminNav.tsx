@@ -4,7 +4,7 @@ import { BarChart2, Package, Users, ShoppingCart } from "lucide-react";
 const navItems = [
   { name: "Dashboard", icon: BarChart2, to: "/admin" },
   { name: "Products", icon: Package, to: "/admin/products" },
-  { name: "Orders", icon: ShoppingCart, to: "/admin/orders?query=" },
+  { name: "Orders", icon: ShoppingCart, to: "/admin/orders" },
   { name: "Users", icon: Users, to: "/admin/users" },
 ];
 
