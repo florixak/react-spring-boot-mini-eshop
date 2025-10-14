@@ -5,6 +5,9 @@ import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/admin/orders/")({
   component: RouteComponent,
+  validateSearch: (search) => ({
+    query: (search.query as string) ?? "",
+  }),
 });
 
 function RouteComponent() {
