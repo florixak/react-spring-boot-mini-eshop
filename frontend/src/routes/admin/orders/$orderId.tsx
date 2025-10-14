@@ -9,7 +9,7 @@ function RouteComponent() {
   const { orderId } = Route.useParams();
 
   if (!orderId) {
-    redirect({ to: "/admin/orders" });
+    redirect({ to: "/admin/orders", search: { query: "" } });
   }
 
   return <OrderDetailsPage orderId={orderId} isAdminView />;

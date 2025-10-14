@@ -10,6 +10,7 @@ import Pagination from "./Pagination";
 
 import type { ShopSearch } from "@/routes/shop";
 import { cn } from "@/lib/utils";
+import { useUserStore } from "@/stores/useUserStore";
 
 type ProductsProps = {
   products?: Product[] | undefined;
@@ -34,6 +35,7 @@ const Products = ({
   className,
   search,
 }: ProductsProps) => {
+  const { isAuthenticated } = useUserStore();
   const { addToCart } = useCartStore();
   const { isInWishlist, toggleWishlist } = useWishlist();
 
@@ -66,6 +68,7 @@ const Products = ({
                 onAddToCart={addToCart}
                 isInWishlist={isInWishlist(product.id)}
                 toggleWishlist={toggleWishlist}
+                isAuthenticated={isAuthenticated}
               />
             ))
           : Array.from({ length: 8 }).map((_, index) => (

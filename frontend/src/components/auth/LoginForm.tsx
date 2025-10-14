@@ -10,6 +10,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { Route } from "@/routes/auth";
 import { Separator } from "../ui/separator";
 import { useUserStore } from "@/stores/useUserStore";
+import toast from "react-hot-toast";
 
 type LoginFormProps = {
   redirectTo?: string;
@@ -18,7 +19,6 @@ type LoginFormProps = {
 const LoginForm = ({ redirectTo }: LoginFormProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const navigate = Route.useNavigate();
   const { login } = useUserStore();
 
@@ -37,7 +37,6 @@ const LoginForm = ({ redirectTo }: LoginFormProps) => {
 
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
-    setError(null);
 
     try {
       await login({
@@ -47,6 +46,8 @@ const LoginForm = ({ redirectTo }: LoginFormProps) => {
 
       reset();
 
+      toast.success("Logged in successfully!");
+
       navigate({
         to: "/account",
         replace: true,
@@ -55,7 +56,7 @@ const LoginForm = ({ redirectTo }: LoginFormProps) => {
         },
       });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
+      toast.error(err instanceof Error ? err.message : "Login failed");
     } finally {
       setIsLoading(false);
     }
@@ -123,8 +124,6 @@ const LoginForm = ({ redirectTo }: LoginFormProps) => {
       >
         {isLoading ? "Signing in..." : "Sign In"}
       </Button>
-
-      {error && <p className="text-red-500 text-sm">{error}</p>}
 
       <Separator orientation="horizontal" className="bg-secondary-100" />
 

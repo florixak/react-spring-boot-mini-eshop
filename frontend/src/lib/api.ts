@@ -13,6 +13,8 @@ import type {
   PagingObjectResponse,
   AdminStatsResponse,
 } from "@/types/responses";
+import type { AdminUserEditFormData } from "./schema";
+import type { ProductSort } from "@/constants";
 
 export type ProductFilter = {
   categorySlug?: string;
@@ -22,6 +24,7 @@ export type ProductFilter = {
   inStock?: boolean;
   page?: number;
   size?: number;
+  sortBy?: ProductSort["value"];
 };
 
 export const fetchCategories = async (): Promise<Response<Category[]>> => {
@@ -78,6 +81,21 @@ export const fetchProducts = async (
     params.append("maxPrice", filter.maxPrice.toString());
   if (filter.search) params.append("search", filter.search);
   if (filter.inStock) params.append("inStock", "true");
+  if (filter.sortBy && filter.sortBy !== "no-filter") {
+    let sort = "id,asc";
+    switch (filter.sortBy) {
+      case "price_low_to_high":
+        sort = "price,asc";
+        break;
+      case "price_high_to_low":
+        sort = "price,desc";
+        break;
+      case "newest_arrivals":
+        sort = "createdAt,desc";
+        break;
+    }
+    params.append("sortBy", sort);
+  }
 
   const url =
     `${import.meta.env.VITE_API_URL}/products` +
@@ -197,9 +215,13 @@ export const updateProduct = async (
   return data;
 };
 
-export const fetchTheMostExpensiveProductPrice = async (): Promise<number> => {
+export const fetchTheMostExpensiveProductPrice = async (
+  category?: string
+): Promise<number> => {
   const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/products/most-expensive`,
+    `${import.meta.env.VITE_API_URL}/products/most-expensive${
+      category ? `?category=${category}` : ""
+    }`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -209,8 +231,8 @@ export const fetchTheMostExpensiveProductPrice = async (): Promise<number> => {
   if (!response.ok) {
     throw new Error("Failed to fetch the most expensive product price");
   }
-  const data = (await response.json()) as Response<{ price: number }>;
-  return data.data.price;
+  const data = (await response.json()) as Response<number>;
+  return data.data;
 };
 
 export const fetchOrders = async ({
@@ -522,13 +544,14 @@ export const fetchUser = async (userId: number): Promise<Response<User>> => {
   return data;
 };
 
-export const deactivateUser = async (
-  userId: number
-): Promise<Response<null>> => {
+export const deleteUser = async (userId: number): Promise<Response<null>> => {
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
   const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/users/admin/${userId}/deactivate`,
+    `${import.meta.env.VITE_API_URL}/users/admin/${userId}`,
     {
-      method: "PATCH",
+      method: "DELETE",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
@@ -539,6 +562,31 @@ export const deactivateUser = async (
     throw new Error("Failed to deactivate user");
   }
   const data = (await response.json()) as Response<null>;
+  return data;
+};
+
+export const updateUserAdmin = async (
+  userId: number,
+  userData: AdminUserEditFormData
+): Promise<Response<User>> => {
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/users/admin/${userId}`,
+    {
+      method: "PUT",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ...userData, role: userData.role?.toUpperCase() }),
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to update user");
+  }
+  const data = (await response.json()) as Response<User>;
   return data;
 };
 
@@ -689,6 +737,58 @@ export const resendVerificationCode = async (
   if (!response.ok) {
     throw new Error((await response.json()).message || "Resend failed");
   }
+  const data = (await response.json()) as Response<null>;
+  return data;
+};
+
+export const requestResetPassword = async (
+  email: string
+): Promise<Response<null>> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/auth/forgot-password`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    }
+  );
+  if (!response.ok) {
+    throw new Error((await response.json()).message || "Request failed");
+  }
+  const data = (await response.json()) as Response<null>;
+  return data;
+};
+
+export const resetPassword = async (
+  token: string,
+  newPassword: string
+): Promise<Response<null>> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/auth/reset-password`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token, newPassword }),
+    }
+  );
+  if (!response.ok) {
+    throw new Error((await response.json()).message || "Reset failed");
+  }
+  const data = (await response.json()) as Response<null>;
+  return data;
+};
+
+export const verifyResetPasswordToken = async (
+  token: string
+): Promise<Response<null>> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/auth/verify-reset-token?token=${token}`,
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+
   const data = (await response.json()) as Response<null>;
   return data;
 };

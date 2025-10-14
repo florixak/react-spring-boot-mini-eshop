@@ -3,8 +3,10 @@ import ProductCard from "../ProductCard";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useCartStore } from "@/stores/useCartStore";
 import { HeartCrack } from "lucide-react";
+import { useUserStore } from "@/stores/useUserStore";
 
 const WishlistSection = () => {
+  const { isAuthenticated } = useUserStore();
   const { addToCart } = useCartStore();
   const { wishlist, toggleWishlist, isInWishlist, isLoading, isError } =
     useWishlist();
@@ -30,6 +32,7 @@ const WishlistSection = () => {
                     onAddToCart={addToCart}
                     isInWishlist={isInWishlist(item.id)}
                     toggleWishlist={toggleWishlist}
+                    isAuthenticated={isAuthenticated}
                   />
                 ))}
               </div>

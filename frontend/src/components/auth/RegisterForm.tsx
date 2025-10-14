@@ -20,7 +20,6 @@ const RegisterForm = ({ redirectTo }: RegisterFormProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const navigate = Route.useNavigate();
   const { register: registerUser } = useUserStore();
 
@@ -35,7 +34,6 @@ const RegisterForm = ({ redirectTo }: RegisterFormProps) => {
 
   const onSubmit = async (data: RegisterFormData) => {
     setIsLoading(true);
-    setError(null);
 
     try {
       await registerUser({
@@ -57,7 +55,6 @@ const RegisterForm = ({ redirectTo }: RegisterFormProps) => {
         });
       }, 2000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Registration failed");
       toast.error(err instanceof Error ? err.message : "Registration failed");
     } finally {
       setIsLoading(false);
@@ -211,8 +208,6 @@ const RegisterForm = ({ redirectTo }: RegisterFormProps) => {
       >
         {isLoading ? "Creating Account..." : "Create Account"}
       </Button>
-
-      {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
       <Separator orientation="horizontal" className="bg-secondary-100" />
 

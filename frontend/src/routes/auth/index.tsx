@@ -1,5 +1,6 @@
 import AuthContent from "@/components/auth/AuthContent";
-import { createFileRoute } from "@tanstack/react-router";
+import { useUserStore } from "@/stores/useUserStore";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/auth/")({
   component: Auth,
@@ -21,6 +22,18 @@ export const Route = createFileRoute("/auth/")({
     if (search.email) result.email = String(search.email);
 
     return result;
+  },
+  beforeLoad: async (params) => {
+    const isAuthenticated = useUserStore.getState().isAuthenticated;
+    const mode = params.search.mode;
+    if (isAuthenticated && mode !== "verify-email") {
+      throw redirect({
+        to: "/account",
+        search: {
+          section: "profile",
+        },
+      });
+    }
   },
 });
 

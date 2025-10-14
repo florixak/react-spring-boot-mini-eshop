@@ -6,6 +6,8 @@ import { Link } from "@tanstack/react-router";
 import { Button } from "../ui/button";
 import { FREE_SHIPPING_THRESHOLD } from "@/constants";
 import { useCartStore } from "@/stores/useCartStore";
+import { useUserStore } from "@/stores/useUserStore";
+import toast from "react-hot-toast";
 
 type OrderSummaryProps = {
   shippingCost: number;
@@ -16,6 +18,14 @@ const OrderSummary = ({ shippingCost, isCartPage }: OrderSummaryProps) => {
   const { cartItems } = useCartStore();
   const { quantity, subtotal, shipping, tax, total, isFreeShipping } =
     useOrderCalculations(cartItems, shippingCost);
+  const { user } = useUserStore();
+
+  const handleDisabledButtonClick = (e: React.MouseEvent) => {
+    if (!user?.verified) {
+      e.preventDefault();
+      toast.error("Please verify your email to proceed to checkout.");
+    }
+  };
 
   return (
     <Card className="sticky top-6">
@@ -92,8 +102,12 @@ const OrderSummary = ({ shippingCost, isCartPage }: OrderSummaryProps) => {
                 </Button>
               ) : (
                 <Button
-                  className="w-full bg-primary hover:bg-primary/90 py-3"
+                  className={`w-full bg-primary hover:bg-primary/90 py-3 ${
+                    !user?.verified ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                   asChild
+                  onClick={handleDisabledButtonClick}
+                  disabled={!user?.verified}
                 >
                   <Link to="/cart/checkout" search={{ step: 1 }}>
                     Proceed to Checkout

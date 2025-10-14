@@ -1,14 +1,13 @@
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Card, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { formatDate, formatPrice } from "@/lib/utils";
-import { deactivateUser } from "@/lib/api";
-import useOrders from "@/hooks/useOrders";
-import type { User, Order } from "@/types";
+import { formatDate } from "@/lib/utils";
+import { deleteUser } from "@/lib/api";
+import type { User } from "@/types";
 import toast from "react-hot-toast";
 import useUsers from "@/hooks/useUsers";
-import { useMemo } from "react";
+import NotFound from "../NotFound";
 
 type UserDetailsProps = {
   userId: User["id"] | undefined;
@@ -23,30 +22,19 @@ const UserDetails = ({ userId }: UserDetailsProps) => {
     refetch: refetchUser,
   } = useUsers({ userId });
 
-  const { orders = [], isLoading: ordersLoading } = useOrders({
-    userId: userId,
-    query: "",
-    size: 1000,
-    recent: false,
-  });
+  if (!user) {
+    return <NotFound />;
+  }
 
-  const ordersCount = orders?.length ?? 0;
-  const lifetimeSpend = useMemo(
-    () =>
-      orders?.reduce((sum: number, o: Order) => sum + (o.totalPrice ?? 0), 0) ??
-      0,
-    [orders]
-  );
-
-  const handleDeactivate = async () => {
+  const handleDelete = async () => {
     if (!user) return;
-    if (!confirm(`Deactivate user ${user.email}?`)) return;
+    if (!confirm(`Delete user ${user.email}?`)) return;
     try {
-      await deactivateUser(user.id);
-      toast.success("User deactivated.");
+      await deleteUser(user.id);
+      toast.success("User deleted.");
       refetchUser();
     } catch (err) {
-      toast.error((err as Error)?.message || "Failed to deactivate user.");
+      toast.error((err as Error)?.message || "Failed to delete user.");
     }
   };
 
@@ -92,75 +80,27 @@ const UserDetails = ({ userId }: UserDetailsProps) => {
                 <Button
                   size="sm"
                   onClick={() =>
-                    navigate({ to: `/admin/users/${user?.id}/edit` })
+                    navigate({ to: `/admin/users/edit/${user?.id}` })
                   }
                 >
                   Edit
                 </Button>
 
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() =>
-                    navigate({
-                      to: "/admin/orders",
-                      search: user?.id ? { query: String(user.id) } : undefined,
-                    })
-                  }
-                >
-                  View orders
+                <Button size="sm" variant="outline" asChild>
+                  <Link
+                    to={`/admin/orders`}
+                    search={{ query: `user:${user?.id}` }}
+                  >
+                    View orders
+                  </Link>
                 </Button>
-              </div>
-
-              <div className="flex gap-2">
-                <Button
-                  size="sm"
-                  variant="destructive"
-                  onClick={handleDeactivate}
-                >
-                  Deactivate
-                </Button>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() =>
-                    toast(
-                      `Orders: ${ordersCount}, Lifetime: ${formatPrice(
-                        lifetimeSpend
-                      )}`
-                    )
-                  }
-                >
-                  Quick stats
+                <Button size="sm" variant="destructive" onClick={handleDelete}>
+                  Delete
                 </Button>
               </div>
             </div>
           </div>
         </CardHeader>
-
-        <CardContent className="pt-0">
-          <div>
-            <h3 className="text-sm font-medium text-secondary-600 mb-2">
-              Orders
-            </h3>
-
-            <div className="flex items-center gap-6">
-              <div>
-                <p className="text-xs text-secondary-500">Total orders</p>
-                <p className="text-lg font-semibold text-primary">
-                  {ordersLoading ? "…" : ordersCount}
-                </p>
-              </div>
-
-              <div>
-                <p className="text-xs text-secondary-500">Lifetime spend</p>
-                <p className="text-lg font-semibold text-primary">
-                  {ordersLoading ? "…" : formatPrice(lifetimeSpend)}
-                </p>
-              </div>
-            </div>
-          </div>
-        </CardContent>
       </Card>
     </div>
   );

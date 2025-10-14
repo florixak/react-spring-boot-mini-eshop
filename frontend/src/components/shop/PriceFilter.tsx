@@ -16,13 +16,16 @@ const PriceFilter = ({
   minPrice = 0,
   maxPrice = 1000,
 }: PriceFilterProps) => {
-  const [priceRange, setPriceRange] = useState(() => {
-    const [min, max] = search.price?.split("-").map(Number) || [
-      minPrice,
-      maxPrice,
-    ];
-    return [min, max];
-  });
+  const [priceRange, setPriceRange] = useState<[number, number]>([
+    minPrice,
+    maxPrice,
+  ]);
+
+  useEffect(() => {
+    setPriceRange(([prevMin, prevMax]) => {
+      return [Math.max(prevMin, minPrice), Math.min(prevMax, maxPrice)];
+    });
+  }, [minPrice, maxPrice]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -43,7 +46,10 @@ const PriceFilter = ({
       <div className="px-2">
         <Slider
           value={priceRange}
-          onValueChange={setPriceRange}
+          onValueChange={(value) =>
+            setPriceRange([value[0] || 0, value[1] || maxPrice])
+          }
+          defaultValue={[minPrice, maxPrice]}
           max={maxPrice}
           min={minPrice}
           step={10}

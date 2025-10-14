@@ -12,6 +12,8 @@ import {
   type ForgotPasswordFormData,
   forgotPasswordSchema,
 } from "@/lib/schema";
+import { requestResetPassword } from "@/lib/api";
+import toast from "react-hot-toast";
 
 type ForgotPasswordFormProps = {
   redirectTo?: string;
@@ -39,25 +41,15 @@ const ForgotPasswordForm = ({ redirectTo }: ForgotPasswordFormProps) => {
     setError(null);
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/auth/forgot-password`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email: data.email }),
-        }
-      );
+      const response = await requestResetPassword(data.email);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to send reset email");
+      if (!response.success) {
+        throw new Error(response.message || "Failed to send reset email");
       }
 
       setSuccess(true);
     } catch (err) {
-      setError(
+      toast.error(
         err instanceof Error ? err.message : "Failed to send reset email"
       );
     } finally {

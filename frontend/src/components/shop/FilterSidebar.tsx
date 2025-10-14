@@ -12,14 +12,11 @@ type FilterSidebarProps = {
 };
 
 const FilterSidebar = ({ search, navigate }: FilterSidebarProps) => {
-  const {
-    data: maxPrice,
-    isLoading,
-    isError,
-  } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["mostExpensivePrice", search.category],
-    queryFn: fetchTheMostExpensiveProductPrice,
+    queryFn: () => fetchTheMostExpensiveProductPrice(search.category),
   });
+
   return (
     <aside className="p-4 border rounded-lg h-fit sticky top-20 self-start w-full lg:w-72 xl:w-80 2xl:w-96 mb-8 md:mb-0">
       <h2 className="text-primary font-bold">Filters</h2>
@@ -47,7 +44,13 @@ const FilterSidebar = ({ search, navigate }: FilterSidebarProps) => {
           <PriceFilter
             search={search}
             navigate={navigate}
-            maxPrice={isLoading || isError ? 1000 : maxPrice || 1000}
+            maxPrice={
+              isLoading || isError
+                ? 1000
+                : data != null
+                ? Math.round(data)
+                : 1000
+            }
           />
         </div>
       </div>

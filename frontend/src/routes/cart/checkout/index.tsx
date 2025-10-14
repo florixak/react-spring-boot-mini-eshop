@@ -1,7 +1,9 @@
 import CheckoutContent from "@/components/checkout/CheckoutContent";
 import CheckoutHeader from "@/components/checkout/CheckoutHeader";
 import { CHECKOUT_STEPS } from "@/constants";
+import { useUserStore } from "@/stores/useUserStore";
 import { createFileRoute, redirect } from "@tanstack/react-router";
+import toast from "react-hot-toast";
 
 type CheckoutSearch = {
   step: number;
@@ -15,6 +17,13 @@ export const Route = createFileRoute("/cart/checkout/")({
     order_id: search.order_id as string | undefined,
   }),
   beforeLoad: ({ search }) => {
+    const verified = useUserStore.getState().user?.verified;
+    if (!verified) {
+      toast.error("Please verify your email to proceed to checkout.");
+      throw redirect({
+        to: "/cart",
+      });
+    }
     if (
       (search.step && isNaN(Number(search.step))) ||
       Number(search.step) < 1 ||

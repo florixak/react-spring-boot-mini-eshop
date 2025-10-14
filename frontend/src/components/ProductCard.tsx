@@ -5,6 +5,7 @@ import { Heart, ShoppingCart } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 import type { CartState } from "@/stores/useCartStore";
 import { Badge } from "./ui/badge";
+import toast from "react-hot-toast";
 
 type ProductCardProps = {
   product: Product;
@@ -12,6 +13,7 @@ type ProductCardProps = {
   onAddToCart: CartState["addToCart"];
   isInWishlist: boolean;
   toggleWishlist: (productId: number) => void;
+  isAuthenticated: boolean;
 };
 
 const ProductCard = ({
@@ -20,6 +22,7 @@ const ProductCard = ({
   onAddToCart,
   isInWishlist,
   toggleWishlist,
+  isAuthenticated,
 }: ProductCardProps) => {
   const isList = viewMode === "list";
   const cardClass = isList
@@ -31,6 +34,10 @@ const ProductCard = ({
   };
 
   const handleToggleWishlist = () => {
+    if (!isAuthenticated) {
+      toast.error("Please log in to manage your wishlist.");
+      return;
+    }
     toggleWishlist(product.id);
   };
 
@@ -61,6 +68,7 @@ const ProductCard = ({
           className={`w-full h-full md:max-h-none object-cover object-center transition-transform duration-300 ease-in-out group-hover:scale-105 ${
             isList ? "md:rounded-l-md md:rounded-tr-none" : ""
           }`}
+          loading="lazy"
         />
       </CardHeader>
 
