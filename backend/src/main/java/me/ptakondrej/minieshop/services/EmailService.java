@@ -31,7 +31,7 @@ public class EmailService {
 		mailSender.send(message);
 	}
 
-	public void sendVerificationEmail(User user) {
+	public void sendVerificationEmail(User user) throws MessagingException {
 		String subject = "Account Verification";
 		String verificationCode = "VERIFICATION CODE " + user.getVerificationCode();
 		String htmlMessage = "<html>"
@@ -46,11 +46,7 @@ public class EmailService {
 				+ "</div>"
 				+ "</body>"
 				+ "</html>";
-		try {
-			sendEmail(user.getEmail(), subject, htmlMessage);
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		}
+		sendEmail(user.getEmail(), subject, htmlMessage);
 	}
 
 	public void sendOrderConfirmationEmail(String to, String orderDetails) throws MessagingException {
