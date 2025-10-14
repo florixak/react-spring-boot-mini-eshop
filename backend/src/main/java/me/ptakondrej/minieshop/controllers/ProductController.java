@@ -36,13 +36,15 @@ public class ProductController {
 			@RequestParam(required = false) Double maxPrice,
 			@RequestParam(required = false) String search,
 			@RequestParam(defaultValue = "false") boolean inStock,
-			@RequestParam(defaultValue = "id,asc") String[] sort) {
+			@RequestParam(defaultValue = "id,asc") String sortBy) {
 		try {
 			if (page < 0 || size <= 0) {
 				return ResponseEntity.badRequest().body(new Response<>(false, null, "Invalid request parameters"));
 			}
 
-			Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+			Pageable pageable = PageRequest.of(page, size,
+					Sort.by(Sort.Direction.fromString(sortBy.split(",")[1]), sortBy.split(",")[0])
+			);
 			Page<Product> products = productService.filterProducts(categorySlug, minPrice, maxPrice, search, inStock, pageable);
 			List<ProductDTO> productDTOs = products.stream()
 					.map(ProductMapper::convertToDto)
