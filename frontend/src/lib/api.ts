@@ -580,7 +580,7 @@ export const updateUserAdmin = async (
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ ...userData, role: userData.role.toUpperCase() }),
+      body: JSON.stringify({ ...userData, role: userData.role?.toUpperCase() }),
     }
   );
   if (!response.ok) {
