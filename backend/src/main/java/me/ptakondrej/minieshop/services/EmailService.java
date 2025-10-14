@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 @Service
 public class EmailService {
@@ -70,11 +74,19 @@ public class EmailService {
 	public void sendPasswordResetEmail(User user) {
 		String subject = "Password Reset Request";
 		String token = user.getPasswordResetToken();
-		String encodedToken = java.net.URLEncoder.encode(token == null ? "" : token, java.nio.charset.StandardCharsets.UTF_8);
-		String resetUrl = frontendUrl + "/reset-password?token=" + encodedToken;
-		String expires = user.getPasswordResetTokenExpiresAt() != null
-				? user.getPasswordResetTokenExpiresAt().toString()
-				: "30 minutes";
+		String expires;
+		if (user.getPasswordResetTokenExpiresAt() != null) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withLocale(Locale.ENGLISH);
+			expires = user.getPasswordResetTokenExpiresAt().format(formatter);
+		} else {
+			expires = "30 minutes";
+		}
+
+		String resetUrl = UriComponentsBuilder.fromHttpUrl(frontendUrl)
+								.path("/reset-password")
+								.queryParam("token", token == null ? "" : token)
+								.build()
+								.toUriString();
 
 		String htmlMessage = "<!doctype html>"
 				+ "<html><body style=\"font-family:Arial,sans-serif;background:#f5f5f5;padding:20px\">"
