@@ -92,11 +92,9 @@ public class ProductController {
 	public ResponseEntity<Response<BigDecimal>> getMostExpensivePrice(@RequestParam(required = false) String categorySlug) {
 		try {
 			Product product = productService.getMostExpensiveProduct(categorySlug);
-			if (product == null) {
-				return ResponseEntity.notFound().build();
-			}
-			ProductDTO productDTO = ProductMapper.convertToDto(product);
-			return ResponseEntity.ok(new Response<>(true, productDTO.getPrice(), "Most expensive price retrieved successfully"));
+			return ResponseEntity.ok(new Response<>(true, product.getPrice(), "Most expensive price retrieved successfully"));
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(new Response<>(false, null, e.getMessage()));
 		} catch (Exception e) {
 			return ResponseEntity.status(500).body(new Response<>(false, null, "An error occurred while retrieving the most expensive product: " + e.getMessage()));
 		}
