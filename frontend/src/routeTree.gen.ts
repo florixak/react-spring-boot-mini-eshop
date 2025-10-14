@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ShopIndexRouteImport } from './routes/shop/index'
+import { Route as ResetPasswordIndexRouteImport } from './routes/reset-password/index'
 import { Route as ContactIndexRouteImport } from './routes/contact/index'
 import { Route as CartIndexRouteImport } from './routes/cart/index'
 import { Route as AuthIndexRouteImport } from './routes/auth/index'
@@ -29,6 +30,7 @@ import { Route as CartCheckoutSuccessIndexRouteImport } from './routes/cart/chec
 import { Route as CartCheckoutCancelIndexRouteImport } from './routes/cart/checkout/cancel/index'
 import { Route as AdminUsersNewIndexRouteImport } from './routes/admin/users/new/index'
 import { Route as AdminProductsNewIndexRouteImport } from './routes/admin/products/new/index'
+import { Route as AdminUsersEditUserIdRouteImport } from './routes/admin/users/edit/$userId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -38,6 +40,11 @@ const IndexRoute = IndexRouteImport.update({
 const ShopIndexRoute = ShopIndexRouteImport.update({
   id: '/shop/',
   path: '/shop/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordIndexRoute = ResetPasswordIndexRouteImport.update({
+  id: '/reset-password/',
+  path: '/reset-password/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactIndexRoute = ContactIndexRouteImport.update({
@@ -131,6 +138,11 @@ const AdminProductsNewIndexRoute = AdminProductsNewIndexRouteImport.update({
   path: '/admin/products/new/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminUsersEditUserIdRoute = AdminUsersEditUserIdRouteImport.update({
+  id: '/admin/users/edit/$userId',
+  path: '/admin/users/edit/$userId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -140,6 +152,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthIndexRoute
   '/cart': typeof CartIndexRoute
   '/contact': typeof ContactIndexRoute
+  '/reset-password': typeof ResetPasswordIndexRoute
   '/shop': typeof ShopIndexRoute
   '/account/orders/$orderId': typeof AccountOrdersOrderIdRoute
   '/admin/orders/$orderId': typeof AdminOrdersOrderIdRoute
@@ -149,6 +162,7 @@ export interface FileRoutesByFullPath {
   '/admin/products': typeof AdminProductsIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
   '/cart/checkout': typeof CartCheckoutIndexRoute
+  '/admin/users/edit/$userId': typeof AdminUsersEditUserIdRoute
   '/admin/products/new': typeof AdminProductsNewIndexRoute
   '/admin/users/new': typeof AdminUsersNewIndexRoute
   '/cart/checkout/cancel': typeof CartCheckoutCancelIndexRoute
@@ -162,6 +176,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthIndexRoute
   '/cart': typeof CartIndexRoute
   '/contact': typeof ContactIndexRoute
+  '/reset-password': typeof ResetPasswordIndexRoute
   '/shop': typeof ShopIndexRoute
   '/account/orders/$orderId': typeof AccountOrdersOrderIdRoute
   '/admin/orders/$orderId': typeof AdminOrdersOrderIdRoute
@@ -171,6 +186,7 @@ export interface FileRoutesByTo {
   '/admin/products': typeof AdminProductsIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
   '/cart/checkout': typeof CartCheckoutIndexRoute
+  '/admin/users/edit/$userId': typeof AdminUsersEditUserIdRoute
   '/admin/products/new': typeof AdminProductsNewIndexRoute
   '/admin/users/new': typeof AdminUsersNewIndexRoute
   '/cart/checkout/cancel': typeof CartCheckoutCancelIndexRoute
@@ -185,6 +201,7 @@ export interface FileRoutesById {
   '/auth/': typeof AuthIndexRoute
   '/cart/': typeof CartIndexRoute
   '/contact/': typeof ContactIndexRoute
+  '/reset-password/': typeof ResetPasswordIndexRoute
   '/shop/': typeof ShopIndexRoute
   '/account/orders/$orderId': typeof AccountOrdersOrderIdRoute
   '/admin/orders/$orderId': typeof AdminOrdersOrderIdRoute
@@ -194,6 +211,7 @@ export interface FileRoutesById {
   '/admin/products/': typeof AdminProductsIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
   '/cart/checkout/': typeof CartCheckoutIndexRoute
+  '/admin/users/edit/$userId': typeof AdminUsersEditUserIdRoute
   '/admin/products/new/': typeof AdminProductsNewIndexRoute
   '/admin/users/new/': typeof AdminUsersNewIndexRoute
   '/cart/checkout/cancel/': typeof CartCheckoutCancelIndexRoute
@@ -209,6 +227,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cart'
     | '/contact'
+    | '/reset-password'
     | '/shop'
     | '/account/orders/$orderId'
     | '/admin/orders/$orderId'
@@ -218,6 +237,7 @@ export interface FileRouteTypes {
     | '/admin/products'
     | '/admin/users'
     | '/cart/checkout'
+    | '/admin/users/edit/$userId'
     | '/admin/products/new'
     | '/admin/users/new'
     | '/cart/checkout/cancel'
@@ -231,6 +251,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cart'
     | '/contact'
+    | '/reset-password'
     | '/shop'
     | '/account/orders/$orderId'
     | '/admin/orders/$orderId'
@@ -240,6 +261,7 @@ export interface FileRouteTypes {
     | '/admin/products'
     | '/admin/users'
     | '/cart/checkout'
+    | '/admin/users/edit/$userId'
     | '/admin/products/new'
     | '/admin/users/new'
     | '/cart/checkout/cancel'
@@ -253,6 +275,7 @@ export interface FileRouteTypes {
     | '/auth/'
     | '/cart/'
     | '/contact/'
+    | '/reset-password/'
     | '/shop/'
     | '/account/orders/$orderId'
     | '/admin/orders/$orderId'
@@ -262,6 +285,7 @@ export interface FileRouteTypes {
     | '/admin/products/'
     | '/admin/users/'
     | '/cart/checkout/'
+    | '/admin/users/edit/$userId'
     | '/admin/products/new/'
     | '/admin/users/new/'
     | '/cart/checkout/cancel/'
@@ -276,6 +300,7 @@ export interface RootRouteChildren {
   AuthIndexRoute: typeof AuthIndexRoute
   CartIndexRoute: typeof CartIndexRoute
   ContactIndexRoute: typeof ContactIndexRoute
+  ResetPasswordIndexRoute: typeof ResetPasswordIndexRoute
   ShopIndexRoute: typeof ShopIndexRoute
   AccountOrdersOrderIdRoute: typeof AccountOrdersOrderIdRoute
   AdminOrdersOrderIdRoute: typeof AdminOrdersOrderIdRoute
@@ -285,6 +310,7 @@ export interface RootRouteChildren {
   AdminProductsIndexRoute: typeof AdminProductsIndexRoute
   AdminUsersIndexRoute: typeof AdminUsersIndexRoute
   CartCheckoutIndexRoute: typeof CartCheckoutIndexRoute
+  AdminUsersEditUserIdRoute: typeof AdminUsersEditUserIdRoute
   AdminProductsNewIndexRoute: typeof AdminProductsNewIndexRoute
   AdminUsersNewIndexRoute: typeof AdminUsersNewIndexRoute
   CartCheckoutCancelIndexRoute: typeof CartCheckoutCancelIndexRoute
@@ -305,6 +331,13 @@ declare module '@tanstack/react-router' {
       path: '/shop'
       fullPath: '/shop'
       preLoaderRoute: typeof ShopIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password/': {
+      id: '/reset-password/'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact/': {
@@ -433,6 +466,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminProductsNewIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/users/edit/$userId': {
+      id: '/admin/users/edit/$userId'
+      path: '/admin/users/edit/$userId'
+      fullPath: '/admin/users/edit/$userId'
+      preLoaderRoute: typeof AdminUsersEditUserIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -444,6 +484,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthIndexRoute: AuthIndexRoute,
   CartIndexRoute: CartIndexRoute,
   ContactIndexRoute: ContactIndexRoute,
+  ResetPasswordIndexRoute: ResetPasswordIndexRoute,
   ShopIndexRoute: ShopIndexRoute,
   AccountOrdersOrderIdRoute: AccountOrdersOrderIdRoute,
   AdminOrdersOrderIdRoute: AdminOrdersOrderIdRoute,
@@ -453,6 +494,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminProductsIndexRoute: AdminProductsIndexRoute,
   AdminUsersIndexRoute: AdminUsersIndexRoute,
   CartCheckoutIndexRoute: CartCheckoutIndexRoute,
+  AdminUsersEditUserIdRoute: AdminUsersEditUserIdRoute,
   AdminProductsNewIndexRoute: AdminProductsNewIndexRoute,
   AdminUsersNewIndexRoute: AdminUsersNewIndexRoute,
   CartCheckoutCancelIndexRoute: CartCheckoutCancelIndexRoute,
