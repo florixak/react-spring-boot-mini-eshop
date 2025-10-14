@@ -149,6 +149,14 @@ public class AuthService {
 			throw new RuntimeException("Invalid or expired password reset token.");
 		}
 
+		if (dto.getNewPassword().length() < 8) {
+			throw new IllegalArgumentException("Password must be at least 8 characters long");
+		}
+
+		if (passwordEncoder.matches(dto.getNewPassword(), user.getPassword())) {
+			throw new IllegalArgumentException("New password must be different from the current password");
+		}
+
 		user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
 		user.setPasswordResetToken(null);
 		user.setPasswordResetTokenExpiresAt(null);
