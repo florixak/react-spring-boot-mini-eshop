@@ -42,9 +42,17 @@ public class ProductController {
 				return ResponseEntity.badRequest().body(new Response<>(false, null, "Invalid request parameters"));
 			}
 
-			Pageable pageable = PageRequest.of(page, size,
-					Sort.by(Sort.Direction.fromString(sortBy.split(",")[1]), sortBy.split(",")[0])
-			);
+			String[] sortParams = sortBy.split(",");
+			if (sortParams.length != 2) {
+				return ResponseEntity.badRequest().body(new Response<>(false, null, "Invalid sortBy format. Expected 'field,direction'"));
+			}
+			String field = sortParams[0].trim();
+			String direction = sortParams[1].trim();
+			if (!direction.equalsIgnoreCase("asc") && !direction.equalsIgnoreCase("desc")) {
+				return ResponseEntity.badRequest().body(new Response<>(false, null, "Invalid sort direction. Use 'asc' or 'desc'"));
+			}
+
+			Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), field));
 			Page<Product> products = productService.filterProducts(categorySlug, minPrice, maxPrice, search, inStock, pageable);
 			List<ProductDTO> productDTOs = products.stream()
 					.map(ProductMapper::convertToDto)
