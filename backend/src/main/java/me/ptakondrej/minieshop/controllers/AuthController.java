@@ -190,7 +190,7 @@ public class AuthController {
 				return ResponseEntity.badRequest().body(new Response<String>(false, null, "Email must not be null or empty."));
 			}
 			authService.resendPasswordResetEmail(prRequestDTO);
-			return ResponseEntity.ok(new Response<String>(true, null, "Password reset link resend."));
+			return ResponseEntity.ok(new Response<String>(true, null, "Password reset link has been resent."));
 		} catch (Exception e) {
 			return ResponseEntity.status(500).body(new Response<String>(false, null, "An error occurred while resending password reset email."));
 		}
