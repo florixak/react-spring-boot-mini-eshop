@@ -1,7 +1,6 @@
 package me.ptakondrej.minieshop.services;
 
 import me.ptakondrej.minieshop.requests.AdminUserEditRequest;
-import me.ptakondrej.minieshop.requests.EmailRequest;
 import me.ptakondrej.minieshop.requests.PasswordRequest;
 import me.ptakondrej.minieshop.requests.UserEditRequest;
 import me.ptakondrej.minieshop.user.Role;
@@ -28,6 +27,7 @@ public class UserService {
 		this.passwordEncoder = passwordEncoder;
 	}
 
+	@Transactional(readOnly = true)
 	public Optional<User> findByEmailOrUsername(String emailOrUsername) {
 		if  (emailOrUsername == null || emailOrUsername.isBlank() || emailOrUsername.trim().equals("")) {
 			return Optional.empty();
@@ -40,6 +40,7 @@ public class UserService {
 		}
 	}
 
+	@Transactional(readOnly = true)
 	public User findById(Long userId) {
 		if (userId == null || userId <= 0) {
 			throw new IllegalArgumentException("Invalid user ID: " + userId);
@@ -48,6 +49,7 @@ public class UserService {
 				.orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
 	}
 
+	@Transactional(readOnly = true)
 	public List<User> getAllUsers(String search) {
 		return userRepository.findAll(UserSpecification.filter(search), Sort.by("id").descending());
 	}
