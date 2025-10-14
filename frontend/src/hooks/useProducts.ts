@@ -4,13 +4,14 @@ import type { PagingObjectResponse, Response } from "@/types/responses";
 import { useQuery } from "@tanstack/react-query";
 import useObjectPaging from "./useObjectPaging";
 import { getDummyProducts, products } from "@/lib/dummyData";
+import type { ProductSort } from "@/constants";
 
 export type ProductSearchParams = {
   category?: string;
   query?: string;
   price?: string;
   stock?: string;
-  sortBy?: string;
+  sortBy?: ProductSort["value"];
   page?: number;
   size?: number;
 };
@@ -38,7 +39,7 @@ export const useProducts = (
       if (!isNaN(minPrice) && minPrice > 0) {
         filter.minPrice = minPrice;
       }
-      if (!isNaN(maxPrice) && maxPrice < 1000) {
+      if (!isNaN(maxPrice)) {
         filter.maxPrice = maxPrice;
       }
     }
@@ -61,6 +62,10 @@ export const useProducts = (
       filter.size = search.size;
     } else {
       filter.size = 9;
+    }
+
+    if (search.sortBy) {
+      filter.sortBy = search.sortBy;
     }
 
     return filter;

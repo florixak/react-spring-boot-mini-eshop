@@ -14,7 +14,7 @@ import PlaceholderImage from "@/assets/placeholder.svg";
 import { formatPrice } from "@/lib/utils";
 import type { ShippingMethodKey } from "@/types";
 
-type ProductFilter = {
+export type ProductSort = {
   value:
     | "price_low_to_high"
     | "price_high_to_low"
@@ -23,7 +23,7 @@ type ProductFilter = {
   label: string;
 };
 
-const PRODUCT_FILTERS: ProductFilter[] = [
+const PRODUCT_FILTERS: ProductSort[] = [
   {
     value: "price_low_to_high",
     label: "Price: Low to High",
