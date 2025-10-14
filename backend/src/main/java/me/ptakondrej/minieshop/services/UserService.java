@@ -1,8 +1,9 @@
 package me.ptakondrej.minieshop.services;
 
-import me.ptakondrej.minieshop.requests.EmailRequest;
+import me.ptakondrej.minieshop.requests.AdminUserEditRequest;
 import me.ptakondrej.minieshop.requests.PasswordRequest;
 import me.ptakondrej.minieshop.requests.UserEditRequest;
+import me.ptakondrej.minieshop.user.Role;
 import me.ptakondrej.minieshop.user.User;
 import me.ptakondrej.minieshop.user.UserRepository;
 import me.ptakondrej.minieshop.user.UserSpecification;
@@ -26,6 +27,7 @@ public class UserService {
 		this.passwordEncoder = passwordEncoder;
 	}
 
+	@Transactional(readOnly = true)
 	public Optional<User> findByEmailOrUsername(String emailOrUsername) {
 		if  (emailOrUsername == null || emailOrUsername.isBlank() || emailOrUsername.trim().equals("")) {
 			return Optional.empty();
@@ -38,6 +40,7 @@ public class UserService {
 		}
 	}
 
+	@Transactional(readOnly = true)
 	public User findById(Long userId) {
 		if (userId == null || userId <= 0) {
 			throw new IllegalArgumentException("Invalid user ID: " + userId);
@@ -46,6 +49,7 @@ public class UserService {
 				.orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
 	}
 
+	@Transactional(readOnly = true)
 	public List<User> getAllUsers(String search) {
 		return userRepository.findAll(UserSpecification.filter(search), Sort.by("id").descending());
 	}
@@ -118,7 +122,7 @@ public class UserService {
 			}
 			user.setEmail(trimmedEmail);
 		}
-		// Some values are not trimmed to allow multi part values like "New York"
+
 		if (request.getAddress() != null && !request.getAddress().isBlank()) {
 			user.setAddress(request.getAddress());
 		}
@@ -140,6 +144,49 @@ public class UserService {
 			}
 			user.setPhone(request.getPhone().trim());
 		}
+		return userRepository.save(user);
+	}
+
+	@Transactional
+	public User updateUser(Long userId, AdminUserEditRequest request) {
+		if (userId == null || userId <= 0) {
+			throw new IllegalArgumentException("Invalid user ID: " + userId);
+		}
+		if (request == null) {
+			throw new IllegalArgumentException("Request cannot be null");
+		}
+		User user = userRepository.findById(userId)
+				.orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+
+		if (request.getFirstName() != null && !request.getFirstName().isBlank()) {
+			user.setFirstName(request.getFirstName().trim());
+		}
+		if (request.getLastName() != null && !request.getLastName().isBlank()) {
+			user.setLastName(request.getLastName().trim());
+		}
+		if (request.getEmail() != null && !request.getEmail().isBlank()) {
+			if (!request.getEmail().contains("@") || !request.getEmail().contains(".")) {
+				throw new IllegalArgumentException("Invalid email format");
+			}
+			String trimmedEmail = request.getEmail().trim();
+			if (userRepository.findByEmail(trimmedEmail).isPresent() && !user.getEmail().equalsIgnoreCase(trimmedEmail)) {
+				throw new IllegalArgumentException("Email is already in use");
+			}
+			user.setEmail(trimmedEmail);
+		}
+
+		if (request.getRole() != null) {
+			try {
+				Role.fromString(request.getRole());
+			} catch (IllegalArgumentException e) {
+				throw new IllegalArgumentException("Invalid role: " + request.getRole());
+			}
+		}
+
+		if (request.getVerified() != null) {
+			user.setVerified(request.getVerified());
+		}
+
 		return userRepository.save(user);
 	}
 

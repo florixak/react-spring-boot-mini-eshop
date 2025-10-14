@@ -38,6 +38,7 @@ public class SecurityConfig {
 						.requestMatchers("/api/users/admin", "/api/users/admin/**").hasRole("ADMIN")
 						.requestMatchers("/api/admin/dashboard/**").hasRole("ADMIN")
 						.requestMatchers("/api/products").permitAll()
+						.requestMatchers("/api/products/most-expensive").permitAll()
 						.requestMatchers("/api/checkout/create-checkout-session").permitAll()
 						.requestMatchers("/api/auth/**").permitAll()
 						.requestMatchers("/api/categories/**").permitAll()
@@ -61,9 +62,7 @@ public class SecurityConfig {
 		config.setAllowedOrigins(List.of(
 				"http://localhost:8080",
 				"http://localhost:5173",
-				"https://react-spring-boot-mini-eshop.vercel.app",
-				"https://react-spring-boot-mini-eshop-git-main-florixaks-projects.vercel.app",
-				"https://react-spring-boot-mini-eshop-m75dwuaxt-florixaks-projects.vercel.app"
+				"https://minimal-minieshop.vercel.app"
 		));
 		config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Stripe-Signature", "X-SCHEDULER-TOKEN"));
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));

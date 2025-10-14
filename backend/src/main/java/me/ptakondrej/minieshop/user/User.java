@@ -66,6 +66,10 @@ public class User implements UserDetails {
 	private LocalDateTime verificationCodeExpiresAt;
 	@Column(name = "verified", nullable = false, columnDefinition = "boolean default false")
 	private boolean verified;
+	@Column(name = "password_reset_token", unique = true)
+	private String passwordResetToken;
+	@Column(name = "password_reset_token_expires_at")
+	private LocalDateTime passwordResetTokenExpiresAt;
 
 	@Override
 	public String getUsername() {

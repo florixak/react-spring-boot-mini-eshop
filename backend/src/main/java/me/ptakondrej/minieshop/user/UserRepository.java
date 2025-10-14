@@ -13,4 +13,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 	Optional<User> findByUsername(String username);
 	long countByCreatedAtAfter(LocalDateTime dateTime);
 	boolean existsByVerificationCode(String code);
+	Optional<User> findByPasswordResetToken(String token);
+	boolean existsByPasswordResetToken(String token);
 }

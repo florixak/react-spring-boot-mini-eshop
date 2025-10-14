@@ -148,6 +148,23 @@ public class ProductService {
 		productRepository.save(product);
 	}
 
+	@Transactional(readOnly = true)
+	public Product getMostExpensiveProduct(String categorySlug) {
+		if (categorySlug != null && !categorySlug.trim().isEmpty()) {
+			Category category = categoryService.getCategoryBySlug(categorySlug);
+			if (category == null) {
+				throw new IllegalArgumentException("Category not found with slug: " + categorySlug);
+			}
+			Specification<Product> spec = ProductSpecification.filter(category.getId(), null, null, null, false);
+			return productRepository.findAll(spec).stream()
+					.filter(product -> product.getEnabled() && !product.getDeleted())
+					.max((p1, p2) -> p1.getPrice().compareTo(p2.getPrice()))
+					.orElseThrow(() -> new IllegalArgumentException("No products found in category: " + categorySlug));
+		}
+		return productRepository.findTopByEnabledTrueAndDeletedFalseOrderByPriceDesc()
+				.orElseThrow(() -> new IllegalArgumentException("No products found"));
+	}
+
 	public boolean existsProductById(Long id) {
 		return productRepository.existsById(id);
 	}

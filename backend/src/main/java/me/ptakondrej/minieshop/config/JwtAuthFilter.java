@@ -18,6 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -36,8 +37,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 									@NonNull FilterChain filterChain) throws ServletException, IOException {
 		String requestPath = request.getRequestURI();
 
-		if (requestPath.equals("/api/auth/login") || requestPath.equals("/api/auth/signup") ||
-				requestPath.equals("/api/auth/refresh-token") || requestPath.equals("/api/auth/verify")) {
+
+		List<String> whitelist = List.of(
+				"/api/auth/login",
+				"/api/auth/signup",
+				"/api/auth/refresh-token",
+				"/api/auth/verify",
+				"/api/auth/resend-verification",
+				"/api/auth/forgot-password",
+				"/api/auth/resend-password-reset",
+ 				"/api/auth/reset-password",
+ 				"/api/auth/verify-reset-token"
+		);
+		if (whitelist.contains(requestPath)) {
 			filterChain.doFilter(request, response);
 			return;
 		}

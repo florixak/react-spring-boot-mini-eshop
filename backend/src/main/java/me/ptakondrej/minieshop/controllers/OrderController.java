@@ -126,7 +126,24 @@ public class OrderController {
 	@GetMapping("/admin")
 	public ResponseEntity<Response<List<OrderDTO>>> getAllOrders(@RequestParam(required = false) String search) {
 		try {
-			List<Order> orders = orderService.getAllOrders(search);
+			List<Order> orders;
+			if (search != null && !search.trim().isEmpty() && search.trim().matches("\\d+")) {
+				Long id = Long.parseLong(search.trim());
+				Order order = orderService.getOrderById(id);
+				orders = order == null ? List.of() : List.of(order);
+			} else {
+				orders = orderService.getAllOrders(search);
+			}
+
+			if (search != null && search.contains("user:")) {
+				String[] parts = search.split("user:");
+				if (parts.length == 2 && parts[1] != null && parts[1].matches("\\d+")) {
+					Long userId = Long.parseLong(parts[1]);
+					orders = orderService.getAllUserOrders(userId);
+				} else {
+					orders = List.of();
+				}
+			}
 			List<OrderDTO> orderDTOs = orders.stream()
 					.map(OrderMapper::convertToDto)
 					.toList();

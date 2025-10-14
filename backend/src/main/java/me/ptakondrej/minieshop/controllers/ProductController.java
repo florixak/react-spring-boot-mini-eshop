@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -35,13 +36,23 @@ public class ProductController {
 			@RequestParam(required = false) Double maxPrice,
 			@RequestParam(required = false) String search,
 			@RequestParam(defaultValue = "false") boolean inStock,
-			@RequestParam(defaultValue = "id,asc") String[] sort) {
+			@RequestParam(defaultValue = "id,asc") String sortBy) {
 		try {
 			if (page < 0 || size <= 0) {
 				return ResponseEntity.badRequest().body(new Response<>(false, null, "Invalid request parameters"));
 			}
 
-			Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+			String[] sortParams = sortBy.split(",");
+			if (sortParams.length != 2) {
+				return ResponseEntity.badRequest().body(new Response<>(false, null, "Invalid sortBy format. Expected 'field,direction'"));
+			}
+			String field = sortParams[0].trim();
+			String direction = sortParams[1].trim();
+			if (!direction.equalsIgnoreCase("asc") && !direction.equalsIgnoreCase("desc")) {
+				return ResponseEntity.badRequest().body(new Response<>(false, null, "Invalid sort direction. Use 'asc' or 'desc'"));
+			}
+
+			Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), field));
 			Page<Product> products = productService.filterProducts(categorySlug, minPrice, maxPrice, search, inStock, pageable);
 			List<ProductDTO> productDTOs = products.stream()
 					.map(ProductMapper::convertToDto)
@@ -82,6 +93,21 @@ public class ProductController {
 			return ResponseEntity.badRequest().body(new Response<ProductDTO>(false, null, e.getMessage()));
 		} catch (Exception e) {
 			return ResponseEntity.status(500).body(new Response<ProductDTO>(false, null, "An error occurred while retrieving the product: " + e.getMessage()));
+		}
+	}
+
+	@GetMapping("/most-expensive")
+	public ResponseEntity<Response<BigDecimal>> getMostExpensivePrice(@RequestParam(required = false) String categorySlug) {
+		try {
+			Product product = productService.getMostExpensiveProduct(categorySlug);
+			if (product == null) {
+				return ResponseEntity.notFound().build();
+			}
+			return ResponseEntity.ok(new Response<>(true, product.getPrice(), "Most expensive price retrieved successfully"));
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(new Response<>(false, null, e.getMessage()));
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(new Response<>(false, null, "An error occurred while retrieving the most expensive product: " + e.getMessage()));
 		}
 	}
 
