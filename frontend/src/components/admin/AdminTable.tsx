@@ -54,17 +54,21 @@ const AdminTable = <T,>({
   showSearch = true,
 }: AdminTableProps<T>) => {
   const navigate = useNavigate();
-  const searchParams = useSearch({ from: "__root__" }) as { search?: string };
+  const searchParams = useSearch({ from: "__root__" }) as { query?: string };
 
-  const [searchValue, setSearchValue] = useState(searchParams.search || "");
+  const [searchValue, setSearchValue] = useState(searchParams.query || "");
 
   const { debouncedValue } = useDebounce({
     value: searchValue,
     delay: 300,
     onDebounce: (debouncedSearchValue) => {
+      const nextSearch = debouncedSearchValue
+        ? { query: debouncedSearchValue }
+        : { ...searchParams };
+
       navigate({
         to: ".",
-        search: debouncedSearchValue ? { query: debouncedSearchValue } : {},
+        search: nextSearch as unknown as Record<string, string>,
         replace: false,
       });
     },
