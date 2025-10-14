@@ -5,6 +5,7 @@ import CategoryFilter from "./CategoryFilter";
 import SortFilter from "../SortFilter";
 import { useQuery } from "@tanstack/react-query";
 import { fetchTheMostExpensiveProductPrice } from "@/lib/api";
+import { getMostExpensivePrice } from "@/lib/dummyData";
 
 type FilterSidebarProps = {
   search: ReturnType<typeof Route.useSearch>;
@@ -14,7 +15,13 @@ type FilterSidebarProps = {
 const FilterSidebar = ({ search, navigate }: FilterSidebarProps) => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["mostExpensivePrice", search.category],
-    queryFn: () => fetchTheMostExpensiveProductPrice(search.category),
+    queryFn: async () => {
+      try {
+        return await fetchTheMostExpensiveProductPrice(search.category);
+      } catch {
+        return getMostExpensivePrice();
+      }
+    },
   });
 
   return (
