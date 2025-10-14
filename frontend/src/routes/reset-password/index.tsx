@@ -15,9 +15,15 @@ export const Route = createFileRoute("/reset-password/")({
         search: { mode: "login" },
       });
     }
-
-    const data = await verifyResetPasswordToken(search.token);
-    if (!data.success) {
+    try {
+      const data = await verifyResetPasswordToken(search.token);
+      if (!data.success) {
+        return redirect({
+          to: "/auth",
+          search: { mode: "login" },
+        });
+      }
+    } catch {
       return redirect({
         to: "/auth",
         search: { mode: "login" },
