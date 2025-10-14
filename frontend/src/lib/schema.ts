@@ -134,3 +134,13 @@ export const verifyEmailSchema = z.object({
   email: z.string().email().optional(),
 });
 export type VerifyEmailValues = z.infer<typeof verifyEmailSchema>;
+
+export const adminUserEditSchema = z.object({
+  firstName: z.string().min(1, "First name required"),
+  lastName: z.string().min(1, "Last name required"),
+  email: z.string().email(),
+  role: z.enum(["user", "admin"]),
+  verified: z.boolean(),
+});
+
+export type AdminUserEditFormData = z.infer<typeof adminUserEditSchema>;
