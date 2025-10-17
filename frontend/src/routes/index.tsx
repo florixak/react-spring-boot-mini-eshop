@@ -4,7 +4,7 @@ import StayUpdated from "@/components/home/StayUpdated";
 import type { PRODUCT_FILTERS } from "@/constants";
 import type { View } from "@/types";
 import { createFileRoute } from "@tanstack/react-router";
-import LandingImage from "../assets/landing-image4.jpg";
+import LandingImage from "../assets/hero-image.webp";
 
 type IndexSearch = {
   category: string;

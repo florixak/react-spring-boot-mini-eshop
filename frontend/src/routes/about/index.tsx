@@ -1,5 +1,5 @@
 import Hero from "@/components/home/Hero";
-import AboutImage from "@/assets/landing-image2.jpg";
+import AboutImage from "@/assets/about-image.webp";
 import { createFileRoute } from "@tanstack/react-router";
 import Statistics from "@/components/about/Statistics";
 import OurMission from "@/components/about/OurMission";
