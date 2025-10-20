@@ -155,17 +155,3 @@ PRs are welcome. For small changes:
 3. Open a PR describing the change
 
 If you plan larger changes, open an issue first so we can discuss scope.
-
-## License
-
-This repository does not include an explicit license. Add one (for example `MIT`) if you plan to make the project public and want to grant reuse permissions.
-
----
-
-If you'd like, I can also:
-
-- Add a sample `backend/.env.example` file to the repo.
-- Add a small `Makefile` to simplify common dev tasks.
-- Add setup scripts for seeding the database with example data.
-
-Tell me which of these you'd like next and I'll add them.
