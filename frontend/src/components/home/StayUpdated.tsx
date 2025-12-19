@@ -1,14 +1,24 @@
 import toast from "react-hot-toast";
 import Button from "../Button";
 import { Input } from "../ui/input";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 const StayUpdated = () => {
+  const [inputValue, setInputValue] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
   const handleSubscribe = (event: React.FormEvent) => {
     event.preventDefault();
+    if (
+      !inputValue ||
+      inputValue.trim() === "" ||
+      !/\S+@\S+\.\S+/.test(inputValue)
+    ) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
     toast.success("Subscribed successfully!");
     formRef.current?.reset();
+    setInputValue("");
   };
 
   return (
@@ -26,6 +36,7 @@ const StayUpdated = () => {
           type="email"
           placeholder="Enter your email"
           className="border rounded-lg bg-white py-5"
+          onChange={(e) => setInputValue(e.target.value)}
         />
         <Button className="bg-primary text-white rounded-lg">Subscribe</Button>
       </form>
