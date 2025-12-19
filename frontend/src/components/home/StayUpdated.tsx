@@ -36,6 +36,7 @@ const StayUpdated = () => {
           type="email"
           placeholder="Enter your email"
           className="border rounded-lg bg-white py-5"
+          value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
         />
         <Button className="bg-primary text-white rounded-lg">Subscribe</Button>
