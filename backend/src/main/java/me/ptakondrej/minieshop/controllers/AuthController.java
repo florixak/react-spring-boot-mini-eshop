@@ -40,6 +40,7 @@ public class AuthController {
 			}
 
 			User user = authService.signUp(registerUserDTO);
+			authService.sendSignUpVerificationEmail(user);
 			UserDTO userDTO = UserMapper.convertToDto(user);
 
 			return ResponseEntity.ok(new Response<UserDTO>(true, userDTO, "Registration successful. Please verify your email."));
