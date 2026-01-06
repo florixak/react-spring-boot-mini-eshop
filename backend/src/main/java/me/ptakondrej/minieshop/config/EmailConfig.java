@@ -37,7 +37,7 @@ public class EmailConfig {
     	props.put("mail.smtp.ssl.trust", host);
     	props.put("mail.smtp.connectiontimeout", "10000");
     	props.put("mail.smtp.timeout", "10000");
-    	props.put("mail.debug", "true");
+    	props.put("mail.debug", "false");
 
 		return mailSender;
 	}
