@@ -57,11 +57,13 @@ public class AuthService {
 				.build();
 		User createdUser = userRepository.save(user);
 		wishlistService.createWishlist(user.getId());
+
 		try {
 			emailService.sendVerificationEmail(createdUser);
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to send verification email", e);
 		}
+		
 		return createdUser;
 	}
 
