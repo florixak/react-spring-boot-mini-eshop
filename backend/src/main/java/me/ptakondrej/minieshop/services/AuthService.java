@@ -51,20 +51,19 @@ public class AuthService {
 				.deleted(false)
 				.role(Role.USER)
 				.enabled(true)
-				.verified(true)
-				.verificationCode(null)
-				.verificationCodeExpiresAt(null)
-				//.verificationCode(generateVerificationCode())
-				//.verificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15))
+				.verified(false)
+				.verificationCode(generateVerificationCode())
+				.verificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15))
 				.build();
 		User createdUser = userRepository.save(user);
 		wishlistService.createWishlist(user.getId());
-		// TODO: fix email sending
-		/*try {
+
+		try {
 			emailService.sendVerificationEmail(createdUser);
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to send verification email", e);
-		}*/
+		}
+		
 		return createdUser;
 	}
 
